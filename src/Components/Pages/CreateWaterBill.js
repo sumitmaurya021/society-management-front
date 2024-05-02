@@ -55,8 +55,8 @@ function CreateWaterBill() {
     <motion.div>
         <div>
         <div className="createmaincss">
-        <Typography variant="h6" gutterBottom>Create Water Bill</Typography>
-
+        <Typography variant="h6" gutterBottom className='text-center p-3 bg-body-secondary sticky-top border-bottom text-dark'>Create Water Bill</Typography>
+        <div className='p-4'>
         <TextField
           name="bill_month_and_year"
           label="Bill Month And Year"
@@ -126,6 +126,7 @@ function CreateWaterBill() {
         >
           Create
         </Button>
+        </div>
       </div>
       <ToastContainer />
     </div>

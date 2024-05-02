@@ -62,8 +62,8 @@ const Sidebar = ({ children }) => {
     <div className="main-container">
         <motion.div animate={{ width: isOpen ? "15%" : "3%", transition: { duration: 0.5, type: "spring", damping: 10 } }} className="sidebar">
 
-          <div className="top_section" style={{marginBottom: "35px"}}>
-            {isOpen && <h1 className="logo m-0">SM</h1>}
+          <div className="top_section border-bottom" style={{marginBottom: "35px"}}>
+            {isOpen && <h1 className="logo m-0" style={{whiteSpace: "nowrap"}}>Solaris Business</h1>}
             <div className="bars" style={{marginLeft: "1px"}}>
               <FaBars onClick={toggle} />
             </div>

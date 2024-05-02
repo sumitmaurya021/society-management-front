@@ -53,7 +53,8 @@ function CreateMaintanenceBill() {
   return (
     <div>
       <div className="createmaincss">
-        <Typography variant="h6" gutterBottom>Create Maintenance Bill</Typography>
+        <Typography variant="h6" gutterBottom className="text-center p-3 bg-body-secondary text-dark sticky-top">Create Maintenance Bill</Typography>
+        <div className='p-4'>
         <TextField
           name="bill_month_and_year"
           label="Bill Month And Year"
@@ -121,6 +122,7 @@ function CreateMaintanenceBill() {
         >
           Create
         </Button>
+        </div>
       </div>
       <ToastContainer />
     </div>

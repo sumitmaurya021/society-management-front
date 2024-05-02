@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
+import { toast, ToastContainer } from 'react-toastify';
 
 function CreateWaterBill() {
   const [waterBill, setWaterBill] = useState({
-    your_name: '',
-    name: 'Water Bill',
-    amount: '',
+    bill_name: 'Water Bill',
+    bill_month_and_year: '',
+    owner_amount: '',
+    rent_amount: '',
     start_date: '',
     end_date: '',
     remarks: ''
@@ -33,11 +35,13 @@ function CreateWaterBill() {
     });
     const data = await response.json();
     if (response.ok) {
+      toast.success('Water bill created successfully!');
       setCreatedBill(data);
       setWaterBill({
-        your_name: '',
-        name: 'Water Bill',
-        amount: '',
+        bill_name: 'Water Bill',
+        bill_month_and_year: '',
+        owner_amount: '',
+        rent_amount: '',
         start_date: '',
         end_date: '',
         remarks: ''
@@ -52,19 +56,29 @@ function CreateWaterBill() {
         <div>
         <div className="createmaincss">
         <Typography variant="h6" gutterBottom>Create Water Bill</Typography>
+
         <TextField
-          name="your_name"
-          label="Your Name"
-          value={waterBill.your_name}
+          name="bill_month_and_year"
+          label="Bill Month And Year"
+          value={waterBill.bill_month_and_year}
           onChange={handleChange}
           fullWidth
           margin="normal"
         />
         <TextField
-          name="amount"
-          label="Amount"
+          name="owner_amount"
+          label="Owner Amount"
           type="number"
-          value={waterBill.amount}
+          value={waterBill.owner_amount}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          name="rent_amount"
+          label="Rent Amount"
+          type="number"
+          value={waterBill.rent_amount}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -103,6 +117,8 @@ function CreateWaterBill() {
           multiline
           rows={4}
         />
+
+
         <Button
           variant="contained"
           color="primary"
@@ -111,6 +127,7 @@ function CreateWaterBill() {
           Create
         </Button>
       </div>
+      <ToastContainer />
     </div>
   </motion.div>
   )

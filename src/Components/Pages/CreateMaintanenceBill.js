@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
+import { toast, ToastContainer } from 'react-toastify';
 
 function CreateMaintanenceBill() {
   const [maintenanceBill, setMaintenanceBill] = useState({
-    your_name: '',
-    name: 'Maintenance Bill',
-    amount: '',
+    bill_name: 'Maintanence Bill',
+    bill_month_and_year: '',
+    owner_amount: '',
+    rent_amount: '',
     start_date: '',
     end_date: '',
     remarks: ''
@@ -32,11 +34,13 @@ function CreateMaintanenceBill() {
     });
     const data = await response.json();
     if (response.ok) {
+      toast.success('Maintenance bill created successfully!');
       setCreatedBill(data);
       setMaintenanceBill({
-        your_name: '',
-        name: 'Maintenance Bill',
-        amount: '',
+        bill_name: 'Maintanence Bill',
+        bill_month_and_year: '',
+        owner_amount: '',
+        rent_amount: '',
         start_date: '',
         end_date: '',
         remarks: ''
@@ -51,18 +55,27 @@ function CreateMaintanenceBill() {
       <div className="createmaincss">
         <Typography variant="h6" gutterBottom>Create Maintenance Bill</Typography>
         <TextField
-          name="your_name"
-          label="Your Name"
-          value={maintenanceBill.your_name}
+          name="bill_month_and_year"
+          label="Bill Month And Year"
+          value={maintenanceBill.bill_month_and_year}
           onChange={handleChange}
           fullWidth
           margin="normal"
         />
         <TextField
-          name="amount"
-          label="Amount"
+          name="owner_amount"
+          label="Owner Amount"
           type="number"
-          value={maintenanceBill.amount}
+          value={maintenanceBill.owner_amount}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          name="rent_amount"
+          label="Rent Amount"
+          type="number"
+          value={maintenanceBill.rent_amount}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -109,6 +122,7 @@ function CreateMaintanenceBill() {
           Create
         </Button>
       </div>
+      <ToastContainer />
     </div>
   );
 }

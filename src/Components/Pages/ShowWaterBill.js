@@ -38,13 +38,23 @@ function ShowWaterBill() {
   // Define columns for MaterialReactTable
   const columns = [
     {
-      accessorKey: 'name',
-      header: 'Name',
+      accessorKey: 'bill_name',
+      header: 'Bill Name',
       size: 200,
     },
     {
-      accessorKey: 'amount',
-      header: 'Amount',
+      accessorKey: 'bill_month_and_year',
+      header: 'Bill Month and Year',
+      size: 150,
+    },
+    {
+      accessorKey: 'owner_amount',
+      header: 'Owner Amount',
+      size: 150,
+    },
+    { 
+      accessorKey: 'rent_amount',
+      header: 'Rent Amount',
       size: 150,
     },
     {

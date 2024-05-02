@@ -60,7 +60,7 @@ const Sidebar = ({ children }) => {
 
   return (
     <div className="main-container">
-        <motion.div animate={{ width: isOpen ? "200px" : "50px", transition: { duration: 0.5, type: "spring", damping: 10 } }} className="sidebar">
+        <motion.div animate={{ width: isOpen ? "15%" : "3%", transition: { duration: 0.5, type: "spring", damping: 10 } }} className="sidebar">
 
           <div className="top_section" style={{marginBottom: "35px"}}>
             {isOpen && <h1 className="logo m-0">SM</h1>}
@@ -79,10 +79,8 @@ const Sidebar = ({ children }) => {
               </NavLink>
             ))}
           </section>
-
-
         </motion.div>
-          <main style={{width:"100%"}}>{children}</main>
+          <main style={{width: isOpen ? "85%" : "97%"}}>{children}</main>
     </div>
   )
 }

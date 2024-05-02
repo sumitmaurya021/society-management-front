@@ -36,18 +36,23 @@ function ShowMaintenanceBill() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'your_name',
-        header: 'Your Name',
+        accessorKey: 'bill_name',
+        header: 'Bill Name',
         size: 200,
       },
       {
-        accessorKey: 'name',
-        header: 'Name',
+        accessorKey: 'bill_month_and_year',
+        header: 'Bill Month and Year',
         size: 150,
       },
       {
-        accessorKey: 'amount',
-        header: 'Amount',
+        accessorKey: 'owner_amount',
+        header: 'Owner Amount',
+        size: 150,
+      },
+      { 
+        accessorKey: 'rent_amount',
+        header: 'Rent Amount',
         size: 150,
       },
       {

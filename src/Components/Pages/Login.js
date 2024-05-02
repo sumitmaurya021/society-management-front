@@ -51,7 +51,7 @@ function Login() {
           email,
           otp
         },
-        client_id: '_P0PGQWddUlm_ILEzaei1yajPVnVL0m9uYvwvJQgyZ4'
+        client_id: 'o4pTwJqWFO0SiCnDRxT8qUKGCLNruKSQcExCVAL68UM'
       });
       if (response && response.data && response.status === 200) {
         // Store access token in local storage

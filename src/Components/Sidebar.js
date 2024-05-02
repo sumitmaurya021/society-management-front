@@ -86,7 +86,6 @@ const Sidebar = ({ children }) => {
         // Remove access token from local storage
         localStorage.removeItem('access_token');
         toast.success('Logged out successfully');
-        setLoggedIn(false); // Hide sidebar
         setTimeout(() => {
           navigate('/login');
         }, 2000);

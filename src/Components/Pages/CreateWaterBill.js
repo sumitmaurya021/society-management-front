@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import { toast, ToastContainer } from 'react-toastify';
+import axios from 'axios';
+
 
 function CreateWaterBill() {
+
+
   const [waterBill, setWaterBill] = useState({
     bill_name: 'Water Bill',
     bill_month_and_year: '',
@@ -25,113 +29,116 @@ function CreateWaterBill() {
 
   const handleSubmit = async () => {
     const accessToken = localStorage.getItem("access_token");
-    const response = await fetch('http://localhost:3000/api/v1/buildings/1/water_bills', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}` // Assuming accessToken is defined
-      },
-      body: JSON.stringify({ water_bill: waterBill })
-    });
-    const data = await response.json();
-    if (response.ok) {
-      toast.success('Water bill created successfully!');
-      setCreatedBill(data);
-      setWaterBill({
-        bill_name: 'Water Bill',
-        bill_month_and_year: '',
-        owner_amount: '',
-        rent_amount: '',
-        start_date: '',
-        end_date: '',
-        remarks: ''
-      });
-    } else {
-      console.error('Failed to create Water bill:', data.error);
+    try {
+      const response = await axios.post('http://localhost:3000/api/v1/buildings/1/water_bills', 
+        { water_bill: waterBill },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+          }
+        }
+      );
+      if (response.status === 201) {
+        toast.success('Water bill created successfully!');
+        setCreatedBill(response.data);
+        setWaterBill({
+          bill_name: 'Water Bill',
+          bill_month_and_year: '',
+          owner_amount: '',
+          rent_amount: '',
+          start_date: '',
+          end_date: '',
+          remarks: ''
+        });
+      } else {
+        toast.error('Failed to create Water bill');
+      }
+    } catch (error) {
+      toast.error('Failed to create Water bill: ' + error.message);
+      console.error('Failed to create Water bill:', error);
     }
   };
 
   return (
     <motion.div>
-        <div>
+      <div>
         <div className="createmaincss">
-        <Typography variant="h6" gutterBottom className='text-center p-3 bg-body-secondary sticky-top border-bottom text-dark'>Create Water Bill</Typography>
-        <div className='p-4'>
-        <TextField
-          name="bill_month_and_year"
-          label="Bill Month And Year"
-          value={waterBill.bill_month_and_year}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          name="owner_amount"
-          label="Owner Amount"
-          type="number"
-          value={waterBill.owner_amount}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          name="rent_amount"
-          label="Rent Amount"
-          type="number"
-          value={waterBill.rent_amount}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          name="start_date"
-          label="Start Date"
-          type="date"
-          value={waterBill.start_date}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          name="end_date"
-          label="End Date"
-          type="date"
-          value={waterBill.end_date}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          name="remarks"
-          label="Remarks"
-          value={waterBill.remarks}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          multiline
-          rows={4}
-        />
-
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-        >
-          Create
-        </Button>
+          <Typography variant="h6" gutterBottom className='text-center p-3 bg-body-secondary sticky-top border-bottom text-dark'>Create Water Bill</Typography>
+          <div className='p-4'>
+            <TextField
+              name="bill_month_and_year"
+              label="Bill Month And Year"
+              value={waterBill.bill_month_and_year}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="owner_amount"
+              label="Owner Amount"
+              type="number"
+              value={waterBill.owner_amount}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="rent_amount"
+              label="Rent Amount"
+              type="number"
+              value={waterBill.rent_amount}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="start_date"
+              label="Start Date"
+              type="date"
+              value={waterBill.start_date}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              name="end_date"
+              label="End Date"
+              type="date"
+              value={waterBill.end_date}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              name="remarks"
+              label="Remarks"
+              value={waterBill.remarks}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              multiline
+              rows={4}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+            >
+              Create
+            </Button>
+          </div>
         </div>
+        <ToastContainer />
       </div>
-      <ToastContainer />
-    </div>
-  </motion.div>
-  )
+    </motion.div>
+  );
 }
 
-export default CreateWaterBill
+export default CreateWaterBill;

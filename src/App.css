@@ -58,3 +58,9 @@ a{
 table, th, td {
   border: 1px solid black;
 }
+.logcss{
+  bottom: 40px;
+  position: absolute;
+  font-size: 35px;
+  margin-left: 2px;
+}

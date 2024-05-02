@@ -4,8 +4,11 @@ import { FaBars, FaWater } from "react-icons/fa";
 import { GrHostMaintenance } from "react-icons/gr";
 import { MdDomainVerification } from "react-icons/md";
 import { FaHandHoldingWater } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { IoLogOut } from "react-icons/io5";
 import { useState } from "react";
+import { toast } from 'react-toastify';
+import axios from "axios";
 
 const routes = [
   {
@@ -39,6 +42,8 @@ const routes = [
 const Sidebar = ({ children }) => {
 
   const [isOpen, setIsOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const navigate = useNavigate();
   const toggle = () => setIsOpen(!isOpen);
 
   const showAnimation = {
@@ -56,6 +61,43 @@ const Sidebar = ({ children }) => {
         duration: 0.2,
       },
     },
+  };
+
+  const handleLogout = async () => {
+    try {
+      const accessToken = localStorage.getItem('access_token');
+      if (!accessToken) {
+        toast.error('Access token not found.');
+        return;
+      }
+
+      // Set authorization headers with the access token
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      };
+
+      // Make the POST request to logout
+      const response = await axios.post('http://localhost:3000/api/v1/logout', null, config);
+
+      // Check response status
+      if (response.status === 200) {
+        // Remove access token from local storage
+        localStorage.removeItem('access_token');
+        toast.success('Logged out successfully');
+        setLoggedIn(false); // Hide sidebar
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
+        // Handle unexpected response
+        toast.error('An error occurred while logging out. Please try again later.');
+      }
+    } catch (error) {
+      console.error('Error while logging out:', error);
+      toast.error('An error occurred while logging out. Please try again later.');
+    }
   };
 
   return (
@@ -78,6 +120,9 @@ const Sidebar = ({ children }) => {
                 </AnimatePresence>
               </NavLink>
             ))}
+            <div className="logcss">
+            {isOpen ? <button type="button" onClick={handleLogout} className="btn btn-sm btn-danger" style={{marginLeft: "40px", whiteSpace: "nowrap"}}>Log Out</button> : <IoLogOut className="icon" onClick={handleLogout} />}
+            </div>
           </section>
         </motion.div>
           <main style={{width: isOpen ? "85%" : "97%"}}>{children}</main>

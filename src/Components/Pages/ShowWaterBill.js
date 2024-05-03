@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { MaterialReactTable, useMaterialReactTable,} from "material-react-table";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import Spinner from "../Spinner";
+import { ToastContainer, toast } from "react-toastify";
 
 function ShowWaterBill() {
   const [waterBills, setWaterBills] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchBills = async () => {
@@ -27,7 +33,14 @@ function ShowWaterBill() {
           "http://localhost:3000/api/v1/buildings/1/water_bills",
           config
         );
-        setWaterBills(response.data);
+
+        if (response.status === 200) {
+          setWaterBills(response.data);
+          setIsLoading(false);
+          toast.success("Water bills fetched successfully");
+        } else {
+          toast.error("Error fetching water bills");
+        }
       } catch (error) {
         console.error("Error fetching water bills:", error);
       }
@@ -82,12 +95,18 @@ function ShowWaterBill() {
   });
 
   return (
-    <motion.div whileInView={{ opacity: [0, 1] }}>
-      <h1 className='sticky-top text-center p-3 bg-light border-bottom'>Water Bill</h1>
-      <div className='p-3'>
-        <MaterialReactTable table={table} />
-      </div>
-    </motion.div>
+    <>
+      {isLoading && <Spinner />}
+      <motion.div whileInView={{ opacity: [0, 1] }}>
+        <h1 className="sticky-top text-center p-3 bg-light border-bottom">
+          Water Bill
+        </h1>
+        <div className="p-3">
+          <MaterialReactTable table={table} />
+        </div>
+        <ToastContainer />
+      </motion.div>
+    </>
   );
 }
 

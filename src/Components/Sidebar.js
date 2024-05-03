@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion";
 import { MdDashboard } from "react-icons/md";
 import { FaBars, FaWater } from "react-icons/fa";
 import { GrHostMaintenance } from "react-icons/gr";
@@ -7,7 +7,7 @@ import { FaHandHoldingWater } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { IoLogOut } from "react-icons/io5";
 import { useState } from "react";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import axios from "axios";
 
 const routes = [
@@ -25,7 +25,6 @@ const routes = [
     path: "/showmaintenancebill",
     name: "Show Maintenance Bill",
     icon: <MdDomainVerification />,
-    
   },
   {
     path: "/createwaterbill",
@@ -37,10 +36,9 @@ const routes = [
     name: "Create Maintenance Bill",
     icon: <GrHostMaintenance />,
   },
-]
+];
 
 const Sidebar = ({ children }) => {
-
   const [isOpen, setIsOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
@@ -65,68 +63,114 @@ const Sidebar = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      const accessToken = localStorage.getItem('access_token');
+      const accessToken = localStorage.getItem("access_token");
       if (!accessToken) {
-        toast.error('Access token not found.');
+        toast.error("Access token not found.");
         return;
       }
 
       // Set authorization headers with the access token
       const config = {
         headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+        },
       };
 
       // Make the POST request to logout
-      const response = await axios.post('http://localhost:3000/api/v1/logout', null, config);
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/logout",
+        null,
+        config
+      );
 
       // Check response status
       if (response.status === 200) {
         // Remove access token from local storage
-        localStorage.removeItem('access_token');
-        toast.success('Logged out successfully');
+        localStorage.removeItem("access_token");
+        toast.success("Logged out successfully");
         setTimeout(() => {
-          navigate('/login');
+          navigate("/login");
         }, 2000);
       } else {
         // Handle unexpected response
-        toast.error('An error occurred while logging out. Please try again later.');
+        toast.error(
+          "An error occurred while logging out. Please try again later."
+        );
       }
     } catch (error) {
-      console.error('Error while logging out:', error);
-      toast.error('An error occurred while logging out. Please try again later.');
+      console.error("Error while logging out:", error);
+      toast.error(
+        "An error occurred while logging out. Please try again later."
+      );
     }
   };
 
   return (
     <div className="main-container">
-        <motion.div animate={{ width: isOpen ? "15%" : "3%", transition: { duration: 0.5, type: "spring", damping: 10 } }} className="sidebar">
-
-          <div className="top_section border-bottom" style={{marginBottom: "35px"}}>
-            {isOpen && <h1 className="logo m-0" style={{whiteSpace: "nowrap"}}>Solaris Business</h1>}
-            <div className="bars" style={{marginLeft: "1px"}}>
-              <FaBars onClick={toggle} />
-            </div>
+      <motion.div
+        animate={{
+          width: isOpen ? "15%" : "3%",
+          transition: { duration: 0.5, type: "spring", damping: 10 },
+        }}
+        className="sidebar"
+      >
+        <div
+          className="top_section border-bottom"
+          style={{ marginBottom: "35px" }}
+        >
+          {isOpen && (
+            <h1 className="logo m-0" style={{ whiteSpace: "nowrap" }}>
+              Solaris Business
+            </h1>
+          )}
+          <div className="bars" style={{ marginLeft: "1px" }}>
+            <FaBars onClick={toggle} />
           </div>
+        </div>
 
-          <section className="routes">
-            {routes.map((route, index) => (
-              <NavLink ActiveClassName="active" to={route.path} key={route.name} className="link">
-                <div className="icon">{route.icon}</div>
-                <AnimatePresence>
-                 {isOpen && <motion.div variants={showAnimation} initial="hidden" animate="show" exit="hidden" className="link-text">{route.name}</motion.div>}
-                </AnimatePresence>
-              </NavLink>
-            ))}
-            <div className="logcss">
-            {isOpen ? <button type="button" onClick={handleLogout} className="btn btn-sm btn-danger" style={{marginLeft: "40px", whiteSpace: "nowrap"}}>Log Out</button> : <IoLogOut className="icon" onClick={handleLogout} />}
-            </div>
-          </section>
-        </motion.div>
-          <main style={{width: isOpen ? "85%" : "97%"}}>{children}</main>
+        <section className="routes">
+          {routes.map((route, index) => (
+            <NavLink
+              ActiveClassName="active"
+              to={route.path}
+              key={route.name}
+              className="link"
+            >
+              <div className="icon">{route.icon}</div>
+              <AnimatePresence>
+                {isOpen && (
+                  <motion.div
+                    variants={showAnimation}
+                    initial="hidden"
+                    animate="show"
+                    exit="hidden"
+                    className="link-text"
+                  >
+                    {route.name}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </NavLink>
+          ))}
+          <div className="logcss">
+            {isOpen ? (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="btn btn-sm btn-danger"
+                style={{ marginLeft: "40px", whiteSpace: "nowrap" }}
+              >
+                Log Out
+              </button>
+            ) : (
+              <IoLogOut className="icon" onClick={handleLogout} />
+            )}
+          </div>
+        </section>
+      </motion.div>
+      <main style={{ width: isOpen ? "85%" : "97%" }}>{children}</main>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

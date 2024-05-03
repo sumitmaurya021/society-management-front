@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   Box,
   Paper,
@@ -8,19 +8,35 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography
-} from '@mui/material';
-import axios from 'axios';
+  Typography,
+} from "@mui/material";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import { useSpring, animated } from "react-spring";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Spinner from "../Spinner";
 
 const Dashboard = () => {
   const [dashboard, setDashboard] = useState({});
+  const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const accessToken = localStorage.getItem('access_token');
+        const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
-          console.error('Access token not found in local storage');
+          console.error("Access token not found in local storage");
           return;
         }
 
@@ -30,148 +46,128 @@ const Dashboard = () => {
           },
         };
 
-        const response = await axios.get('http://localhost:3000/api/v1/dashboard', config);
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/dashboards",
+          config
+        );
 
         if (response.status === 200) {
-          console.log('Dashboard fetched successfully');
           setDashboard(response.data);
+          toast.success("Dashboard fetched successfully");
+          setShow(true);
+          setIsLoading(false);
         } else {
-          console.error('Error fetching dashboard');
+          toast.error("Error fetching dashboard");
         }
       } catch (error) {
-        console.error('Error fetching dashboard:', error);
+        toast.error("Error fetching dashboard", error);
       }
     };
 
     fetchDashboard();
   }, []);
 
+  const fade = useSpring({
+    opacity: show ? 1 : 0,
+    marginTop: show ? 0 : -100,
+    from: { opacity: 0, marginTop: -100 },
+  });
+
   return (
-    <Box p={3}>
-      <Typography variant="h3" gutterBottom>DashBoard</Typography>
+    <>
 
-      {/* User Information Table */}
-      <Typography variant="h4" gutterBottom>User Information</Typography>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Email</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Role</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell>{dashboard.user?.email}</TableCell>
-              <TableCell>{dashboard.user?.name}</TableCell>
-              <TableCell>{dashboard.user?.role}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {isLoading && <Spinner />}
+      <Box p={3}>
+        <ToastContainer />
+        <animated.div style={fade}>
+          <Typography variant="h3" gutterBottom className="dashboard-heading">
+            DashBoard
+          </Typography>
 
-      {/* Buildings Table */}
-      <Typography variant="h4" gutterBottom>Buildings</Typography>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Address</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {dashboard.building?.map((building) => (
-              <TableRow key={building.id}>
-                <TableCell>{building.building_name}</TableCell>
-                <TableCell>{building.building_address}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      {/* Blocks Table */}
-      <Typography variant="h4" gutterBottom>Blocks</Typography>
-      {dashboard.building?.map((building) => (
-        <Box key={building.id} mt={3}>
-          <Typography variant="h5" gutterBottom>{building.building_name}</Typography>
+          {/* Table for Users */}
+          <Typography variant="h4" gutterBottom>
+            Users
+          </Typography>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
                 <TableRow>
                   <TableCell>Name</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Role</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dashboard.block
-                  ?.filter((block) => block.building_id === building.id)
-                  .map((block) => (
-                    <TableRow key={block.id}>
-                      <TableCell>{block.name}</TableCell>
-                    </TableRow>
-                  ))}
+                {dashboard.admin_users?.map((adminUser) => (
+                  <TableRow key={adminUser.id}>
+                    <TableCell>{adminUser.name}</TableCell>
+                    <TableCell>{adminUser.email}</TableCell>
+                    <TableCell>{adminUser.role}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
 
-          {/* Floors Table */}
-          {dashboard.block
-            ?.filter((block) => block.building_id === building.id)
-            .map((block) => (
-              <Box key={block.id} mt={3}>
-                <Typography variant="h6" gutterBottom>{block.name}</Typography>
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Floor Number</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {dashboard.floor
-                        ?.filter((floor) => floor.block_id === block.id)
-                        .map((floor) => (
-                          <TableRow key={floor.id}>
-                            <TableCell>{floor.number}</TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+          {/* Charts with Animations */}
+          <Box mt={4}>
+            <Typography variant="h4" gutterBottom>
+              User Types
+            </Typography>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                data={[
+                  { name: "Admin Users", value: dashboard.admin_users_count },
+                  {
+                    name: "Regular Users",
+                    value: dashboard.regular_users_count,
+                  },
+                ]}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="value" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Box>
 
-                {/* Rooms Table */}
-                {dashboard.floor
-                  ?.filter((floor) => floor.block_id === block.id)
-                  .map((floor) => (
-                    <Box key={floor.id} mt={3}>
-                      <Typography variant="subtitle1" gutterBottom>Rooms - Floor {floor.number}</Typography>
-                      <TableContainer component={Paper}>
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Room Number</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {dashboard.room
-                              ?.filter((room) => room.floor_id === floor.id)
-                              .map((room) => (
-                                <TableRow key={room.id}>
-                                  <TableCell>{room.room_number}</TableCell>
-                                </TableRow>
-                              ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Box>
-                  ))}
-              </Box>
-            ))}
-        </Box>
-      ))}
-    </Box>
+          <Box mt={4}>
+            <Typography variant="h4" gutterBottom>
+              Building Structure
+            </Typography>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart
+                data={dashboard.buildings?.flatMap((building) =>
+                  building.blocks?.map((block) => ({
+                    building_name: building.name,
+                    block_name: block.name,
+                    blocks_count: building.blocks_count,
+                    floors_count: block.floors?.length || 0,
+                    rooms_count:
+                      block.floors?.reduce(
+                        (total, floor) => total + (floor.rooms?.length || 0),
+                        0
+                      ) || 0,
+                  }))
+                )}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="block_name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="blocks_count" name="Blocks" fill="#8884d8" />
+                <Bar dataKey="floors_count" name="Floors" fill="#82ca9d" />
+                <Bar dataKey="rooms_count" name="Rooms" fill="#ffc658" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Box>
+        </animated.div>
+      </Box>
+    </>
   );
 };
 

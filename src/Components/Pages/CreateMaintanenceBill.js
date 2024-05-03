@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { Button, TextField, Typography } from '@mui/material';
-import { toast, ToastContainer } from 'react-toastify';
-import axios from 'axios';
+import React, { useState } from "react";
+import { Button, TextField, Typography } from "@mui/material";
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
+import { Bounce } from "react-awesome-reveal";
 
 function CreateMaintenanceBill() {
-
   const [maintenanceBill, setMaintenanceBill] = useState({
-    bill_name: 'Maintenance Bill',
-    bill_month_and_year: '',
-    owner_amount: '',
-    rent_amount: '',
-    start_date: '',
-    end_date: '',
-    remarks: ''
+    bill_name: "Maintenance Bill",
+    bill_month_and_year: "",
+    owner_amount: "",
+    rent_amount: "",
+    start_date: "",
+    end_date: "",
+    remarks: "",
   });
   const [createdBill, setCreatedBill] = useState(null);
 
@@ -20,48 +20,57 @@ function CreateMaintenanceBill() {
     const { name, value } = e.target;
     setMaintenanceBill({
       ...maintenanceBill,
-      [name]: value
+      [name]: value,
     });
   };
 
   const handleSubmit = async () => {
     const accessToken = localStorage.getItem("access_token");
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/buildings/1/maintenance_bills', 
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/buildings/1/maintenance_bills",
         { maintenance_bill: maintenanceBill },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
-          }
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
       if (response.status === 201) {
-        toast.success('Maintenance bill created successfully!');
+        toast.success("Maintenance bill created successfully!");
         setCreatedBill(response.data);
         setMaintenanceBill({
-          bill_name: 'Maintenance Bill',
-          bill_month_and_year: '',
-          owner_amount: '',
-          rent_amount: '',
-          start_date: '',
-          end_date: '',
-          remarks: ''
+          bill_name: "Maintenance Bill",
+          bill_month_and_year: "",
+          owner_amount: "",
+          rent_amount: "",
+          start_date: "",
+          end_date: "",
+          remarks: "",
         });
       } else {
-        toast.error('Failed to create maintenance bill');
+        toast.error("Failed to create maintenance bill");
       }
     } catch (error) {
-      toast.error('Failed to create maintenance bill: ' + error.message);
-      console.error('Failed to create maintenance bill:', error);
+      toast.error("Failed to create maintenance bill: " + error.message);
+      console.error("Failed to create maintenance bill:", error);
     }
   };
 
   return (
     <div>
+      <Bounce>
       <div className="createmaincss">
-        <Typography variant="h6" gutterBottom className="text-center p-3 bg-body-secondary text-dark sticky-top">Create Maintenance Bill</Typography>
-        <div className='p-4'>
+        <Typography
+          variant="h6"
+          gutterBottom
+          className="text-center p-3 bg-body-secondary text-dark sticky-top"
+        >
+          Create Maintenance Bill
+        </Typography>
+        <div className="p-4">
+          <div className="p-4 box-shadow-css">
           <TextField
             name="bill_month_and_year"
             label="Bill Month And Year"
@@ -122,16 +131,14 @@ function CreateMaintenanceBill() {
             multiline
             rows={4}
           />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-          >
+          <Button variant="contained" color="primary" onClick={handleSubmit}>
             Create
           </Button>
+          </div>
         </div>
       </div>
       <ToastContainer />
+      </Bounce>
     </div>
   );
 }

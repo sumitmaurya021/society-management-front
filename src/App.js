@@ -9,6 +9,7 @@ import CreateWaterBill from './Components/Pages/CreateWaterBill';
 import CreateMaintanenceBill from './Components/Pages/CreateMaintanenceBill';
 import Sidebar from './Components/Sidebar';
 import ForgotPassword from './Components/Pages/ForgotPassword';
+import Spinner from './Components/Spinner';
 
 function App() {
   return (

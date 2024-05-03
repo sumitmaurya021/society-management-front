@@ -1,33 +1,48 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
-import { motion } from 'framer-motion';
-import { MaterialReactTable, useMaterialReactTable,} from 'material-react-table';
+import React, { useState, useEffect, useMemo } from "react";
+import axios from "axios";
+import { motion } from "framer-motion";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import { ToastContainer, toast } from "react-toastify";
+import Spinner from "../Spinner";
 
 function ShowMaintenanceBill() {
   const [bills, setBills] = useState([]);
-  
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchBills = async () => {
       try {
         // Retrieve access token from local storage
-        const accessToken = localStorage.getItem('access_token');
-        
+        const accessToken = localStorage.getItem("access_token");
+
         if (!accessToken) {
-          console.error('Access token not found in local storage');
+          console.error("Access token not found in local storage");
           return;
         }
 
         const config = {
           headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
+            Authorization: `Bearer ${accessToken}`,
+          },
         };
 
-        const response = await axios.get('http://localhost:3000/api/v1/buildings/1/maintenance_bills', config);
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/buildings/1/maintenance_bills",
+          config
+        );
 
-        setBills(response.data);
+        if (response.status === 200) {
+          setBills(response.data);
+          setIsLoading(false);
+          toast.success("Maintenance bills fetched successfully");
+        } else {
+          toast.error("Error fetching maintenance bills");
+        }
       } catch (error) {
-        console.error('Error fetching maintenance bills:', error);
+        console.error("Error fetching maintenance bills:", error);
       }
     };
     fetchBills();
@@ -36,37 +51,42 @@ function ShowMaintenanceBill() {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'your_name',
-        header: 'Your Name',
+        accessorKey: "bill_name",
+        header: "Bill Name",
         size: 200,
       },
       {
-        accessorKey: 'name',
-        header: 'Name',
+        accessorKey: "bill_month_and_year",
+        header: "Bill Month and Year",
         size: 150,
       },
       {
-        accessorKey: 'amount',
-        header: 'Amount',
+        accessorKey: "owner_amount",
+        header: "Owner Amount",
         size: 150,
       },
       {
-        accessorKey: 'start_date',
-        header: 'Start Date',
+        accessorKey: "rent_amount",
+        header: "Rent Amount",
         size: 150,
       },
       {
-        accessorKey: 'end_date',
-        header: 'End Date',
+        accessorKey: "start_date",
+        header: "Start Date",
         size: 150,
       },
       {
-        accessorKey: 'remarks',
-        header: 'Remarks',
+        accessorKey: "end_date",
+        header: "End Date",
+        size: 150,
+      },
+      {
+        accessorKey: "remarks",
+        header: "Remarks",
         size: 300,
       },
     ],
-    [],
+    []
   );
 
   const table = useMaterialReactTable({
@@ -75,12 +95,18 @@ function ShowMaintenanceBill() {
   });
 
   return (
-    <motion.div whileInView={{ opacity: [0, 1] }}>
-      <h1 className='sticky-top text-center p-3 bg-light border-bottom'>Maintenance Bill</h1>
-      <div className='p-3'>
-        <MaterialReactTable table={table} />
-      </div>
-    </motion.div>
+    <>
+      {isLoading && <Spinner />}
+      <motion.div>
+        <h1 className="sticky-top text-center p-3 bg-light border-bottom">
+          Maintenance Bill
+        </h1>
+        <div className="p-3">
+          <MaterialReactTable table={table} />
+        </div>
+        <ToastContainer />
+      </motion.div>
+    </>
   );
 }
 

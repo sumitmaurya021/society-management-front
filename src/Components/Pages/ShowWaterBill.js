@@ -1,34 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Container } from '@mui/material';
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { toast, ToastContainer } from 'react-toastify';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { motion } from "framer-motion";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import Spinner from "../Spinner";
+import { ToastContainer, toast } from "react-toastify";
 
 function ShowWaterBill() {
   const [waterBills, setWaterBills] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchBills = async () => {
       try {
         // Retrieve access token from local storage
-        const accessToken = localStorage.getItem('access_token');
+        const accessToken = localStorage.getItem("access_token");
 
         if (!accessToken) {
-          console.error('Access token not found in local storage');
+          console.error("Access token not found in local storage");
           return;
         }
 
         const config = {
           headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
+            Authorization: `Bearer ${accessToken}`,
+          },
         };
 
-        const response = await axios.get('http://localhost:3000/api/v1/buildings/1/water_bills', config);
-        setWaterBills(response.data);
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/buildings/1/water_bills",
+          config
+        );
+
+        if (response.status === 200) {
+          setWaterBills(response.data);
+          setIsLoading(false);
+          toast.success("Water bills fetched successfully");
+        } else {
+          toast.error("Error fetching water bills");
+        }
       } catch (error) {
-        console.error('Error fetching water bills:', error);
-        toast.error('Error fetching water bills');
+        console.error("Error fetching water bills:", error);
       }
     };
 
@@ -38,28 +52,38 @@ function ShowWaterBill() {
   // Define columns for MaterialReactTable
   const columns = [
     {
-      accessorKey: 'name',
-      header: 'Name',
+      accessorKey: "bill_name",
+      header: "Bill Name",
       size: 200,
     },
     {
-      accessorKey: 'amount',
-      header: 'Amount',
+      accessorKey: "bill_month_and_year",
+      header: "Bill Month and Year",
       size: 150,
     },
     {
-      accessorKey: 'start_date',
-      header: 'Start Date',
+      accessorKey: "owner_amount",
+      header: "Owner Amount",
       size: 150,
     },
     {
-      accessorKey: 'end_date',
-      header: 'End Date',
+      accessorKey: "rent_amount",
+      header: "Rent Amount",
       size: 150,
     },
     {
-      accessorKey: 'remarks',
-      header: 'Remarks',
+      accessorKey: "start_date",
+      header: "Start Date",
+      size: 150,
+    },
+    {
+      accessorKey: "end_date",
+      header: "End Date",
+      size: 150,
+    },
+    {
+      accessorKey: "remarks",
+      header: "Remarks",
       size: 300,
     },
   ];
@@ -71,13 +95,18 @@ function ShowWaterBill() {
   });
 
   return (
-    <div>
-      <ToastContainer />
-      <Container>
-        <h2 className=' mb-3'>Water Bills</h2>
-        <MaterialReactTable table={table} />
-      </Container>
-    </div>
+    <>
+      {isLoading && <Spinner />}
+      <motion.div whileInView={{ opacity: [0, 1] }}>
+        <h1 className="sticky-top text-center p-3 bg-light border-bottom">
+          Water Bill
+        </h1>
+        <div className="p-3">
+          <MaterialReactTable table={table} />
+        </div>
+        <ToastContainer />
+      </motion.div>
+    </>
   );
 }
 

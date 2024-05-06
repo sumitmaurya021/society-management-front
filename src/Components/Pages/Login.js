@@ -53,7 +53,7 @@ function Login() {
             email,
             otp,
           },
-          client_id: "o4pTwJqWFO0SiCnDRxT8qUKGCLNruKSQcExCVAL68UM",
+          client_id: "FBSGyGUtZFJdocZXlB6Y_wKL7d3CSPjNj9oawZS7HaY",
         }
       );
       if (response && response.data && response.status === 200) {

@@ -10,6 +10,9 @@ import CreateMaintanenceBill from './Components/Pages/CreateMaintanenceBill';
 import Sidebar from './Components/Sidebar';
 import ForgotPassword from './Components/Pages/ForgotPassword';
 import Spinner from './Components/Spinner';
+import LoginCustomer from './Components/Pages/LoginCustomer';
+import SignUpCustomer from './Components/Pages/SignUpCustomer';
+import UserRequests from './Components/Pages/UserRequests';
 
 function App() {
   return (
@@ -25,6 +28,9 @@ function App() {
             <Route path="/createwaterbill" element={<CreateWaterBill />} />
             <Route path="/createmaintenancebill" element={<CreateMaintanenceBill />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="customer_login" element={<LoginCustomer />} />
+            <Route path="/customer_signup" element={<SignUpCustomer />} />
+            <Route path="/user_request" element={<UserRequests />} />
             <Route path="*" element={<> not found</>} />
           </Routes>
         </Sidebar>

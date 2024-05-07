@@ -9,10 +9,10 @@ import CreateWaterBill from './Components/Pages/CreateWaterBill';
 import CreateMaintanenceBill from './Components/Pages/CreateMaintanenceBill';
 import Sidebar from './Components/Sidebar';
 import ForgotPassword from './Components/Pages/ForgotPassword';
-import Spinner from './Components/Spinner';
 import LoginCustomer from './Components/Pages/LoginCustomer';
 import SignUpCustomer from './Components/Pages/SignUpCustomer';
 import UserRequests from './Components/Pages/UserRequests';
+import AdminCustomer from './Components/Pages/AdminCustomer';
 
 function App() {
   return (
@@ -31,6 +31,7 @@ function App() {
             <Route path="customer_login" element={<LoginCustomer />} />
             <Route path="/customer_signup" element={<SignUpCustomer />} />
             <Route path="/user_request" element={<UserRequests />} />
+            <Route path="/admin_customer_option" element={<AdminCustomer />} />
             <Route path="*" element={<> not found</>} />
           </Routes>
         </Sidebar>

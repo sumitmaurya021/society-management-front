@@ -38,7 +38,7 @@ h2 {
     align-items: center;
 }
 .table>:not(caption)>*>* {
-    padding: 6px 12px !important;
+    padding: 10px 0px !important;
 }
 
 @media (max-width: 767px) {

@@ -40,7 +40,6 @@ const routes = [
 
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
   const toggle = () => setIsOpen(!isOpen);
 
@@ -89,7 +88,7 @@ const Sidebar = ({ children }) => {
         localStorage.removeItem("access_token");
         toast.success("Logged out successfully");
         setTimeout(() => {
-          navigate("/login");
+          navigate("/admin_customer_option");
         }, 2000);
       } else {
         // Handle unexpected response

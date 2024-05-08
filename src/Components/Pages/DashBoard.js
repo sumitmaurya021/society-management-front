@@ -61,6 +61,8 @@ const Dashboard = () => {
         }
       } catch (error) {
         toast.error("Error fetching dashboard", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -75,8 +77,9 @@ const Dashboard = () => {
 
   return (
     <>
-
-      {isLoading && <Spinner />}
+    {isLoading ? (
+      <Spinner />
+    ) : (
       <Box p={3}>
         <ToastContainer />
         <animated.div style={fade}>
@@ -167,6 +170,7 @@ const Dashboard = () => {
           </Box>
         </animated.div>
       </Box>
+    )}
     </>
   );
 };

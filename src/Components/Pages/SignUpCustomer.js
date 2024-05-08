@@ -14,7 +14,6 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Password } from "@mui/icons-material";
 
 function SignUpCustomer() {
     const [formData, setFormData] = useState({
@@ -27,6 +26,7 @@ function SignUpCustomer() {
         floor_id: "",
         room_number: "",
         owner_or_renter: "",
+        gender: "",
     })
 
     const handleChange = (event) => {
@@ -195,6 +195,19 @@ function SignUpCustomer() {
                     onChange={handleChange}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="gender"
+                    label="Gender"
+                    type="text"
+                    id="gender"
+                    autoComplete="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                  />
+                </Grid>
               </Grid>
               <Button
                 type="submit"
@@ -214,6 +227,7 @@ function SignUpCustomer() {
             </Box>
           </Box>
         </Container>
+        <ToastContainer />
       </ThemeProvider>
                 
     </>

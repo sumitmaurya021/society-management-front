@@ -1,0 +1,36 @@
+/* ShowWaterBill.css */
+
+/* Table container */
+.table-container {
+    overflow-x: auto;
+  }
+  
+  /* Table styling */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+  }
+  
+  .table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #e9ecef;
+  }
+  

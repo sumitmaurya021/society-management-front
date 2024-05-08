@@ -20,7 +20,6 @@ function ShowWaterBill() {
     start_date: "",
     end_date: "",
     remarks: "",
-    status: "",
   });
 
   useEffect(() => {
@@ -74,7 +73,6 @@ function ShowWaterBill() {
       start_date: bill.start_date,
       end_date: bill.end_date,
       remarks: bill.remarks,
-      status: bill.status,
     });
     setShowEditModal(true);
   };
@@ -191,8 +189,6 @@ function ShowWaterBill() {
                     <th>Rent Amount</th>
                     <th>Start Date</th>
                     <th>End Date</th>
-                    <th>Status</th>
-                    <th>Payement Mode</th>
                     <th>Remarks</th>
                     <th>Action</th>
                   </tr>
@@ -207,8 +203,6 @@ function ShowWaterBill() {
                       <td>{bill.rent_amount}</td>
                       <td>{bill.start_date}</td>
                       <td>{bill.end_date}</td>
-                      <td className="text-capitalize" style={{ color: bill.status === "paid" ? "green" : "red" }}>{bill.status}</td>
-                      <td>{bill.payement_mode == null ? "No Payements" : bill.payement_mode }</td>
                       <td>{bill.remarks}</td>
                       <td>
                         <button

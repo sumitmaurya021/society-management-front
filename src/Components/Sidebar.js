@@ -6,6 +6,7 @@ import { MdDomainVerification } from "react-icons/md";
 import { FaHandHoldingWater } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { IoLogOut } from "react-icons/io5";
+import { FaUsers } from "react-icons/fa";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -35,6 +36,11 @@ const routes = [
     path: "/createmaintenancebill",
     name: "Create Maintenance Bill",
     icon: <GrHostMaintenance />,
+  },
+  {
+    path: "/user_request",
+    name: "User Request",
+    icon: <FaUsers />,
   },
 ];
 

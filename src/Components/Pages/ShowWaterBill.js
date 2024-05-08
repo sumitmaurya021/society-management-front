@@ -45,7 +45,12 @@ function ShowWaterBill() {
         );
 
         if (response.status === 200) {
-          setWaterBills(response.data);
+          const formattedBills = response.data.map(bill => ({
+            ...bill,
+            start_date: new Date(bill.start_date).toISOString().substr(5, 5),
+            end_date: new Date(bill.end_date).toISOString().substr(5, 5)
+          }));
+          setWaterBills(formattedBills);
           setIsLoading(false);
           toast("Water bills fetched successfully");
         } else {
@@ -187,6 +192,7 @@ function ShowWaterBill() {
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Status</th>
+                    <th>Payement Mode</th>
                     <th>Remarks</th>
                     <th>Action</th>
                   </tr>
@@ -202,6 +208,7 @@ function ShowWaterBill() {
                       <td>{bill.start_date}</td>
                       <td>{bill.end_date}</td>
                       <td className="text-capitalize" style={{ color: bill.status === "paid" ? "green" : "red" }}>{bill.status}</td>
+                      <td>{bill.payement_mode == null ? "No Payements" : bill.payement_mode }</td>
                       <td>{bill.remarks}</td>
                       <td>
                         <button

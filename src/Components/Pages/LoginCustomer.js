@@ -34,9 +34,10 @@ function LoginCustomer() {
       })
 
       if (response && response.data && response.status === 200) {
+        localStorage.setItem("access_token", response.data.user.access_token);
         toast.success("Login successful");
         setTimeout(() => {
-          navigate("/Customerdashboard");
+          navigate("/");
         }, 2000);
       }
     } catch (error) {

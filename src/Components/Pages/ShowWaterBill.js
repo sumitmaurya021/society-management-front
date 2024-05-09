@@ -20,7 +20,6 @@ function ShowWaterBill() {
     start_date: "",
     end_date: "",
     remarks: "",
-    status: "",
   });
 
   useEffect(() => {
@@ -45,7 +44,12 @@ function ShowWaterBill() {
         );
 
         if (response.status === 200) {
-          setWaterBills(response.data);
+          const formattedBills = response.data.map(bill => ({
+            ...bill,
+            start_date: new Date(bill.start_date).toISOString().substr(5, 5),
+            end_date: new Date(bill.end_date).toISOString().substr(5, 5)
+          }));
+          setWaterBills(formattedBills);
           setIsLoading(false);
           toast("Water bills fetched successfully");
         } else {
@@ -69,7 +73,6 @@ function ShowWaterBill() {
       start_date: bill.start_date,
       end_date: bill.end_date,
       remarks: bill.remarks,
-      status: bill.status,
     });
     setShowEditModal(true);
   };
@@ -186,7 +189,6 @@ function ShowWaterBill() {
                     <th>Rent Amount</th>
                     <th>Start Date</th>
                     <th>End Date</th>
-                    <th>Status</th>
                     <th>Remarks</th>
                     <th>Action</th>
                   </tr>
@@ -201,7 +203,6 @@ function ShowWaterBill() {
                       <td>{bill.rent_amount}</td>
                       <td>{bill.start_date}</td>
                       <td>{bill.end_date}</td>
-                      <td className="text-capitalize" style={{ color: bill.status === "paid" ? "green" : "red" }}>{bill.status}</td>
                       <td>{bill.remarks}</td>
                       <td>
                         <button

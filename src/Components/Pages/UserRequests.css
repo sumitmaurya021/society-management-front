@@ -41,6 +41,10 @@ h2 {
     padding: 10px 0px !important;
 }
 
+
+
+
+
 @media (max-width: 767px) {
     .table th, .table td {
         padding: 6px;

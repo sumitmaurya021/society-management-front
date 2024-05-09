@@ -19,8 +19,7 @@ function ShowMaintenanceBill() {
     rent_amount: "",
     start_date: "",
     end_date: "",
-    remarks: "",
-    status: "",
+    remarks: ""
   });
 
   useEffect(() => {
@@ -45,7 +44,12 @@ function ShowMaintenanceBill() {
         );
 
         if (response.status === 200) {
-          setBills(response.data);
+          const formattedBills = response.data.map(bill => ({
+            ...bill,
+            start_date: new Date(bill.start_date).toISOString().substr(5, 5),
+            end_date: new Date(bill.end_date).toISOString().substr(5, 5)
+          }));
+          setBills(formattedBills);
           setIsLoading(false);
           toast("Maintenance bills fetched successfully");
         } else {
@@ -68,7 +72,6 @@ function ShowMaintenanceBill() {
       start_date: bill.start_date,
       end_date: bill.end_date,
       remarks: bill.remarks,
-      status: bill.status
     });
     setShowEditModal(true);
   };
@@ -176,8 +179,6 @@ function ShowMaintenanceBill() {
                   <th>Rent Amount</th>
                   <th>Start Date</th>
                   <th>End Date</th>
-                  <th>Status</th>
-                  <th>Payement Mode</th>
                   <th>Remarks</th>
                   <th>Action</th>
                 </tr>
@@ -192,8 +193,6 @@ function ShowMaintenanceBill() {
                     <td>{bill.rent_amount}</td>
                     <td>{bill.start_date}</td>
                     <td>{bill.end_date}</td>
-                    <td className="text-capitalize" style={{ color: bill.status === "paid" ? "green" : "red" }}>{bill.status}</td>
-                    <td>{bill.payement_mode == null ? "No Payements" : bill.payement_mode }</td>
                     <td>{bill.remarks}</td>
                     <td>
                       <button onClick={() => handleEdit(bill)} className="btn mx-2 btn-sm btn-primary btn-outline-primary">Edit</button>

@@ -147,8 +147,8 @@ function UserRequests() {
                                                 <td>{request.mobile_number}</td>
                                                 <td className='text-capitalize'>{request.role}</td>
                                                 <td>{request.block}</td>
-                                                <td>{request.floor_id}</td>
-                                                <td>{request.room_number}</td>
+                                                <td>{request.floor === 0 ? "Ground Floor" : request.floor}</td>
+                                                <td>{request.room}</td>
                                                 <td className='text-capitalize'>{request.gender}</td>
                                                 <td className='text-capitalize' style={{ color: request.status === "accepted" ? "green" : request.status === "rejected" ? "red" : "black" }}>{request.status}</td>
                                                 <td className='text-capitalize'>{request.owner_or_renter}</td>

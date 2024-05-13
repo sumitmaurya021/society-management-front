@@ -9,6 +9,8 @@ import { IoLogOut } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { RiBillLine } from "react-icons/ri";
+import { FaAmazonPay } from "react-icons/fa";
 import axios from "axios";
 
 const routes = [
@@ -42,6 +44,16 @@ const routes = [
     name: "User Request",
     icon: <FaUsers />,
   },
+  {
+    path: "/Bill_Page",
+    name: "Bill Page",
+    icon: <FaAmazonPay />,
+  },
+  {
+    path: "/UserPayments",
+    name: "UserPayments",
+    icon: <RiBillLine />,
+  }
 ];
 
 const Sidebar = ({ children }) => {

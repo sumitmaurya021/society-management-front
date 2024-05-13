@@ -30,7 +30,7 @@ function LoginCustomer() {
           room_number,
           password,
         },
-        client_id: "FBSGyGUtZFJdocZXlB6Y_wKL7d3CSPjNj9oawZS7HaY",
+        client_id: "-ThQr4VcQ_wK0uOEc2PAxK7wll_ORtVlFQpOY1CEQQU",
       })
 
       if (response && response.data && response.status === 200) {

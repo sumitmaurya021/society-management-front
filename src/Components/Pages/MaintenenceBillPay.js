@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Spinner from '../Spinner';
-import './BillsPage.css'; // Import CSS for styling
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'; // Import Material UI components
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
+import './MaintenenceBillPay.css';
 
-function BillsPage() {
+function MaintenanceBillPay() {
   const [maintenanceBills, setMaintenanceBills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
@@ -51,6 +51,10 @@ function BillsPage() {
   const handleOpenPaymentPopup = (bill) => {
     setSelectedBill(bill);
     setOpenPaymentPopup(true);
+    // Get block, floor, and room_number from localStorage
+    setBlock(localStorage.getItem('block_number'));
+    setFloor(localStorage.getItem('floor_number'));
+    setRoom(localStorage.getItem('room_number'));
   };
 
   const handleClosePaymentPopup = () => {
@@ -67,18 +71,6 @@ function BillsPage() {
 
   const handleDateChange = (event) => {
     setPaymentDate(event.target.value);
-  };
-
-  const handleBlockChange = (event) => {
-    setBlock(event.target.value);
-  };
-
-  const handleFloorChange = (event) => {
-    setFloor(event.target.value);
-  };
-
-  const handleRoomChange = (event) => {
-    setRoom(event.target.value);
   };
 
   const handlePaymentSubmit = async () => {
@@ -116,43 +108,46 @@ function BillsPage() {
 
   return (
     <>
+    <div className="bills-page">
       {isLoading ? (
         <Spinner />
       ) : (
         <div className="bills-container">
           <h2 className="bills-title">Maintenance Bills</h2>
-          <table className="bills-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Bill Name</th>
-                <th>Month and Year</th>
-                <th>Owner Amount</th>
-                <th>Rent Amount</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Remarks</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {maintenanceBills.map((bill) => (
-                <tr key={bill.id}>
-                  <td>{bill.id}</td>
-                  <td>{bill.bill_name}</td>
-                  <td>{bill.bill_month_and_year}</td>
-                  <td>{bill.owner_amount}</td>
-                  <td>{bill.rent_amount}</td>
-                  <td>{bill.start_date}</td>
-                  <td>{bill.end_date}</td>
-                  <td>{bill.remarks}</td>
-                  <td>
-                    <button className="btn btn-sm btn-success btn-outline-success" onClick={() => handleOpenPaymentPopup(bill)}>Pay</button>
-                  </td>
+          <div className="table-container">
+            <table className="bills-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Bill Name</th>
+                  <th>Month and Year</th>
+                  <th>Owner Amount</th>
+                  <th>Rent Amount</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Remarks</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {maintenanceBills.map((bill) => (
+                  <tr key={bill.id}>
+                    <td>{bill.id}</td>
+                    <td>{bill.bill_name}</td>
+                    <td>{bill.bill_month_and_year}</td>
+                    <td>{bill.owner_amount}</td>
+                    <td>{bill.rent_amount}</td>
+                    <td>{bill.start_date}</td>
+                    <td>{bill.end_date}</td>
+                    <td>{bill.remarks}</td>
+                    <td>
+                      <button className='btn btn-sm btn-success' onClick={() => handleOpenPaymentPopup(bill)}>Pay</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -171,30 +166,6 @@ function BillsPage() {
             type="date"
             value={paymentDate}
             onChange={handleDateChange}
-            fullWidth
-            required
-            margin="normal"
-          />
-          <TextField
-            label="Block"
-            value={block}
-            onChange={handleBlockChange}
-            fullWidth
-            required
-            margin="normal"
-          />
-          <TextField
-            label="Floor"
-            value={floor}
-            onChange={handleFloorChange}
-            fullWidth
-            required
-            margin="normal"
-          />
-          <TextField
-            label="Room Number"
-            value={room}
-            onChange={handleRoomChange}
             fullWidth
             required
             margin="normal"
@@ -227,8 +198,9 @@ function BillsPage() {
         </DialogActions>
       </Dialog>
       <ToastContainer />
+    </div>
     </>
   );
 }
 
-export default BillsPage;
+export default MaintenanceBillPay;

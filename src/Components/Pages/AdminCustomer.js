@@ -1,9 +1,9 @@
-import React from 'react';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Link } from 'react-router-dom'; // Assuming you're using React Router
+import   React              from 'react'                           ;
+import   Button             from '@mui/material/Button'            ;
+import   Grid               from '@mui/material/Grid'              ;
+import   Typography         from '@mui/material/Typography'        ;
+import   LockOutlinedIcon   from '@mui/icons-material/LockOutlined';
+import { Link             } from 'react-router-dom'                ;
 
 function AdminCustomer() {
   return (

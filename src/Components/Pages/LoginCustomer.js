@@ -35,6 +35,10 @@ function LoginCustomer() {
 
       if (response && response.data && response.status === 200) {
         localStorage.setItem("access_token", response.data.user.access_token);
+        localStorage.setItem("block_name", response.data.user.block_id);
+        localStorage.setItem("room_number", response.data.user.room_number);
+        localStorage.setItem("floor_number", response.data.user.floor_id);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
         toast.success("Login successful");
         setTimeout(() => {
           navigate("/");

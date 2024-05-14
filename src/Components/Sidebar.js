@@ -45,8 +45,8 @@ const routes = [
     icon: <FaUsers />,
   },
   {
-    path: "/Bill_Page",
-    name: "Bill Page",
+    path: "/MaintenenceBillPay",
+    name: "MaintenenceBillPay",
     icon: <FaAmazonPay />,
   },
   {

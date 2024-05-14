@@ -13,6 +13,8 @@ import LoginCustomer from './Components/Pages/LoginCustomer';
 import SignUpCustomer from './Components/Pages/SignUpCustomer';
 import UserRequests from './Components/Pages/UserRequests';
 import AdminCustomer from './Components/Pages/AdminCustomer';
+import BillsPage from './Components/Pages/BillsPage';
+import UserPayments from './Components/Pages/UserPayments';
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
             <Route path="/customer_signup" element={<SignUpCustomer />} />
             <Route path="/user_request" element={<UserRequests />} />
             <Route path="/admin_customer_option" element={<AdminCustomer />} />
+            <Route path="/Bill_Page" element={<BillsPage />} />
+            <Route path="/UserPayments" element={<UserPayments />} />
             <Route path="*" element={<> not found</>} />
           </Routes>
         </Sidebar>

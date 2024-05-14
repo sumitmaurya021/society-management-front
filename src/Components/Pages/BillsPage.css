@@ -1,0 +1,33 @@
+.bills-container {
+    margin: 20px;
+  }
+  
+  .bills-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .bills-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .bills-table th, .bills-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .bills-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-align: left;
+  }
+  
+  .bills-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .bills-table tr:hover {
+    background-color: #ddd;
+  }
+  

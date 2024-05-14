@@ -129,7 +129,7 @@ function UserPayments() {
                   <td>{payment.payment_method}</td>
                   <td>{payment.status || 'N/A'}</td>
                   <td>
-                    {payment.status !== 'paid' && (
+                    {payment.status === 'paid'? "Payment Accepted" : (
                       <button className='btn btn-sm btn-primary' onClick={() => handleAcceptPayment(payment.id)}>Accept</button>
                     )}
                   </td>

@@ -31,3 +31,33 @@
     background-color: #ddd;
   }
   
+  .bills-page {
+    padding: 20px;
+  }
+  
+  .bills-title {
+    text-align: center;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .bills-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .bills-table th, .bills-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  /* Responsive styles */
+  @media screen and (max-width: 600px) {
+    .bills-table th, .bills-table td {
+      font-size: 12px;
+    }
+  }
+  

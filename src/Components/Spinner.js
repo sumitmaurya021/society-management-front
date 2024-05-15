@@ -1,11 +1,11 @@
-import React from "react";
-import ClipLoader from "react-spinners/ClipLoader";
+import React            from "react"                         ;
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Spinner() {
   return (
     <div className="spinner-class">
-      <ClipLoader
-        size={150}
+      <CircularProgress
+        size={50}
         aria-label="Loading Spinner"
         data-testid="loader"
       />

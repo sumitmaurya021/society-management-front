@@ -53,6 +53,11 @@ const routes = [
     path: "/UserPayments",
     name: "UserPayments",
     icon: <RiBillLine />,
+  },
+  {
+    path: "/WaterBillsPay",
+    name: "WaterBillsPay",
+    icon: <FaAmazonPay />,
   }
 ];
 

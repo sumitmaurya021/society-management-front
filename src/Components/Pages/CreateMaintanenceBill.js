@@ -2,7 +2,7 @@ import   React , { useState }            from "react"               ;
 import { Button, TextField, Typography } from "@mui/material"       ;
 import { toast , ToastContainer }        from "react-toastify"      ;
 import   axios                           from "axios"               ;
-import { Bounce }                        from "react-awesome-reveal";
+import { Fade }                        from "react-awesome-reveal";
 
 function CreateMaintenanceBill() {
   const [maintenanceBill, setMaintenanceBill] = useState({
@@ -14,7 +14,6 @@ function CreateMaintenanceBill() {
     end_date: "",
     remarks: "",
   });
-  const [createdBill, setCreatedBill] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,7 +38,6 @@ function CreateMaintenanceBill() {
       );
       if (response.status === 201) {
         toast.success("Maintenance bill created successfully!");
-        setCreatedBill(response.data);
         setMaintenanceBill({
           bill_name: "Maintenance Bill",
           bill_month_and_year: "",
@@ -60,7 +58,7 @@ function CreateMaintenanceBill() {
 
   return (
     <div>
-      <Bounce>
+      <Fade>
       <div className="createmaincss">
         <Typography
           variant="h6"
@@ -138,7 +136,7 @@ function CreateMaintenanceBill() {
         </div>
       </div>
       <ToastContainer />
-      </Bounce>
+      </Fade>
     </div>
   );
 }

@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
-import { TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Container } from '@mui/material';
-import { Edit, CheckCircle } from '@mui/icons-material';
+import { TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Container } from '@mui/material';
+import { CheckCircle } from '@mui/icons-material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThreeDots } from 'react-loader-spinner';
 
+
+
 function UserPayments() {
   const [payments, setPayments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
   const [maintenanceBillId, setMaintenanceBillId] = useState(1);
 
   useEffect(() => {
@@ -35,7 +36,7 @@ function UserPayments() {
           throw new Error('Failed to fetch payments');
         }
       } catch (error) {
-        setErrorMessage(error.response?.data?.message || 'An error occurred');
+        console.log(error);
         setIsLoading(false);
       }
     };
@@ -49,8 +50,6 @@ function UserPayments() {
       if (!accessToken) {
         throw new Error('Access token not found');
       }
-  
-      // Set the status of the payment to "loading"
       const updatedPayments = payments.map(payment => {
         if (payment.id === paymentId) {
           return { ...payment, status: 'loading' };
@@ -80,13 +79,9 @@ function UserPayments() {
       }
     } catch (error) {
       console.error('Error accepting payment:', error);
-      setErrorMessage('Failed to accept payment');
     }
   };
-
-  // Function to convert block number to corresponding alphabet
   const convertBlockToAlphabet = (blockNumber) => {
-    // Assuming blockNumber starts from 1
     return String.fromCharCode(64 + parseInt(blockNumber));
   };
 
@@ -142,9 +137,9 @@ function UserPayments() {
                         <TableCell align="center" className="text-capitalize">{payment.payment_method}</TableCell>
                         <TableCell align="center">
                           {payment.status === 'paid' ? (
-                            <Typography style={{ color: 'green' }}>Paid</Typography>
+                            <Typography><p style={{ color: 'green' }} className='mb-0'>Paid</p></Typography>
                           ) : (
-                            <Typography style={{ color: 'orange' }}>Pending</Typography>
+                            <Typography><p style={{ color: 'orange' }} className='mb-0'>Pending</p></Typography>
                           )}
                         </TableCell>
                         <TableCell align="center">

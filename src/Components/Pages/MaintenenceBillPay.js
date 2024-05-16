@@ -8,7 +8,6 @@ import './MaintenenceBillPay.css';
 function MaintenanceBillPay() {
   const [maintenanceBills, setMaintenanceBills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
   const [selectedBill, setSelectedBill] = useState(null);
   const [openPaymentPopup, setOpenPaymentPopup] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -38,7 +37,7 @@ function MaintenanceBillPay() {
         throw new Error('Failed to fetch maintenance bills');
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.error || 'An error occurred');
+      console.log(error)
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +101,6 @@ function MaintenanceBillPay() {
       }
     } catch (error) {
       console.error('Error creating payment:', error);
-      setErrorMessage('Failed to create payment');
     }
   };
 

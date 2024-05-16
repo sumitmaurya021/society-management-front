@@ -3,7 +3,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
-import { Bounce } from "react-awesome-reveal";
+import { Fade } from "react-awesome-reveal";
 
 function CreateWaterBill() {
   const [waterBill, setWaterBill] = useState({
@@ -15,7 +15,6 @@ function CreateWaterBill() {
     end_date: "",
     remarks: "",
   });
-  const [createdBill, setCreatedBill] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,7 +39,6 @@ function CreateWaterBill() {
       );
       if (response.status === 201) {
         toast.success("Water bill created successfully!");
-        setCreatedBill(response.data);
         setWaterBill({
           bill_name: "Water Bill",
           bill_month_and_year: "",
@@ -60,7 +58,7 @@ function CreateWaterBill() {
   };
 
   return (
-    <Bounce>
+    <Fade>
     <motion.div>
       <div>
         <div className="createmaincss">
@@ -146,7 +144,7 @@ function CreateWaterBill() {
         <ToastContainer />
       </div>
     </motion.div>
-    </Bounce>
+    </Fade>
   );
 }
 

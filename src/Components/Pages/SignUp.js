@@ -35,7 +35,7 @@ function SignUp({ setIsLoggedIn }) {
     try {
       const response = await axios.post("http://localhost:3000/api/v1/users", {
         user: formData,
-        client_id: "-ThQr4VcQ_wK0uOEc2PAxK7wll_ORtVlFQpOY1CEQQU",
+        client_id: "ytIEAWawGMrlvHLtV3uLFCXQoeR6s2XeH8S9Lt46Koo",
       });
       console.log("User signed up successfully:", response.data);
       toast.success("Sign up successful!");

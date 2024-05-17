@@ -239,6 +239,84 @@ function ShowWaterBill() {
     }
   };
 
+  const [buildingId, setBuildingId] = useState(1); // Initial building ID
+  const [blocks, setBlocks] = useState([]);
+  const [floors, setFloors] = useState([]);
+  const [rooms, setRooms] = useState([]);
+  const accessToken = localStorage.getItem('access_token'); // Retrieve access token from local storage
+
+  // Function to fetch blocks based on selected building
+  const fetchBlocks = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/v1/buildings/${buildingId}/blocks`, {
+        params: {
+          access_token: accessToken // Use the access token retrieved from local storage
+        }
+      });
+      setBlocks(response.data); // Assuming the response is an array of blocks
+    } catch (error) {
+      console.error('Error fetching blocks:', error);
+    }
+  };
+
+  // Function to fetch floors based on selected building and block
+  const fetchFloors = async () => {
+    // Check if blockId is not null
+    if (blocks.length > 0) {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/v1/buildings/${buildingId}/blocks/${blocks[0].id}/floors`, {
+          params: {
+            access_token: accessToken // Use the access token retrieved from local storage
+          }
+        });
+        setFloors(response.data); // Assuming the response is an array of floors
+      } catch (error) {
+        console.error('Error fetching floors:', error);
+      }
+    }
+  };
+
+  // Function to fetch rooms based on selected building, block, and floor
+  const fetchRooms = async () => {
+    // Check if blockId and floorId are not null
+    if (blocks.length > 0 && floors.length > 0) {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/v1/buildings/${buildingId}/blocks/${blocks[0].id}/floors/${floors[0].id}/rooms`, {
+          params: {
+            access_token: accessToken // Use the access token retrieved from local storage
+          }
+        });
+        setRooms(response.data); // Assuming the response is an array of rooms
+      } catch (error) {
+        console.error('Error fetching rooms:', error);
+      }
+    }
+  };
+
+  // Fetch blocks when buildingId changes
+  useEffect(() => {
+    fetchBlocks();
+  }, [buildingId]);
+
+  // Fetch floors when blocks array changes
+  useEffect(() => {
+    fetchFloors();
+  }, [blocks]);
+
+  // Fetch rooms when floors array changes
+  useEffect(() => {
+    fetchRooms();
+  }, [floors]);
+
+  // Function to handle building selection
+  const handleBuildingChange = (event) => {
+    setBuildingId(event.target.value);
+    setBlocks([]); // Clear blocks and floors when building changes
+    setFloors([]);
+  };
+
+
+
   return (
     <>
       {isLoading ? (
@@ -459,6 +537,61 @@ function ShowWaterBill() {
       </Modal>
         </motion.div>
       )}
+
+      <div>
+     <div>
+      <label>Select Building:</label>
+      <select value={buildingId} onChange={handleBuildingChange}>
+        {/* Render options dynamically based on your data */}
+        <option value={1}>Building 1</option>
+        <option value={2}>Building 2</option>
+        {/* Add more options as needed */}
+      </select>
+
+      {blocks.length > 0 && (
+        <div>
+          <label>Select Block:</label>
+          <select>
+            {/* Render options dynamically based on fetched blocks */}
+            {blocks.map(block => (
+              <option key={block.id} value={block.id}>{block.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {floors.length > 0 && (
+        <div>
+          <label>Select Floor:</label>
+          <select>
+            {/* Render options dynamically based on fetched floors */}
+            {floors.map(floor => (
+              <option key={floor.id} value={floor.id}>{floor.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <table>
+        <thead>
+          <tr>
+            <th>Room ID</th>
+            <th>Room Name</th>
+            {/* Add more table headers as needed */}
+          </tr>
+        </thead>
+        <tbody>
+          {rooms.map(room => (
+            <tr key={room.id}>
+              <td>{room.id}</td>
+              <td>{room.name}</td>
+              {/* Add more table data cells as needed */}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+      </div>
     </>
   );
 }

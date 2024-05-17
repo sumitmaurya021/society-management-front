@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import Spinner from "../Spinner";
 import { ToastContainer, toast } from "react-toastify";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 import "./ShowWaterBill.css";
 
 function ShowWaterBill() {
@@ -20,6 +20,13 @@ function ShowWaterBill() {
     start_date: "",
     end_date: "",
     remarks: "",
+  });
+
+  const [showAddUnitsModal, setShowAddUnitsModal] = useState(false);
+  const [unitFormData, setUnitFormData] = useState({
+    unit_rate: "",
+    previous_unit: "",
+    room_units: {},
   });
 
   useEffect(() => {
@@ -44,10 +51,10 @@ function ShowWaterBill() {
         );
 
         if (response.status === 200) {
-          const formattedBills = response.data.map(bill => ({
+          const formattedBills = response.data.map((bill) => ({
             ...bill,
             start_date: new Date(bill.start_date).toISOString().substr(5, 5),
-            end_date: new Date(bill.end_date).toISOString().substr(5, 5)
+            end_date: new Date(bill.end_date).toISOString().substr(5, 5),
           }));
           setWaterBills(formattedBills);
           setIsLoading(false);
@@ -168,6 +175,70 @@ function ShowWaterBill() {
     }
   };
 
+
+
+
+  const handleAddUnitsModalOpen = () => {
+    setShowAddUnitsModal(true);
+  };
+
+  const handleAddUnitsModalClose = () => {
+    setShowAddUnitsModal(false);
+  };
+
+  const handleUnitFormChange = (e) => {
+    setUnitFormData({
+      ...unitFormData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleRoomUnitsChange = (roomId, value) => {
+    setUnitFormData({
+      ...unitFormData,
+      room_units: {
+        ...unitFormData.room_units,
+        [roomId]: value,
+      },
+    });
+  };
+
+  const handleAddUnitsSubmit = async () => {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      if (!accessToken) {
+        console.error("Access token not found in local storage");
+        return;
+      }
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/buildings/1/blocks/1/floors/1/rooms/1/update_units",
+        {
+          water_bill: unitFormData,
+          access_token: accessToken,
+        },
+        config
+      );
+
+      if (response.status === 200) {
+        console.log("Units added successfully");
+        setShowAddUnitsModal(false);
+        // Add any necessary state updates or notifications here
+      } else {
+        console.error("Error adding units");
+      }
+    } catch (error) {
+      console.error("Error adding units:", error);
+    }
+  };
+
   return (
     <>
       {isLoading ? (
@@ -191,6 +262,7 @@ function ShowWaterBill() {
                     <th>End Date</th>
                     <th>Remarks</th>
                     <th>Action</th>
+                    <th>Add Unit</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -218,6 +290,7 @@ function ShowWaterBill() {
                           Delete
                         </button>
                       </td>
+                      <td><button className="btn btn-sm btn-primary btn-outline-success" onClick={handleAddUnitsModalOpen}>Add Units</button></td>
                     </tr>
                   ))}
                 </tbody>
@@ -236,85 +309,71 @@ function ShowWaterBill() {
               <Modal.Title>Edit Bill</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <form>
-                <div className="form-group">
-                  <label htmlFor="bill_name">Bill Name</label>
-                  <input
+              <Form>
+                <Form.Group>
+                  <Form.Label>Bill Name</Form.Label>
+                  <Form.Control
                     type="text"
-                    className="form-control"
-                    id="bill_name"
                     name="bill_name"
                     value={editFormData.bill_name}
                     onChange={handleEditFormChange}
                   />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="bill_month_and_year">Bill Month and Year</label>
-                  <input
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Bill Month and Year</Form.Label>
+                  <Form.Control
                     type="text"
-                    className="form-control"
-                    id="bill_month_and_year"
                     name="bill_month_and_year"
                     value={editFormData.bill_month_and_year}
                     onChange={handleEditFormChange}
                   />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="owner_amount">Owner Amount</label>
-                  <input
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Owner Amount</Form.Label>
+                  <Form.Control
                     type="text"
-                    className="form-control"
-                    id="owner_amount"
                     name="owner_amount"
                     value={editFormData.owner_amount}
                     onChange={handleEditFormChange}
                   />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="rent_amount">Rent Amount</label>
-                  <input
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Rent Amount</Form.Label>
+                  <Form.Control
                     type="text"
-                    className="form-control"
-                    id="rent_amount"
                     name="rent_amount"
                     value={editFormData.rent_amount}
                     onChange={handleEditFormChange}
                   />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="start_date">Start Date</label>
-                  <input
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Start Date</Form.Label>
+                  <Form.Control
                     type="text"
-                    className="form-control"
-                    id="start_date"
                     name="start_date"
                     value={editFormData.start_date}
                     onChange={handleEditFormChange}
                   />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="end_date">End Date</label>
-                  <input
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>End Date</Form.Label>
+                  <Form.Control
                     type="text"
-                    className="form-control"
-                    id="end_date"
                     name="end_date"
                     value={editFormData.end_date}
                     onChange={handleEditFormChange}
                   />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="remarks">Remarks</label>
-                  <input
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Remarks</Form.Label>
+                  <Form.Control
                     type="text"
-                    className="form-control"
-                    id="remarks"
                     name="remarks"
                     value={editFormData.remarks}
                     onChange={handleEditFormChange}
                   />
-                </div>
-              </form>
+                </Form.Group>
+              </Form>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={() => setShowEditModal(false)}>
@@ -345,6 +404,59 @@ function ShowWaterBill() {
               </Button>
             </Modal.Footer>
           </Modal>
+
+          <Modal
+        show={showAddUnitsModal}
+        onHide={handleAddUnitsModalClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add Units</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Unit Rate</Form.Label>
+              <Form.Control
+                type="text"
+                name="unit_rate"
+                value={unitFormData.unit_rate}
+                onChange={handleUnitFormChange}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Previous Unit</Form.Label>
+              <Form.Control
+                type="text"
+                name="previous_unit"
+                value={unitFormData.previous_unit}
+                onChange={handleUnitFormChange}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Room Units</Form.Label>
+              {waterBills.map((bill, index) => (
+                <Form.Control
+                  key={index}
+                  type="text"
+                  placeholder={`Room ${bill.id}`}
+                  value={unitFormData.room_units[bill.id] || ""}
+                  onChange={(e) => handleRoomUnitsChange(bill.id, e.target.value)}
+                />
+              ))}
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleAddUnitsModalClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleAddUnitsSubmit}>
+            Submit
+          </Button>
+        </Modal.Footer>
+      </Modal>
         </motion.div>
       )}
     </>

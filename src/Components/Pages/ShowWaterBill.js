@@ -383,7 +383,7 @@ function ShowWaterBill() {
             Close
           </Button>
           <Button variant="primary" onClick={handleAddUnitsSubmit}>
-            Save Changes
+            Add Unit
           </Button>
         </Modal.Footer>
       </Modal>

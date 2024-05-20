@@ -9,8 +9,8 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@mui/material";
-import {
+  } from "@mui/material";
+  import {
   BarChart,
   Bar,
   XAxis,
@@ -19,12 +19,12 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from "recharts";
-import { useSpring, animated } from "react-spring";
-import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Spinner from "../Spinner";
+  } from "recharts";
+  import { useSpring, animated } from "react-spring";
+  import axios from "axios";
+  import { toast, ToastContainer } from "react-toastify";
+  import "react-toastify/dist/ReactToastify.css";
+  import Spinner from "../Spinner";
 
 const Dashboard = () => {
   const [dashboard, setDashboard] = useState({});

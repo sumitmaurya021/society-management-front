@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Spinner from '../Spinner';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import { toast, ToastContainer } from 'react-toastify';
-import './WaterBillsPay.css';
+import React, { useState, useEffect } from                                           'react'              ;
+import axios from                                                                    'axios'              ;
+import Spinner from                                                                  '../Spinner'         ;
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'      ;
+import { toast, ToastContainer } from                                                'react-toastify'     ;
+import                                                                               './WaterBillsPay.css';
 
 function WaterBillsPay() {
     const [waterBills, setWaterBills] = useState([]);

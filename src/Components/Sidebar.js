@@ -161,16 +161,6 @@ const Sidebar = ({ children }) => {
             </>
           ) : (
             <>
-              <NavLink to="/" className="link" activeClassName="active">
-                <div className="icon"><MdDashboard /></div>
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div style={{ whiteSpace: "nowrap", fontSize: "14px" }} variants={showAnimation} initial="hidden" animate="show" exit="hidden" className="link_text">
-                      Dashboard
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </NavLink>
               <NavLink to="/MaintenenceBillPay" className="link" activeClassName="active">
                 <div className="icon"><MdDomainVerification /></div>
                 <AnimatePresence>

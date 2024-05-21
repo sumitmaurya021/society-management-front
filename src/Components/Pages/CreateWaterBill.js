@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Button, TextField, Typography } from "@mui/material";
-import { motion } from "framer-motion";
-import { toast, ToastContainer } from "react-toastify";
-import axios from "axios";
-import { Fade } from "react-awesome-reveal";
+import   React , { useState }            from "react"               ;
+import { Button, TextField, Typography } from "@mui/material"       ;
+import { motion }                        from "framer-motion"       ;
+import { toast , ToastContainer }        from "react-toastify"      ;
+import   axios                           from "axios"               ;
+import { Fade   }                        from "react-awesome-reveal";
 
 function CreateWaterBill() {
   const [waterBill, setWaterBill] = useState({

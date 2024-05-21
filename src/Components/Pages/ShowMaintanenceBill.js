@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { motion } from "framer-motion";
-import { ToastContainer, toast } from "react-toastify";
-import { Modal, Button } from 'react-bootstrap';
-import Spinner from "../Spinner";
-import "./ShowMaintenanceBill.css";
+import React, { useState, useEffect } from "react"                    ;
+import axios from                          "axios"                    ;
+import { motion } from                     "framer-motion"            ;
+import { ToastContainer, toast } from      "react-toastify"           ;
+import { Modal, Button } from              'react-bootstrap'          ;
+import Spinner from                        "../Spinner"               ;
+import                                     "./ShowMaintenanceBill.css";
 
 function ShowMaintenanceBill() {
   const [bills, setBills] = useState([]);

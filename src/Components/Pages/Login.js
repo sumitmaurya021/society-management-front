@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { Link, Link as RouterLink, useNavigate } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { toast, ToastContainer } from "react-toastify"; // Importing react-toastify
-import "react-toastify/dist/ReactToastify.css";
+import React, { useState } from                       "react"                                ;
+import axios from                                     "axios"                                ;
+import { Link, Navigate, Link as RouterLink, useNavigate } from "react-router-dom"                     ;
+import Avatar from                                    "@mui/material/Avatar"                 ;
+import Button from                                    "@mui/material/Button"                 ;
+import CssBaseline from                               "@mui/material/CssBaseline"            ;
+import TextField from                                 "@mui/material/TextField"              ;
+import Paper from                                     "@mui/material/Paper"                  ;
+import Box from                                       "@mui/material/Box"                    ;
+import Grid from                                      "@mui/material/Grid"                   ;
+import LockOutlinedIcon from                          "@mui/icons-material/LockOutlined"     ;
+import Typography from                                "@mui/material/Typography"             ;
+import { createTheme, ThemeProvider } from            "@mui/material/styles"                 ;
+import { toast, ToastContainer } from                 "react-toastify"                       ;
+import                                                "react-toastify/dist/ReactToastify.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -21,6 +21,7 @@ function Login() {
   const [otpSent, setOTPSent] = useState(false);
   const [otp, setOTP] = useState("");
   const navigate = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,10 +54,12 @@ function Login() {
             email,
             otp,
           },
-          client_id: "ytIEAWawGMrlvHLtV3uLFCXQoeR6s2XeH8S9Lt46Koo",
+          client_id: "h0u00MVHWvSRj6YUjvcs2N3JSlBrYGyfBti4cPeWvZA",
         }
       );
       if (response && response.data && response.status === 200) {
+        const role = 'admin';
+        localStorage.setItem('user_role', role);
         // Store access token in local storage
         localStorage.setItem("access_token", response.data.user.access_token);
         // Show toast notification for OTP verification

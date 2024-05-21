@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { Link as RouterLink } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useState } from            "react"                                ;
+import axios from                          "axios"                                ;
+import { Link as RouterLink } from         "react-router-dom"                     ;
+import Avatar from                         "@mui/material/Avatar"                 ;
+import Button from                         "@mui/material/Button"                 ;
+import CssBaseline from                    "@mui/material/CssBaseline"            ;
+import TextField from                      "@mui/material/TextField"              ;
+import Link from                           "@mui/material/Link"                   ;
+import Grid from                           "@mui/material/Grid"                   ;
+import Box from                            "@mui/material/Box"                    ;
+import LockOutlinedIcon from               "@mui/icons-material/LockOutlined"     ;
+import Typography from                     "@mui/material/Typography"             ;
+import Container from                      "@mui/material/Container"              ;
+import { createTheme, ThemeProvider } from "@mui/material/styles"                 ;
+import { toast, ToastContainer } from      "react-toastify"                       ;
+import                                     "react-toastify/dist/ReactToastify.css";
 
 function SignUp({ setIsLoggedIn }) {
   const [formData, setFormData] = useState({
@@ -35,7 +35,7 @@ function SignUp({ setIsLoggedIn }) {
     try {
       const response = await axios.post("http://localhost:3000/api/v1/users", {
         user: formData,
-        client_id: "ytIEAWawGMrlvHLtV3uLFCXQoeR6s2XeH8S9Lt46Koo",
+        client_id: "h0u00MVHWvSRj6YUjvcs2N3JSlBrYGyfBti4cPeWvZA",
       });
       console.log("User signed up successfully:", response.data);
       toast.success("Sign up successful!");

@@ -1,5 +1,5 @@
 import                                                 './App.css'                                ;
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'                         ;
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'                         ;
 import DashBoard from                                  './Components/Pages/DashBoard'             ;
 import Login from                                      './Components/Pages/Login'                 ;
 import SignUp from                                     './Components/Pages/SignUp'                ;
@@ -16,34 +16,55 @@ import AdminCustomer from                              './Components/Pages/Admin
 import MaintenenceBillPay from                         './Components/Pages/MaintenenceBillPay'    ;
 import UserPayments from                               './Components/Pages/UserPayments'          ;
 import WaterBillsPay from                              './Components/Pages/WaterBillsPay'         ;
+import NotFound from './NotFound';
 
 function App() {
-  return (
-    <>
-      <Router>
-        <Sidebar> 
+  const isAuthenticated = localStorage.getItem('access_token');
+  const userRole = localStorage.getItem('user_role');
+
+    if (!isAuthenticated) {
+      return (
+        <Router>
           <Routes>
-            <Route path="/" element={<DashBoard />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/customer_login" element={<LoginCustomer />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/showwaterbill" element={<ShowWaterBill />} />
-            <Route path="/showmaintenancebill" element={<ShowMaintanenceBill />} />
-            <Route path="/createwaterbill" element={<CreateWaterBill />} />
-            <Route path="/createmaintenancebill" element={<CreateMaintanenceBill />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="customer_login" element={<LoginCustomer />} />
             <Route path="/customer_signup" element={<SignUpCustomer />} />
-            <Route path="/user_request" element={<UserRequests />} />
-            <Route path="/admin_customer_option" element={<AdminCustomer />} />
-            <Route path="/MaintenenceBillPay" element={<MaintenenceBillPay />} />
-            <Route path="/UserPayments" element={<UserPayments />} />
-            <Route path="/WaterBillsPay" element={<WaterBillsPay />} />
-            <Route path="*" element={<> not found</>} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
+      );
+    }
+
+    return (
+      <Router>
+        <Sidebar>
+          <Routes>
+            {userRole === 'admin' ? (
+              <>
+                <Route path="/" element={<DashBoard />} />
+                <Route path="/showwaterbill" element={<ShowWaterBill />} />
+                <Route path="/showmaintenancebill" element={<ShowMaintanenceBill />} />
+                <Route path="/createwaterbill" element={<CreateWaterBill />} />
+                <Route path="/createmaintenancebill" element={<CreateMaintanenceBill />} />
+                <Route path="/user_request" element={<UserRequests />} />
+                <Route path="/admin_customer_option" element={<AdminCustomer />} />
+                <Route path="/UserPayments" element={<UserPayments />} />
+              </>
+            ) : (
+              <>
+                <Route path="/WaterBillsPay" element={<WaterBillsPay />} />
+                <Route path="/MaintenenceBillPay" element={<MaintenenceBillPay />} />
+              </>
+            )}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Sidebar>
       </Router>
-    </>
-  );
-}
+    );
+  }
+  
+
 
 export default App;

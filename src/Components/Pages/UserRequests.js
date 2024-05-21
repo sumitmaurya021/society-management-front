@@ -1,10 +1,10 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import './UserRequests.css'; // Import custom CSS file for additional styling
-import Spinner from '../Spinner';
-import { ThreeDots } from 'react-loader-spinner';
+import axios from                          'axios'                                ;
+import React, { useEffect, useState } from 'react'                                ;
+import { toast, ToastContainer } from      'react-toastify'                       ;
+import                                     'react-toastify/dist/ReactToastify.css';
+import                                     './UserRequests.css'                   ;
+import Spinner from                        '../Spinner'                           ;
+import { ThreeDots } from                  'react-loader-spinner'                 ;
 
 function UserRequests() {
     const [requests, setRequests] = useState([]);

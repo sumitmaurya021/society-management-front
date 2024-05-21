@@ -58,7 +58,7 @@ const Sidebar = ({ children }) => {
         localStorage.clear();
         toast.success("Logged out successfully");
         setTimeout(() => {
-          navigate("/login");
+          navigate("/admin_customer_option");
         }, 2000);
       } else {
         toast.error("An error occurred while logging out. Please try again later.");

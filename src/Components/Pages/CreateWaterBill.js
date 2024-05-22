@@ -9,8 +9,7 @@ function CreateWaterBill() {
   const [waterBill, setWaterBill] = useState({
     bill_name: "Water Bill",
     bill_month_and_year: "",
-    owner_amount: "",
-    rent_amount: "",
+    unit_rate: "",
     start_date: "",
     end_date: "",
     remarks: "",
@@ -42,8 +41,7 @@ function CreateWaterBill() {
         setWaterBill({
           bill_name: "Water Bill",
           bill_month_and_year: "",
-          owner_amount: "",
-          rent_amount: "",
+          unit_rate: "",
           start_date: "",
           end_date: "",
           remarks: "",
@@ -80,19 +78,10 @@ function CreateWaterBill() {
                 margin="normal"
               />
               <TextField
-                name="owner_amount"
-                label="Owner Amount"
+                name="unit_rate"
+                label="Unit Rate"
                 type="number"
-                value={waterBill.owner_amount}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                name="rent_amount"
-                label="Rent Amount"
-                type="number"
-                value={waterBill.rent_amount}
+                value={waterBill.unit_rate}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"

@@ -169,6 +169,16 @@ function ShowWaterBill() {
   // Open add units modal for specific room
   const handleRoomAddUnitsClick = (room) => {
     setSelectedRoom(room);
+    let previousUnit = room.updated_unit || 0; // Use updated unit if available, otherwise default to 0
+    const currentUnit = unitFormData.room_units[room.id] || 0;
+    setUnitFormData((prevFormData) => ({
+      ...prevFormData,
+      previous_unit: previousUnit, // Set previous unit to updated unit or 0 if not available
+      room_units: {
+        ...prevFormData.room_units,
+        [room.id]: currentUnit, // Set current unit to updated unit
+      },
+    }));
     setShowAddUnitsModal(true);
   };
 
@@ -212,7 +222,6 @@ function ShowWaterBill() {
           water_bill_id: waterBillId,
           water_bill: {
             ...unitFormData,
-            unit_rate: waterBills.find(bill => bill.id === waterBillId).unit_rate, // Set unit rate dynamically based on selected water bill
           },
           access_token: accessToken,
         },
@@ -221,10 +230,20 @@ function ShowWaterBill() {
 
       if (response.status === 200) {
         toast.success("Units added successfully");
+
+        // Update the selected room's updated unit
+        setRooms((prevRooms) =>
+          prevRooms.map((room) =>
+            room.id === selectedRoom.id
+              ? { ...room, previous_unit: unitFormData.room_units[room.id] }
+              : room
+          )
+        );
+
         setShowAddUnitsModal(false);
         setUnitFormData({
-          unit_rate: unit,
-          previous_unit: "",
+          unit_rate: "",
+          previous_unit: "" || 0,
           room_units: {},
         });
         fetchRooms(); // Refresh rooms to reflect updated units
@@ -254,7 +273,7 @@ function ShowWaterBill() {
             <thead>
               <tr>
                 <th className="text-center">Bill Name</th>
-                <th className="text-center">Month and Year</th>
+                <th className="text-center">Bill Month & Year</th>
                 <th className="text-center">Unit Rate</th>
                 <th className="text-center">Start Date</th>
                 <th className="text-center">End Date</th>
@@ -288,7 +307,10 @@ function ShowWaterBill() {
       )}
 
       {/* Building Modal */}
-      <Modal show={showBuildingModal} onHide={() => setShowBuildingModal(false)}>
+      <Modal
+        show={showBuildingModal}
+        onHide={() => setShowBuildingModal(false)}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Building Information</Modal.Title>
         </Modal.Header>
@@ -296,14 +318,22 @@ function ShowWaterBill() {
           <Form>
             <Form.Group>
               <Form.Label>Building:</Form.Label>
-              <Form.Control as="select" value={buildingId} onChange={handleBuildingChange}>
+              <Form.Control
+                as="select"
+                value={buildingId}
+                onChange={handleBuildingChange}
+              >
                 <option value={1}>Building 1</option>
                 <option value={2}>Building 2</option>
               </Form.Control>
             </Form.Group>
             <Form.Group>
               <Form.Label>Block:</Form.Label>
-              <Form.Control as="select" value={blockId} onChange={handleBlockChange}>
+              <Form.Control
+                as="select"
+                value={blockId}
+                onChange={handleBlockChange}
+              >
                 <option value="">Select Block</option>
                 {blocks.map((block) => (
                   <option key={block.id} value={block.id}>
@@ -314,7 +344,11 @@ function ShowWaterBill() {
             </Form.Group>
             <Form.Group>
               <Form.Label>Floor:</Form.Label>
-              <Form.Control as="select" value={floorId} onChange={handleFloorChange}>
+              <Form.Control
+                as="select"
+                value={floorId}
+                onChange={handleFloorChange}
+              >
                 <option value="">Select Floor</option>
                 {floors.map((floor) => (
                   <option key={floor.id} value={floor.id}>
@@ -330,9 +364,15 @@ function ShowWaterBill() {
               <thead>
                 <tr>
                   <th className="text-center">Room Number</th>
-                  <th className="text-capitalize text-center">previous unit (₹)</th>
-                  <th className="text-capitalize text-center">total units (₹)</th>
-                  <th className="text-capitalize text-center">updated unit (₹)</th>
+                  <th className="text-capitalize text-center">
+                    previous unit (₹)
+                  </th>
+                  <th className="text-capitalize text-center">
+                    updated unit (₹)
+                  </th>
+                  <th className="text-capitalize text-center">
+                    total units (₹)
+                  </th>
                   <th className="text-capitalize text-center">Action</th>
                 </tr>
               </thead>
@@ -340,9 +380,15 @@ function ShowWaterBill() {
                 {rooms.map((room) => (
                   <tr key={room.id}>
                     <td className="text-center">{room.room_number}</td>
-                    <td className="text-center">{room.previous_unit === null ? "-" : room.previous_unit}</td>
-                    <td className="text-center">{room.total_units === null ? "-" : room.total_units}</td>
-                    <td className="text-center">{room.updated_unit === null ? "-" : room.updated_unit}</td>
+                    <td className="text-center">
+                      {room.previous_unit === null ? "-" : room.previous_unit}
+                    </td>
+                    <td className="text-center">
+                      {room.updated_unit === null ? "-" : room.updated_unit}
+                    </td>
+                    <td className="text-center">
+                      {room.total_units === null ? "-" : room.total_units}
+                    </td>
                     <td className="text-center">
                       <Button
                         className="btn btn-sm btn-primary btn-outline-success"
@@ -362,7 +408,9 @@ function ShowWaterBill() {
       {/* Add Units Modal */}
       <Modal show={showAddUnitsModal} onHide={handleAddUnitsModalClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Units for Room {selectedRoom?.room_name}</Modal.Title>
+          <Modal.Title>
+            Add Units for Room {selectedRoom?.room_number}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -373,6 +421,7 @@ function ShowWaterBill() {
                 name="previous_unit"
                 value={unitFormData.previous_unit}
                 onChange={handleUnitFormChange}
+                readOnly
               />
             </Form.Group>
             <Form.Group controlId="room_units">
@@ -381,7 +430,9 @@ function ShowWaterBill() {
                 type="number"
                 name={`room_units[${selectedRoom?.id}]`}
                 value={unitFormData.room_units[selectedRoom?.id] || ""}
-                onChange={(e) => handleRoomUnitsChange(selectedRoom?.id, e.target.value)}
+                onChange={(e) =>
+                  handleRoomUnitsChange(selectedRoom?.id, e.target.value)
+                }
               />
             </Form.Group>
           </Form>

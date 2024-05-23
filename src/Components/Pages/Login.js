@@ -67,7 +67,7 @@ function Login() {
         toast.success("Email verified successfully!");
         // Set isLoggedIn to true to show the sidebar
         setTimeout(() => {
-          navigate("/");
+          navigate("/showwaterbill");
         }, 2000);
       }
     } catch (error) {

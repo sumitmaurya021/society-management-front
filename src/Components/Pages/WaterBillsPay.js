@@ -4,6 +4,7 @@ import Spinner from '../Spinner';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 import './WaterBillsPay.css';
+import { CheckCircle } from '@mui/icons-material';
 
 function WaterBillsPay() {
     const [waterBills, setWaterBills] = useState([]);
@@ -14,9 +15,7 @@ function WaterBillsPay() {
     const [paymentMethod, setPaymentMethod] = useState('Cash');
     const [paymentAmount, setPaymentAmount] = useState('');
     const [paymentDate, setPaymentDate] = useState('');
-    const [block, setBlock] = useState('');
-    const [floor, setFloor] = useState('');
-    const [room, setRoom] = useState('');
+    const [statuses, setStatuses] = useState({});
 
     const fetchWaterBill = async () => {
         try {
@@ -32,9 +31,9 @@ function WaterBillsPay() {
             });
 
             if (response.status === 200) {
-                setIsLoading(false);
                 setWaterBills(response.data.water_bills);
                 setUserRoom(response.data.user_room);
+                fetchStatuses(response.data.water_bills);
             } else {
                 throw new Error('Failed to fetch water bills');
             }
@@ -43,6 +42,39 @@ function WaterBillsPay() {
             toast.error('Failed to fetch water bills');
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const fetchStatuses = async (bills) => {
+        try {
+            const accessToken = localStorage.getItem('access_token');
+            if (!accessToken) {
+                throw new Error('Access token not found');
+            }
+
+            const statusPromises = bills.map(bill => 
+                axios.get(`http://localhost:3000/api/v1/buildings/1/water_bills/${bill.id}/water_bill_payments`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                })
+            );
+
+            const responses = await Promise.all(statusPromises);
+
+            const newStatuses = responses.reduce((acc, response, index) => {
+                if (response.status === 200 && response.data.water_bill_payments.length > 0) {
+                    acc[bills[index].id] = response.data.water_bill_payments[0].status;
+                } else {
+                    acc[bills[index].id] = 'Unpaid';
+                }
+                return acc;
+            }, {});
+
+            setStatuses(newStatuses);
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed to fetch payment statuses');
         }
     };
 
@@ -63,13 +95,14 @@ function WaterBillsPay() {
             }
 
             const response = await axios.post(`http://localhost:3000/api/v1/buildings/1/water_bills/${selectedBill.id}/water_bill_payments`, {
-                month_year: paymentDate, // Assuming paymentDate holds the payment month and year
+                month_year: paymentDate,
                 payment_method: paymentMethod,
                 access_token: accessToken,
             });
 
             if (response.status === 200) {
                 toast.success('Payment successful');
+                fetchStatuses(waterBills);  // Update the status after payment
             } else {
                 throw new Error('Failed to make payment');
             }
@@ -102,6 +135,7 @@ function WaterBillsPay() {
                                         <th>Total Units</th>
                                         <th>Previous Unit</th>
                                         <th>Updated Unit</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -117,8 +151,13 @@ function WaterBillsPay() {
                                             <td>{userRoom.total_units}</td>
                                             <td>{userRoom.previous_unit}</td>
                                             <td>{userRoom.updated_unit}</td>
+                                            <td>{statuses[bill.id] || 'Unpaid'}</td>
                                             <td>
-                                                <button className='btn btn-sm btn-success' onClick={() => handleOpenPaymentPopup(bill)}>Pay</button>
+                                                {statuses[bill.id] === 'Paid' ? (
+                                                    <CheckCircle style={{ color: 'green' }} />
+                                                ) : (
+                                                    <button className='btn btn-sm btn-success' onClick={() => handleOpenPaymentPopup(bill)}>Pay</button>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}

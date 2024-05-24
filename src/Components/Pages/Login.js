@@ -63,6 +63,7 @@ function Login() {
         localStorage.setItem('user_role', role);
         // Store access token in local storage
         localStorage.setItem("access_token", response.data.user.access_token);
+        localStorage.setItem("user", response.data.user.id);
         // Show toast notification for OTP verification
         toast.success("Email verified successfully!");
         // Set isLoggedIn to true to show the sidebar

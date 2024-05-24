@@ -9,6 +9,8 @@ import { FaBars, FaWater, FaHandHoldingWater, FaAmazonPay, FaUsers } from "react
 import { GrHostMaintenance } from "react-icons/gr";
 import { RiBillLine } from "react-icons/ri";
 import { IoLogOut } from "react-icons/io5";
+import { AiFillNotification } from "react-icons/ai";
+import { IoIosNotifications } from "react-icons/io";
 
 import "./Pages/Sidebar.css";
 
@@ -62,11 +64,13 @@ const Sidebar = ({ children }) => {
     { to: "/user_request", icon: <FaUsers />, text: "User Requests" },
     { to: "/MaintenenceBillPayments", icon: <RiBillLine />, text: "User Payments" },
     { to: "/WaterBillPayments", icon: <RiBillLine />, text: "Water Bill Payments" },
+    { to: "/CreateNotification", icon: <AiFillNotification />, text: "Create Notification" },
   ];
 
   const userLinks = [
     { to: "/MaintenenceBillPay", icon: <MdDomainVerification />, text: "Show Maintenance Bill" },
     { to: "/WaterBillsPay", icon: <FaAmazonPay />, text: "Water Bill Pay" },
+    { to: "/ReceiveNotification", icon: <IoIosNotifications />, text: "Receive Notification" },
   ];
 
   const renderLinks = (links) =>

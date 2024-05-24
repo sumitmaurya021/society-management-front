@@ -14,9 +14,10 @@ import SignUpCustomer from                             './Components/Pages/SignU
 import UserRequests from                               './Components/Pages/UserRequests'          ;
 import AdminCustomer from                              './Components/Pages/AdminCustomer'         ;
 import MaintenenceBillPay from                         './Components/Pages/MaintenenceBillPay'    ;
-import UserPayments from                               './Components/Pages/UserPayments'          ;
+import MaintenenceBillPayments from                    './Components/Pages/MaintenenceBillPayments'          ;
 import WaterBillsPay from                              './Components/Pages/WaterBillsPay'         ;
 import NotFound from './NotFound';
+import WaterBillPayments from './Components/Pages/WaterBillPayments';
 
 function App() {
   const isAuthenticated = localStorage.getItem('access_token');
@@ -50,7 +51,8 @@ function App() {
                 <Route path="/createwaterbill" element={<CreateWaterBill />} />
                 <Route path="/createmaintenancebill" element={<CreateMaintanenceBill />} />
                 <Route path="/user_request" element={<UserRequests />} />
-                <Route path="/UserPayments" element={<UserPayments />} />
+                <Route path="/MaintenenceBillPayments" element={<MaintenenceBillPayments />} />
+                <Route path="/WaterBillPayments" element={<WaterBillPayments />} />
               </>
             ) : (
               <>

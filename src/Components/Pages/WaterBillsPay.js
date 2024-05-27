@@ -5,6 +5,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, F
 import { toast, ToastContainer } from 'react-toastify';
 import './WaterBillsPay.css';
 import { CheckCircle } from '@mui/icons-material';
+import { FaFilePdf } from "react-icons/fa";
 
 function WaterBillsPay() {
     const [waterBills, setWaterBills] = useState([]);
@@ -137,6 +138,7 @@ function WaterBillsPay() {
                                         <th>Updated Unit</th>
                                         <th>Status</th>
                                         <th>Action</th>
+                                        <th>Invoice</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -159,6 +161,7 @@ function WaterBillsPay() {
                                                     <button className='btn btn-sm btn-success' onClick={() => handleOpenPaymentPopup(bill)}>Pay</button>
                                                 )}
                                             </td>
+                                            <td><FaFilePdf style={{ color: 'red', cursor: 'pointer', fontSize: '20px' }} /></td>
                                         </tr>
                                     ))}
                                 </tbody>

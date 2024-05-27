@@ -18,8 +18,24 @@ import MaintenenceBillPayments from                    './Components/Pages/Maint
 import WaterBillsPay from                              './Components/Pages/WaterBillsPay'         ;
 import NotFound from './NotFound';
 import WaterBillPayments from './Components/Pages/WaterBillPayments';
+import CreateNotification from './Components/Pages/CreateNotification';
+import ReceiveNotification from './Components/Pages/ReceiveNotification';
+
+const ws = new WebSocket('ws://localhost:3000/cable');
 
 function App() {
+
+  ws.onopen = () => {
+    console.log('Connection established');
+
+    ws.send(JSON.stringify({
+      command: 'subscribe',
+      identifier: JSON.stringify({
+        channel: 'NotificationChannel'
+      })
+    }))
+  }
+
   const isAuthenticated = localStorage.getItem('access_token');
   const userRole = localStorage.getItem('user_role');
 
@@ -53,11 +69,13 @@ function App() {
                 <Route path="/user_request" element={<UserRequests />} />
                 <Route path="/MaintenenceBillPayments" element={<MaintenenceBillPayments />} />
                 <Route path="/WaterBillPayments" element={<WaterBillPayments />} />
+                <Route path="/CreateNotification" element={<CreateNotification />} />
               </>
             ) : (
               <>
                 <Route path="/WaterBillsPay" element={<WaterBillsPay />} />
                 <Route path="/MaintenenceBillPay" element={<MaintenenceBillPay />} />
+                <Route path="/ReceiveNotification" element={<ReceiveNotification />} />
               </>
             )}
             <Route path="*" element={<NotFound />} />

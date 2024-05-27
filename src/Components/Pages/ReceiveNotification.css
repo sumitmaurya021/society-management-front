@@ -1,0 +1,29 @@
+.notification-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .notification-paper {
+    padding: 20px;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out; /* Add transition for transform */
+  }
+  
+  .notification-paper:hover {
+    transform: scale(1.03); /* Add scale transformation on hover */
+  }
+  
+  .date-time {
+    font-size: 0.9rem;
+  }
+  
+  .date {
+    color: #1976d2; /* Blue color for date */
+  }
+  
+  .time {
+    color: #4caf50; /* Green color for time */
+  }
+  

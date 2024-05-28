@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ActionCableConsumer } from 'react-actioncable-provider';
-import { Typography, Card, CardContent, List, ListItem, ListItemText, Divider, Container } from '@mui/material';
+import { Typography, Card, CardContent, List, ListItem, Divider, Container } from '@mui/material';
 import axios from 'axios';
 
 function ReceiveNotification() {
@@ -27,22 +27,11 @@ function ReceiveNotification() {
     }
   };
 
-  const handleReceivedNotification = (notification) => {
-    // Add the received notification to the state
-    setNotifications((prevNotifications) => [...prevNotifications, notification]);
-  };
-
-
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
         Receive Notification
       </Typography>
-      {/* Action Cable Consumer to listen for new notifications */}
-      <ActionCableConsumer
-        channel={{ channel: 'NotificationChannel' }}
-        onReceived={handleReceivedNotification}
-      />
       <List>
         {notifications.map((notification) => (
           <React.Fragment key={notification.id}>

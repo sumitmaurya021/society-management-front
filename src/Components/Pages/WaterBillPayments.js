@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Container } from '@mui/material';
-import { CheckCircle } from '@mui/icons-material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Container, TextField, Button, InputAdornment, IconButton } from '@mui/material';
+import { CheckCircle, Clear } from '@mui/icons-material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,36 +10,36 @@ import { ThreeDots } from 'react-loader-spinner';
 
 function WaterBillPayments() {
   const [payments, setPayments] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [waterBillId, setWaterBillId] = useState('');
 
-  useEffect(() => {
-    const fetchPayments = async () => {
-      try {
-        const accessToken = localStorage.getItem('access_token');
-        if (!accessToken) {
-          throw new Error('Access token not found');
-        }
+  const fetchPayments = async () => {
+    if (!waterBillId) return;
 
-        const response = await axios.get('http://localhost:3000/api/v1/buildings/1/water_bills/1/water_bill_payments', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (response.status === 200) {
-          setPayments(response.data.water_bill_payments);
-        } else {
-          throw new Error('Failed to fetch payments');
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
+    setIsLoading(true);
+    try {
+      const accessToken = localStorage.getItem('access_token');
+      if (!accessToken) {
+        throw new Error('Access token not found');
       }
-    };
 
-    fetchPayments();
-  }, []);
+      const response = await axios.get(`http://localhost:3000/api/v1/buildings/1/water_bills/${waterBillId}/water_bill_payments`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        setPayments(response.data.water_bill_payments);
+      } else {
+        throw new Error('Failed to fetch payments');
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleAcceptPayment = async (paymentId, waterBillId) => {
     try {
@@ -47,7 +47,7 @@ function WaterBillPayments() {
       if (!accessToken) {
         throw new Error('Access token not found');
       }
-      
+
       // Update payment status to loading
       const updatedPayments = payments.map(payment => {
         if (payment.id === paymentId) {
@@ -64,7 +64,7 @@ function WaterBillPayments() {
 
       if (response.status === 200) {
         toast.success('Payment accepted successfully');
-        
+
         // Update payment status to paid
         const updatedPayments = payments.map(payment => {
           if (payment.id === paymentId) {
@@ -85,12 +85,40 @@ function WaterBillPayments() {
     return String.fromCharCode(64 + parseInt(blockNumber));
   };
 
+  const handleClear = () => {
+    setWaterBillId('');
+    setPayments([]);
+  };
+
   return (
     <Container>
       <Typography variant="h4" style={{ marginTop: '20px', marginBottom: '20px', textAlign: 'center' }}>Water Bill Payments</Typography>
+      
+      <div style={{ display: 'flex', marginBottom: '20px' }}>
+        <TextField
+          label="Enter Water Bill ID"
+          value={waterBillId}
+          onChange={(e) => setWaterBillId(e.target.value)}
+          fullWidth
+          style={{ marginRight: '10px' }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={handleClear}>
+                  <Clear />
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
+        />
+        <Button variant="contained" color="primary" onClick={fetchPayments} style={{ minWidth: '164px' }}>
+          Fetch Payments
+        </Button>
+      </div>
+      
       <div style={{ position: 'relative', minHeight: '300px' }}>
         <AnimatePresence mode="wait">
-          {!isLoading && (
+          {!isLoading && payments.length > 0 && (
             <motion.div
               key="payments"
               initial={{ opacity: 0, y: 50 }}
@@ -161,6 +189,11 @@ function WaterBillPayments() {
             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
               <CircularProgress />
             </div>
+          )}
+          {!isLoading && payments.length === 0 && (
+            <Typography variant="h6" align="center" style={{ marginTop: '20px' }}>
+              No payments found for the selected Water Bill ID.
+            </Typography>
           )}
         </AnimatePresence>
       </div>

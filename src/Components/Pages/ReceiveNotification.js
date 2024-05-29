@@ -1,14 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { ActionCableConsumer } from 'react-actioncable-provider';
-import { Typography, Card, CardContent, List, ListItem, Divider, Container } from '@mui/material';
+import {
+  Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+  Paper, Container, TextField, Box, Card, CardContent
+} from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { useSpring, animated } from 'react-spring';
 import axios from 'axios';
 
 function ReceiveNotification() {
   const [notifications, setNotifications] = useState([]);
+  const [filteredNotifications, setFilteredNotifications] = useState([]);
+  const [titleFilter, setTitleFilter] = useState('');
+  const [messageFilter, setMessageFilter] = useState('');
+  const [createdAtFilter, setCreatedAtFilter] = useState(null);
 
   useEffect(() => {
     fetchNotifications();
   }, []);
+
+  useEffect(() => {
+    filterNotifications();
+  }, [titleFilter, messageFilter, createdAtFilter, notifications]);
 
   const fetchNotifications = async () => {
     try {
@@ -22,38 +36,78 @@ function ReceiveNotification() {
         },
       });
       setNotifications(response.data);
+      setFilteredNotifications(response.data);
     } catch (error) {
       console.error('Failed to fetch notifications:', error);
     }
   };
 
+  const filterNotifications = () => {
+    const filtered = notifications.filter((notification) => {
+      const matchesTitle = notification.title.toLowerCase().includes(titleFilter.toLowerCase());
+      const matchesMessage = notification.message.toLowerCase().includes(messageFilter.toLowerCase());
+      const matchesCreatedAt = createdAtFilter
+        ? new Date(notification.created_at).toLocaleDateString() === createdAtFilter.toLocaleDateString()
+        : true;
+      return matchesTitle && matchesMessage && matchesCreatedAt;
+    });
+    setFilteredNotifications(filtered);
+  };
+
+  const fade = useSpring({
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+  });
+
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom className='text-center mt-3 mb-5 border p-4'>
         Receive Notification
       </Typography>
-      <List>
-        {notifications.map((notification) => (
-          <React.Fragment key={notification.id}>
-            <ListItem alignItems="flex-start">
-              <Card variant="outlined" sx={{ width: '100%' }}> {/* Use Card component */}
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {notification.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {notification.message}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Created at: {new Date(notification.created_at).toLocaleString()}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </ListItem>
-            <Divider variant="inset" component="li" />
-          </React.Fragment>
-        ))}
-      </List>
+      <Box display="flex" justifyContent="space-between" mb={2}>
+        <TextField
+          label="Filter by Title"
+          variant="outlined"
+          value={titleFilter}
+          onChange={(e) => setTitleFilter(e.target.value)}
+          sx={{ flex: 1, marginRight: 2 }}
+        />
+        <TextField
+          label="Filter by Message"
+          variant="outlined"
+          value={messageFilter}
+          onChange={(e) => setMessageFilter(e.target.value)}
+          sx={{ flex: 1, marginRight: 2 }}
+        />
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DatePicker
+            label="Filter by Created At"
+            value={createdAtFilter}
+            onChange={(newValue) => setCreatedAtFilter(newValue)}
+            renderInput={(params) => <TextField {...params} variant="outlined" sx={{ flex: 1 }} />}
+          />
+        </LocalizationProvider>
+      </Box>
+      <TableContainer component={Paper} sx={{ marginBottom: 2 }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Title</TableCell>
+              <TableCell>Message</TableCell>
+              <TableCell>Created At</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredNotifications.map((notification) => (
+              <TableRow key={notification.id}>
+                <TableCell>{notification.title}</TableCell>
+                <TableCell>{notification.message}</TableCell>
+                <TableCell>{new Date(notification.created_at).toLocaleString()}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 }

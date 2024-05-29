@@ -22,6 +22,7 @@ import WaterBillPayments from './Components/Pages/WaterBillPayments';
 import CreateNotification from './Components/Pages/CreateNotification';
 import ReceiveNotification from './Components/Pages/ReceiveNotification';
 import WebSocketNotification from './Components/Pages/WebSocketNotification';
+import UserProfile from './Components/Pages/UserProfile';
 
 function App() {
   const isAuthenticated = localStorage.getItem('access_token');
@@ -65,6 +66,7 @@ function App() {
               <Route path="/WaterBillsPay" element={<WaterBillsPay />} />
               <Route path="/MaintenenceBillPay" element={<MaintenenceBillPay />} />
               <Route path="/ReceiveNotification" element={<ReceiveNotification />} />
+              <Route path="/UserProfile" element={<UserProfile />} />
             </>
           )}
           <Route path="*" element={<NotFound />} />

@@ -11,6 +11,7 @@ import { RiBillLine } from "react-icons/ri";
 import { IoLogOut } from "react-icons/io5";
 import { AiFillNotification } from "react-icons/ai";
 import { IoIosNotifications } from "react-icons/io";
+import { GiWaterDrop } from "react-icons/gi";
 
 import "./Pages/Sidebar.css";
 
@@ -63,7 +64,7 @@ const Sidebar = ({ children }) => {
     { to: "/showmaintenancebill", icon: <MdDomainVerification />, text: "Show Maintenance Bill" },
     { to: "/user_request", icon: <FaUsers />, text: "User Requests" },
     { to: "/MaintenenceBillPayments", icon: <RiBillLine />, text: "User Payments" },
-    { to: "/WaterBillPayments", icon: <RiBillLine />, text: "Water Bill Payments" },
+    { to: "/WaterBillPayments", icon: <GiWaterDrop />, text: "Water Bill Payments" },
     { to: "/CreateNotification", icon: <AiFillNotification />, text: "Create Notification" },
   ];
 
@@ -71,6 +72,7 @@ const Sidebar = ({ children }) => {
     { to: "/MaintenenceBillPay", icon: <MdDomainVerification />, text: "Show Maintenance Bill" },
     { to: "/WaterBillsPay", icon: <FaAmazonPay />, text: "Water Bill Pay" },
     { to: "/ReceiveNotification", icon: <IoIosNotifications />, text: "Receive Notification" },
+    { to: "/UserProfile", icon: <FaUsers />, text: "User Profile" },
   ];
 
   const renderLinks = (links) =>

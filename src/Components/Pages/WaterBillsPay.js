@@ -161,7 +161,13 @@ function WaterBillsPay() {
                                                     <button className='btn btn-sm btn-success' onClick={() => handleOpenPaymentPopup(bill)}>Pay</button>
                                                 )}
                                             </td>
-                                            <td><FaFilePdf style={{ color: 'red', cursor: 'pointer', fontSize: '20px' }} /></td>
+                                            <td>
+                                                {statuses[bill.id] === 'Paid' ? (
+                                                    <FaFilePdf style={{ color: 'red', cursor: 'pointer', fontSize: '20px' }} />
+                                                ) : (
+                                                    <FaFilePdf style={{ color: 'blue', cursor: 'pointer', fontSize: '20px' }} />
+                                                )}
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>

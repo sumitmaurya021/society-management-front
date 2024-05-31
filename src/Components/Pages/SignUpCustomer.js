@@ -219,7 +219,7 @@ function SignUpCustomer() {
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link component={RouterLink} to="/login" variant="body2">
+                  <Link component={RouterLink} to="/customer_login" variant="body2">
                     Already have an account? Sign in
                   </Link>
                 </Grid>

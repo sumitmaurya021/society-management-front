@@ -44,7 +44,7 @@ const WebSocketNotification = () => {
     }
   }, [location.pathname]);
 
-  return <ToastContainer />;
+  return<></>;
 };
 
 export default WebSocketNotification;

@@ -181,7 +181,6 @@ function UserRequests() {
                                     </tbody>
                                 </table>
                             </div>
-                            <ToastContainer />
                         </div>
                     </div>
                 </>

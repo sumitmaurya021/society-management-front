@@ -240,7 +240,6 @@ function MaintenanceBillPay() {
             <Button onClick={handlePaymentSubmit} color="primary">Pay</Button>
           </DialogActions>
         </Dialog>
-        <ToastContainer />
       </div>
     </>
   );

@@ -207,8 +207,6 @@ function WaterBillsPay() {
                         <Button onClick={handlePayWaterBill}>Pay</Button>
                     </DialogActions>
                 </Dialog>
-
-                <ToastContainer />
             </div>
         </>
     );

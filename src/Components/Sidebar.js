@@ -11,6 +11,7 @@ import { IoLogOut } from "react-icons/io5";
 import { AiFillNotification } from "react-icons/ai";
 import { IoIosNotifications } from "react-icons/io";
 import { GiWaterDrop } from "react-icons/gi";
+import { FaBuilding } from "react-icons/fa";
 import "./Pages/Sidebar.css";
 
 const Sidebar = ({ children }) => {
@@ -56,6 +57,7 @@ const Sidebar = ({ children }) => {
 
   const adminLinks = [
     { to: "/", icon: <MdDashboard />, text: "Dashboard" },
+    { to: "/CreateBuilding", icon: <FaBuilding />, text: "Create Building"},
     { to: "/createwaterbill", icon: <FaWater />, text: "Create Water Bill" },
     { to: "/createmaintenancebill", icon: <GrHostMaintenance />, text: "Create Maintenance Bill" },
     { to: "/showwaterbill", icon: <FaHandHoldingWater />, text: "Show Water Bill" },

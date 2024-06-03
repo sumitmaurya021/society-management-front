@@ -22,6 +22,7 @@ function ShowWaterBill() {
     end_date: "",
     remarks: "",
   });
+
   const [unitFormData, setUnitFormData] = useState({
     unit_rate: "",
     previous_unit: "",
@@ -35,26 +36,31 @@ function ShowWaterBill() {
   const [floors, setFloors] = useState([]);
   const [rooms, setRooms] = useState([]);
   const accessToken = localStorage.getItem("access_token"); // Retrieve access token from local storage
+  const [unit, setUnit] = useState(null);
   const [waterBillId, setWaterBillId] = useState(null);
 
+  // Fetch blocks when buildingId changes
   useEffect(() => {
     if (buildingId) {
       fetchBlocks();
     }
   }, [buildingId]);
 
+  // Fetch floors when blockId changes
   useEffect(() => {
     if (blockId) {
       fetchFloors();
     }
   }, [blockId]);
 
+  // Fetch rooms when floorId changes
   useEffect(() => {
     if (floorId) {
       fetchRooms();
     }
   }, [floorId]);
 
+  // Fetch water bills and set the appropriate water bill
   useEffect(() => {
     const fetchBills = async () => {
       try {
@@ -65,51 +71,52 @@ function ShowWaterBill() {
         };
 
         const response = await axios.get(
-          `http://localhost:3000/api/v1/buildings/${buildingId}/water_bills`,
+          "http://localhost:3000/api/v1/buildings/1/water_bills",
           config
         );
 
         if (response.status === 200) {
           const formattedBills = response.data.map((bill) => ({
             ...bill,
-            start_date: new Date(bill.start_date).toISOString().substr(0, 10),
-            end_date: new Date(bill.end_date).toISOString().substr(0, 10),
+            start_date: new Date(bill.start_date).toISOString().substr(5, 5),
+            end_date: new Date(bill.end_date).toISOString().substr(5, 5),
           }));
 
           setWaterBills(formattedBills);
           setIsLoading(false);
-          toast.success("Water bills fetched successfully");
+          toast("Water bills fetched successfully");
         } else {
           toast.error("Error fetching water bills");
         }
       } catch (error) {
         console.error("Error fetching water bills:", error);
-        toast.error("Error fetching water bills");
       }
     };
 
     fetchBills();
-  }, [buildingId]);
+  }, []);
 
+  // Fetch blocks
   const fetchBlocks = async () => {
     try {
       const response = await axios.get(
         `http://localhost:3000/api/v1/buildings/${buildingId}/blocks`,
         {
           params: {
-            access_token: accessToken,
+            access_token: accessToken, // Use the access token retrieved from local storage
           },
         }
       );
-      setBlocks(response.data);
-      setBlockId(null);
-      setFloors([]);
-      setRooms([]);
+      setBlocks(response.data); // Assuming the response is an array of blocks
+      setBlockId(null); // Reset blockId when new blocks are fetched
+      setFloors([]); // Clear floors when blocks change
+      setRooms([]); // Clear rooms when blocks change
     } catch (error) {
       console.error("Error fetching blocks:", error);
     }
   };
 
+  // Fetch floors
   const fetchFloors = async () => {
     if (blockId) {
       try {
@@ -117,19 +124,20 @@ function ShowWaterBill() {
           `http://localhost:3000/api/v1/buildings/${buildingId}/blocks/${blockId}/floors`,
           {
             params: {
-              access_token: accessToken,
+              access_token: accessToken, // Use the access token retrieved from local storage
             },
           }
         );
-        setFloors(response.data);
-        setFloorId(null);
-        setRooms([]);
+        setFloors(response.data); // Assuming the response is an array of floors
+        setFloorId(null); // Reset floorId when new floors are fetched
+        setRooms([]); // Clear rooms when floors change
       } catch (error) {
         console.error("Error fetching floors:", error);
       }
     }
   };
 
+  // Fetch rooms
   const fetchRooms = async () => {
     if (floorId) {
       try {
@@ -137,54 +145,61 @@ function ShowWaterBill() {
           `http://localhost:3000/api/v1/buildings/${buildingId}/blocks/${blockId}/floors/${floorId}/rooms`,
           {
             params: {
-              access_token: accessToken,
+              access_token: accessToken, // Use the access token retrieved from local storage
             },
           }
         );
-        setRooms(response.data);
+        setRooms(response.data); // Assuming the response is an array of rooms
       } catch (error) {
         console.error("Error fetching rooms:", error);
       }
     }
   };
 
+  // Handle building change
   const handleBuildingChange = (event) => {
     setBuildingId(event.target.value);
   };
 
+  // Handle block change
   const handleBlockChange = (event) => {
     setBlockId(event.target.value);
   };
 
+  // Handle floor change
   const handleFloorChange = (event) => {
     setFloorId(event.target.value);
   };
 
+  // Open add units modal
   const handleAddUnitsModalOpen = (billId) => {
     setShowBuildingModal(true);
-    setWaterBillId(billId);
+    setWaterBillId(billId); // Set the selected water bill ID dynamically
   };
 
+  // Open add units modal for specific room
   const handleRoomAddUnitsClick = (room) => {
     setSelectedRoom(room);
-    const previousUnit = room.updated_unit || 0;
+    let previousUnit = room.updated_unit || 0; // Use updated unit if available, otherwise default to 0
     const currentUnit = unitFormData.room_units[room.id] || 0;
     setUnitFormData((prevFormData) => ({
       ...prevFormData,
-      previous_unit: previousUnit,
+      previous_unit: previousUnit, // Set previous unit to updated unit or 0 if not available
       room_units: {
         ...prevFormData.room_units,
-        [room.id]: currentUnit,
+        [room.id]: currentUnit, // Set current unit to updated unit
       },
     }));
     setShowAddUnitsModal(true);
   };
 
+  // Close add units modal
   const handleAddUnitsModalClose = () => {
     setShowAddUnitsModal(false);
     setSelectedRoom(null);
   };
 
+  // Handle form change
   const handleUnitFormChange = (e) => {
     setUnitFormData({
       ...unitFormData,
@@ -192,6 +207,7 @@ function ShowWaterBill() {
     });
   };
 
+  // Handle room units change
   const handleRoomUnitsChange = (roomId, value) => {
     setUnitFormData({
       ...unitFormData,
@@ -202,6 +218,7 @@ function ShowWaterBill() {
     });
   };
 
+  // Handle add units submit
   const handleAddUnitsSubmit = async () => {
     try {
       const config = {
@@ -225,6 +242,7 @@ function ShowWaterBill() {
       if (response.status === 200) {
         toast.success("Units added successfully");
 
+        // Update the selected room's updated unit
         setRooms((prevRooms) =>
           prevRooms.map((room) =>
             room.id === selectedRoom.id
@@ -236,16 +254,15 @@ function ShowWaterBill() {
         setShowAddUnitsModal(false);
         setUnitFormData({
           unit_rate: "",
-          previous_unit: "",
+          previous_unit: "" || 0,
           room_units: {},
         });
-        fetchRooms();
+        fetchRooms(); // Refresh rooms to reflect updated units
       } else {
         toast.error("Error adding units");
       }
     } catch (error) {
       console.error("Error adding units:", error);
-      toast.error("Error adding units");
     }
   };
 
@@ -354,38 +371,41 @@ function ShowWaterBill() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -50 }}
-      transition={{ duration: 0.5 }}
+      className="water-bill-container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
     >
-      <div className="water-bill-container">
-        <h1 className="text-center mt-3 mb-4">Water Bill Management</h1>
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          <div>
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>Bill Name</th>
-                  <th>Month & Year</th>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                  <th>Remarks</th>
-                  <th>Actions</th>
-                  <th>Add Unit</th>
-                </tr>
-              </thead>
-              <tbody>
-                {waterBills.map((bill) => (
-                  <tr key={bill.id}>
-                    <td>{bill.bill_name}</td>
-                    <td>{bill.bill_month_and_year}</td>
-                    <td>{bill.start_date}</td>
-                    <td>{bill.end_date}</td>
-                    <td>{bill.remarks}</td>
-                    <td>
+      <div className="header">
+        <h2>Show Water Bills</h2>
+      </div>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th className="text-center">Bill Name</th>
+                <th className="text-center">Bill Month & Year</th>
+                <th className="text-center">Unit Rate</th>
+                <th className="text-center">Start Date</th>
+                <th className="text-center">End Date</th>
+                <th className="text-center">Remarks</th>
+                <th className="text-center">Actions</th>
+                <th className="text-center">Add Unit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {waterBills.map((bill) => (
+                <tr key={bill.id}>
+                  <td className="text-center">{bill.bill_name}</td>
+                  <td className="text-center">{bill.bill_month_and_year}</td>
+                  <td className="text-center">{bill.unit_rate}</td>
+                  <td className="text-center">{bill.start_date}</td>
+                  <td className="text-center">{bill.end_date}</td>
+                  <td className="text-center">{bill.remarks}</td>
+                  <td>
                       <Button
                         variant="primary"
                         className="btn-sm"
@@ -401,40 +421,45 @@ function ShowWaterBill() {
                         Delete
                       </Button>
                     </td>
-                    <td><Button
-                        className="btn-sm"
-                        variant="success"
-                        onClick={() => handleAddUnitsModalOpen(bill.id)}
-                      >
-                        Add Units
-                      </Button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
-        )}
-      </div>
-      <Modal show={showBuildingModal} onHide={handleCloseModal}>
+                  <td>
+                    <Button
+                      variant="primary"
+                      className="btn btn-sm btn-primary btn-outline-success text-center"
+                      onClick={() => handleAddUnitsModalOpen(bill.id)}
+                    >
+                      Add Units
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </>
+      )}
+
+      {/* Building Modal */}
+      <Modal
+        show={showBuildingModal}
+        onHide={() => setShowBuildingModal(false)}
+      >
         <Modal.Header closeButton>
-          <Modal.Title>Select Block and Floor</Modal.Title>
+          <Modal.Title>Building Information</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group controlId="formBuildingSelect">
-              <Form.Label>Building</Form.Label>
+            <Form.Group>
+              <Form.Label>Building:</Form.Label>
               <Form.Control
                 as="select"
                 value={buildingId}
                 onChange={handleBuildingChange}
               >
-                <option value="1">Building 1</option>
-                <option value="2">Building 2</option>
+                <option value={1}>Building 1</option>
+                <option value={2}>Building 2</option>
               </Form.Control>
             </Form.Group>
-
-            <Form.Group controlId="formBlockSelect">
-              <Form.Label>Block</Form.Label>
+            <Form.Group>
+              <Form.Label>Block:</Form.Label>
               <Form.Control
                 as="select"
                 value={blockId}
@@ -448,9 +473,8 @@ function ShowWaterBill() {
                 ))}
               </Form.Control>
             </Form.Group>
-
-            <Form.Group controlId="formFloorSelect">
-              <Form.Label>Floor</Form.Label>
+            <Form.Group>
+              <Form.Label>Floor:</Form.Label>
               <Form.Control
                 as="select"
                 value={floorId}
@@ -459,62 +483,89 @@ function ShowWaterBill() {
                 <option value="">Select Floor</option>
                 {floors.map((floor) => (
                   <option key={floor.id} value={floor.id}>
-                    {floor.name}
+                    {floor.number}
                   </option>
                 ))}
               </Form.Control>
             </Form.Group>
           </Form>
+          <div>
+            <h5 className="mt-3 mb-3 font-monospace">Add Units to Rooms:</h5>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th className="text-center">Room Number</th>
+                  <th className="text-capitalize text-center">
+                    previous unit (₹)
+                  </th>
+                  <th className="text-capitalize text-center">
+                    updated unit (₹)
+                  </th>
+                  <th className="text-capitalize text-center">
+                    total units (₹)
+                  </th>
+                  <th className="text-capitalize text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rooms.map((room) => (
+                  <tr key={room.id}>
+                    <td className="text-center">{room.room_number}</td>
+                    <td className="text-center">
+                      {room.previous_unit === null ? "-" : room.previous_unit}
+                    </td>
+                    <td className="text-center">
+                      {room.updated_unit === null ? "-" : room.updated_unit}
+                    </td>
+                    <td className="text-center">
+                      {room.total_units === null ? "-" : room.total_units}
+                    </td>
+                    <td className="text-center">
+                      <Button
+                        className="btn btn-sm btn-primary btn-outline-success"
+                        onClick={() => handleRoomAddUnitsClick(room)}
+                      >
+                        Add Units
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={() => setShowAddUnitsModal(true)}>
-            Next
-          </Button>
-        </Modal.Footer>
       </Modal>
 
+      {/* Add Units Modal */}
       <Modal show={showAddUnitsModal} onHide={handleAddUnitsModalClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Units</Modal.Title>
+          <Modal.Title>
+            Add Units for Room {selectedRoom?.room_number}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group controlId="unitRate">
-              <Form.Label>Unit Rate</Form.Label>
-              <Form.Control
-                type="number"
-                name="unit_rate"
-                value={unitFormData.unit_rate}
-                onChange={handleUnitFormChange}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="previousUnit">
+            <Form.Group controlId="previous_unit">
               <Form.Label>Previous Unit</Form.Label>
               <Form.Control
                 type="number"
                 name="previous_unit"
                 value={unitFormData.previous_unit}
                 onChange={handleUnitFormChange}
+                readOnly
               />
             </Form.Group>
-
-            <h5>Room Units</h5>
-            {rooms.map((room) => (
-              <Form.Group key={room.id} controlId={`room-${room.id}`}>
-                <Form.Label>{room.name}</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={unitFormData.room_units[room.id] || ""}
-                  onChange={(e) =>
-                    handleRoomUnitsChange(room.id, e.target.value)
-                  }
-                />
-              </Form.Group>
-            ))}
+            <Form.Group controlId="room_units">
+              <Form.Label>Current Unit</Form.Label>
+              <Form.Control
+                type="number"
+                name={`room_units[${selectedRoom?.id}]`}
+                value={unitFormData.room_units[selectedRoom?.id] || ""}
+                onChange={(e) =>
+                  handleRoomUnitsChange(selectedRoom?.id, e.target.value)
+                }
+              />
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -522,11 +573,10 @@ function ShowWaterBill() {
             Close
           </Button>
           <Button variant="primary" onClick={handleAddUnitsSubmit}>
-            Save Changes
+            Add Unit
           </Button>
         </Modal.Footer>
       </Modal>
-
       <Modal show={showEditModal} onHide={handleEditModalClose}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Bill</Modal.Title>

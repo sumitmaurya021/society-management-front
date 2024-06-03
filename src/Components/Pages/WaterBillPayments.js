@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Container, TextField, Button, InputAdornment, IconButton } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Container, Select, MenuItem, FormControl, InputLabel, Button, IconButton } from '@mui/material';
 import { CheckCircle, Clear } from '@mui/icons-material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,11 +11,35 @@ import { ThreeDots } from 'react-loader-spinner';
 function WaterBillPayments() {
   const [payments, setPayments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [waterBillId, setWaterBillId] = useState('');
+  const [waterBills, setWaterBills] = useState([]);
+  const [selectedWaterBill, setSelectedWaterBill] = useState('');
 
-  const fetchPayments = async () => {
-    if (!waterBillId) return;
+  useEffect(() => {
+    const fetchWaterBills = async () => {
+      const accessToken = localStorage.getItem('access_token');
+      if (!accessToken) {
+        throw new Error('Access token not found');
+      } 
+      try {
+        const response = await axios.get('http://localhost:3000/api/v1/buildings/1/water_bills',{
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        if (response.status === 200) {
+          setWaterBills(response.data);
+        } else {
+          throw new Error('Failed to fetch water bills');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
+    fetchWaterBills();
+  }, []);
+
+  const fetchPayments = async (waterBillId) => {
     setIsLoading(true);
     try {
       const accessToken = localStorage.getItem('access_token');
@@ -40,6 +64,14 @@ function WaterBillPayments() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (selectedWaterBill) {
+      fetchPayments(selectedWaterBill);
+    } else {
+      setPayments([]);
+    }
+  }, [selectedWaterBill]);
 
   const handleAcceptPayment = async (paymentId, waterBillId) => {
     try {
@@ -86,7 +118,7 @@ function WaterBillPayments() {
   };
 
   const handleClear = () => {
-    setWaterBillId('');
+    setSelectedWaterBill('');
     setPayments([]);
   };
 
@@ -94,27 +126,19 @@ function WaterBillPayments() {
     <Container>
       <Typography variant="h4" style={{ marginTop: '20px', marginBottom: '20px', textAlign: 'center' }}>Water Bill Payments</Typography>
       
-      <div style={{ display: 'flex', marginBottom: '20px' }}>
-        <TextField
-          label="Enter Water Bill ID"
-          value={waterBillId}
-          onChange={(e) => setWaterBillId(e.target.value)}
-          fullWidth
-          style={{ marginRight: '10px' }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={handleClear}>
-                  <Clear />
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-        />
-        <Button variant="contained" color="primary" onClick={fetchPayments} style={{ minWidth: '164px' }}>
-          Fetch Payments
-        </Button>
-      </div>
+      <FormControl fullWidth style={{ marginBottom: '20px' }}>
+        <InputLabel>Select Water Bill</InputLabel>
+        <Select
+          value={selectedWaterBill}
+          onChange={(e) => setSelectedWaterBill(e.target.value)}
+        >
+          {waterBills.map((bill) => (
+            <MenuItem key={bill.id} value={bill.id}>
+              {bill.bill_name} - {bill.bill_month_and_year}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       
       <div style={{ position: 'relative', minHeight: '300px' }}>
         <AnimatePresence mode="wait">
@@ -173,9 +197,9 @@ function WaterBillPayments() {
                           ) : payment.status === 'Paid' ? (
                             <CheckCircle style={{ color: 'green' }} />
                           ) : (
-                            <button className="btn btn-sm btn-primary" onClick={() => handleAcceptPayment(payment.id, payment.water_bill_id)}>
+                            <Button variant="contained" color="primary" size="small" onClick={() => handleAcceptPayment(payment.id, payment.water_bill_id)}>
                               Accept
-                            </button>
+                            </Button>
                           )}
                         </TableCell>
                       </TableRow>
@@ -190,9 +214,9 @@ function WaterBillPayments() {
               <CircularProgress />
             </div>
           )}
-          {!isLoading && payments.length === 0 && (
+          {!isLoading && payments.length === 0 && selectedWaterBill && (
             <Typography variant="h6" align="center" style={{ marginTop: '20px' }}>
-              No payments found for the selected Water Bill ID.
+              No payments found for the selected Water Bill.
             </Typography>
           )}
         </AnimatePresence>

@@ -223,7 +223,7 @@ const Dashboard = () => {
           <Typography variant="h3" gutterBottom>
             Dashboard
           </Typography>
-          <div className="">
+          <div className="d-flex gap-3">
           <FormControl fullWidth margin="normal">
             <InputLabel id="building-select-label">Building</InputLabel>
             <Select

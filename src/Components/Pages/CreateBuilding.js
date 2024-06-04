@@ -1,10 +1,17 @@
 import React, { useState } from "react";
-import { Button, TextField, Typography, FormControlLabel, Checkbox, Box, Paper } from "@mui/material";
+import {
+  Button, TextField, Typography, FormControlLabel, Checkbox, Box, Paper, Dialog, DialogActions, DialogContent, DialogTitle, Slide
+} from "@mui/material";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { Fade } from "react-awesome-reveal";
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingOverlay from "react-loading-overlay";
+
+// Slide transition component for Dialog
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function CreateBuilding() {
   const [building, setBuilding] = useState({
@@ -19,6 +26,7 @@ function CreateBuilding() {
 
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [open, setOpen] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -66,6 +74,7 @@ function CreateBuilding() {
             ground_floor: false,
             starting_room_number: "",
           });
+          handleClose();
         }, 2000);
       } else {
         setLoading(false);
@@ -76,6 +85,14 @@ function CreateBuilding() {
       toast.error("Failed to create building: " + error.message);
       console.error("Failed to create building:", error);
     }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -95,68 +112,92 @@ function CreateBuilding() {
             >
               Create Building
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <TextField
-                name="building_name"
-                label="Building Name"
-                value={building.building_name}
-                onChange={handleChange}
-                fullWidth
-              />
-              <TextField
-                name="building_address"
-                label="Building Address"
-                value={building.building_address}
-                onChange={handleChange}
-                fullWidth
-              />
-              <TextField
-                name="total_blocks"
-                label="Total Blocks"
-                type="number"
-                value={building.total_blocks}
-                onChange={handleChange}
-                fullWidth
-              />
-              <TextField
-                name="number_of_floors"
-                label="Number of Floors"
-                type="number"
-                value={building.number_of_floors}
-                onChange={handleChange}
-                fullWidth
-              />
-              <TextField
-                name="number_of_rooms_per_floor"
-                label="Number of Rooms per Floor"
-                type="number"
-                value={building.number_of_rooms_per_floor}
-                onChange={handleChange}
-                fullWidth
-              />
-              <TextField
-                name="starting_room_number"
-                label="Starting Room Number"
-                type="number"
-                value={building.starting_room_number}
-                onChange={handleChange}
-                fullWidth
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={building.ground_floor}
-                    onChange={handleChange}
-                    name="ground_floor"
-                    color="primary"
-                  />
-                }
-                label="Ground Floor"
-              />
-              <Button variant="contained" color="primary" onClick={handleSubmit} fullWidth>
-                Create
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+              <Button variant="contained" color="primary" onClick={handleClickOpen}>
+                Open Create Building Form
               </Button>
             </Box>
+            <Dialog
+              open={open}
+              TransitionComponent={Transition}
+              onClose={handleClose}
+              fullWidth
+              maxWidth="md"
+              PaperProps={{
+                sx: { padding: 2, maxWidth: '600px' }
+              }}
+            >
+              <DialogTitle>Create Building</DialogTitle>
+              <DialogContent>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <TextField
+                    name="building_name"
+                    label="Building Name"
+                    value={building.building_name}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name="building_address"
+                    label="Building Address"
+                    value={building.building_address}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name="total_blocks"
+                    label="Total Blocks"
+                    type="number"
+                    value={building.total_blocks}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name="number_of_floors"
+                    label="Number of Floors"
+                    type="number"
+                    value={building.number_of_floors}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name="number_of_rooms_per_floor"
+                    label="Number of Rooms per Floor"
+                    type="number"
+                    value={building.number_of_rooms_per_floor}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name="starting_room_number"
+                    label="Starting Room Number"
+                    type="number"
+                    value={building.starting_room_number}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={building.ground_floor}
+                        onChange={handleChange}
+                        name="ground_floor"
+                        color="primary"
+                      />
+                    }
+                    label="Ground Floor"
+                  />
+                </Box>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="secondary">
+                  Cancel
+                </Button>
+                <Button onClick={handleSubmit} color="primary">
+                  Create
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Paper>
         </Fade>
       </Box>

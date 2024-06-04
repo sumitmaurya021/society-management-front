@@ -67,6 +67,7 @@
     "react-spinners": "^0.13.8",
     "react-spring": "^9.7.3",
     "react-toastify": "^10.0.5",
+    "react-useanimations": "^2.10.0",
     "recharts": "^2.12.7",
     "web-vitals": "^3.5.2"
   },

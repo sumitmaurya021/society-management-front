@@ -57,11 +57,8 @@ const Sidebar = ({ children }) => {
 
   const adminLinks = [
     { to: "/", icon: <MdDashboard />, text: "Dashboard" },
-    { to: "/CreateBuilding", icon: <FaBuilding />, text: "Create Building"},
-    { to: "/createwaterbill", icon: <FaWater />, text: "Create Water Bill" },
-    { to: "/createmaintenancebill", icon: <GrHostMaintenance />, text: "Create Maintenance Bill" },
+    { to: "/ShowMaintanenceBill", icon: <GrHostMaintenance />, text: "Show Maintanence Bill" },
     { to: "/showwaterbill", icon: <FaHandHoldingWater />, text: "Show Water Bill" },
-    { to: "/showmaintenancebill", icon: <MdDomainVerification />, text: "Show Maintenance Bill" },
     { to: "/user_request", icon: <FaUsers />, text: "User Requests" },
     { to: "/MaintenenceBillPayments", icon: <RiBillLine />, text: "User Payments" },
     { to: "/WaterBillPayments", icon: <GiWaterDrop />, text: "Water Bill Payments" },

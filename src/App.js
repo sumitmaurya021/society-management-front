@@ -6,8 +6,6 @@ import Login from './Components/Pages/Login';
 import SignUp from './Components/Pages/SignUp';
 import ShowWaterBill from './Components/Pages/ShowWaterBill';
 import ShowMaintanenceBill from './Components/Pages/ShowMaintanenceBill';
-import CreateWaterBill from './Components/Pages/CreateWaterBill';
-import CreateMaintanenceBill from './Components/Pages/CreateMaintanenceBill';
 import Sidebar from './Components/Sidebar';
 import ForgotPassword from './Components/Pages/ForgotPassword';
 import LoginCustomer from './Components/Pages/LoginCustomer';
@@ -55,14 +53,11 @@ function App() {
             <>
               <Route path="/" element={<DashBoard />} />
               <Route path="/showwaterbill" element={<ShowWaterBill />} />
-              <Route path="/showmaintenancebill" element={<ShowMaintanenceBill />} />
-              <Route path="/createwaterbill" element={<CreateWaterBill />} />
-              <Route path="/createmaintenancebill" element={<CreateMaintanenceBill />} />
+              <Route path="/ShowMaintanenceBill" element={<ShowMaintanenceBill />} />
               <Route path="/user_request" element={<UserRequests />} />
               <Route path="/MaintenenceBillPayments" element={<MaintenenceBillPayments />} />
               <Route path="/WaterBillPayments" element={<WaterBillPayments />} />
               <Route path="/CreateNotification" element={<CreateNotification />} />
-              <Route path="/CreateBuilding" element={<CreateBuilding />} />
             </>
           ) : (
             <>

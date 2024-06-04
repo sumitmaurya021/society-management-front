@@ -1,12 +1,22 @@
-import React, { useState, useEffect } from "react"                    ;
-import axios from                          "axios"                    ;
+import React, { useEffect, useState } from 'react';
+import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Zoom } from '@mui/material';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 import { motion } from                     "framer-motion"            ;
-import { ToastContainer, toast } from      "react-toastify"           ;
-import { Modal, Button } from              'react-bootstrap'          ;
-import Spinner from                        "../Spinner"               ;
-import                                     "./ShowMaintenanceBill.css";
+import { Fade } from 'react-awesome-reveal';
+import { Modal } from 'react-bootstrap';
 
-function ShowMaintenanceBill() {
+function ShowMaintanenceBill() {
+  const [maintenanceBill, setMaintenanceBill] = useState({
+    bill_name: 'Maintenance Bill',
+    bill_month_and_year: '',
+    owner_amount: '',
+    rent_amount: '',
+    start_date: '',
+    end_date: '',
+    remarks: '',
+  });
+  const [open, setOpen] = useState(false); // State for controlling the modal
   const [bills, setBills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -46,8 +56,8 @@ function ShowMaintenanceBill() {
         if (response.status === 200) {
           const formattedBills = response.data.map(bill => ({
             ...bill,
-            start_date: new Date(bill.start_date).toISOString().substr(5, 5),
-            end_date: new Date(bill.end_date).toISOString().substr(5, 5)
+            start_date: new Date(bill.start_date).toISOString().substr(0, 10),
+            end_date: new Date(bill.end_date).toISOString().substr(0, 10)
           }));
           setBills(formattedBills);
           setIsLoading(false);
@@ -59,8 +69,60 @@ function ShowMaintenanceBill() {
         console.error("Error fetching maintenance bills:", error);
       }
     };
+
     fetchBills();
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setMaintenanceBill({
+      ...maintenanceBill,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async () => {
+    const accessToken = localStorage.getItem('access_token');
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/api/v1/buildings/1/maintenance_bills',
+        { maintenance_bill: maintenanceBill },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.status === 201) {
+        toast.success('Maintenance bill created successfully!');
+        setBills(prevBills => [...prevBills, response.data]);
+        setMaintenanceBill({
+          bill_name: 'Maintenance Bill',
+          bill_month_and_year: '',
+          owner_amount: '',
+          rent_amount: '',
+          start_date: '',
+          end_date: '',
+          remarks: '',
+        });
+        handleClose(); // Close the modal after submission
+      } else {
+        toast.error('Failed to create maintenance bill');
+      }
+    } catch (error) {
+      toast.error('Failed to create maintenance bill: ' + error.message);
+      console.error('Failed to create maintenance bill:', error);
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleEdit = (bill) => {
     setSelectedBill(bill);
@@ -162,12 +224,99 @@ function ShowMaintenanceBill() {
   };
 
   return (
-    <>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <motion.div className="maintenance-bill-container">
-          <h1 className="text-center page-title">Maintenance Bill</h1>
+    <div>
+      <Fade>
+        <div className="createmaincss">
+          <Typography
+            variant="h6"
+            gutterBottom
+            className="text-center p-3 bg-body-secondary text-dark sticky-top"
+          >
+            Create Maintenance Bill
+          </Typography>
+          <div className="text-end container">
+            <button className='btn btn-sm btn-success' onClick={handleClickOpen}>
+              Create Maintenance Bill
+            </button>
+          </div>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            TransitionComponent={Zoom}
+            transitionDuration={{ enter: 500, exit: 500 }}
+          >
+            <DialogTitle>Create Maintenance Bill</DialogTitle>
+            <DialogContent>
+              <TextField
+                name="bill_month_and_year"
+                label="Bill Month And Year"
+                value={maintenanceBill.bill_month_and_year}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                name="owner_amount"
+                label="Owner Amount"
+                type="number"
+                value={maintenanceBill.owner_amount}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                name="rent_amount"
+                label="Rent Amount"
+                type="number"
+                value={maintenanceBill.rent_amount}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                name="start_date"
+                label="Start Date"
+                type="date"
+                value={maintenanceBill.start_date}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                name="end_date"
+                label="End Date"
+                type="date"
+                value={maintenanceBill.end_date}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                name="remarks"
+                label="Remarks"
+                value={maintenanceBill.remarks}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+                multiline
+                rows={4}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="secondary">Cancel</Button>
+              <Button onClick={handleSubmit} color="primary">Create</Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      </Fade>
+
+      <motion.div className="maintenance-bill-container">
           <div className="table-container">
             <table className="table table-bordered">
               <thead>
@@ -257,9 +406,8 @@ function ShowMaintenanceBill() {
             </Modal.Footer>
           </Modal>
         </motion.div>
-      )}
-    </>
+    </div>
   );
 }
 
-export default ShowMaintenanceBill;
+export default ShowMaintanenceBill;

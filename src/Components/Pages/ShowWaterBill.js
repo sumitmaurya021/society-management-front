@@ -13,6 +13,7 @@ function ShowWaterBill() {
   const [showAddUnitsModal, setShowAddUnitsModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [showCreateBillModal, setShowCreateBillModal] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [selectedBill, setSelectedBill] = useState({});
   const [editFormData, setEditFormData] = useState({
@@ -38,6 +39,15 @@ function ShowWaterBill() {
   const accessToken = localStorage.getItem("access_token"); // Retrieve access token from local storage
   const [unit, setUnit] = useState(null);
   const [waterBillId, setWaterBillId] = useState(null);
+
+  const [createFormData, setCreateFormData] = useState({
+    bill_name: "Water Bill",
+    bill_month_and_year: "",
+    unit_rate: "",
+    start_date: "",
+    end_date: "",
+    remarks: "",
+  });
 
   // Fetch blocks when buildingId changes
   useEffect(() => {
@@ -177,6 +187,13 @@ function ShowWaterBill() {
     setWaterBillId(billId); // Set the selected water bill ID dynamically
   };
 
+  const handleCreateFormChange = (e) => {
+    setCreateFormData({
+      ...createFormData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   // Open add units modal for specific room
   const handleRoomAddUnitsClick = (room) => {
     setSelectedRoom(room);
@@ -273,6 +290,7 @@ function ShowWaterBill() {
       bill_month_and_year: bill.bill_month_and_year,
       start_date: bill.start_date,
       end_date: bill.end_date,
+      unit_rate: bill.unit_rate,
       remarks: bill.remarks,
     });
     setShowEditModal(true);
@@ -369,7 +387,50 @@ function ShowWaterBill() {
     setShowDeleteConfirmation(false);
   };
 
+  const handleCreateBillModalOpen = () => {
+    setShowCreateBillModal(true);
+  };
+
+  const handleCreateBillModalClose = () => {
+    setShowCreateBillModal(false);
+  };
+
+  const handleCreateFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/v1/buildings/${buildingId}/water_bills`,
+        {
+          water_bill: {
+            ...createFormData,
+          },
+          access_token: accessToken,
+        },
+      );
+
+      if (response.status === 201) {
+        toast.success("Bill created successfully");
+
+        setWaterBills([...waterBills, response.data]);
+        setShowCreateBillModal(false);
+        setCreateFormData({
+          bill_name: "",
+          bill_month_and_year: "",
+          start_date: "",
+          end_date: "",
+          unit_rate: "",
+          remarks: "",
+        });
+      } else {
+        toast.error("Error creating bill");
+      }
+    } catch (error) {
+      console.error("Error creating bill:", error);
+    }
+  };
+
   return (
+    <>
     <motion.div
       className="water-bill-container"
       initial={{ opacity: 0 }}
@@ -379,6 +440,9 @@ function ShowWaterBill() {
       <div className="header">
         <h2>Show Water Bills</h2>
       </div>
+      <div className="text-end mb-4">
+      <button className="btn btn-primary btn-sm" onClick={handleCreateBillModalOpen}>Create Water Bill</button>
+    </div>
       {isLoading ? (
         <Spinner />
       ) : (
@@ -593,6 +657,16 @@ function ShowWaterBill() {
               />
             </Form.Group>
 
+            <Form.Group controlId="billAmount">
+              <Form.Label>unit_rate</Form.Label>
+              <Form.Control
+                type="number"
+                name="unit_rate"
+                value={editFormData.unit_rate}
+                onChange={handleEditFormChange}
+              />
+            </Form.Group>
+
             <Form.Group controlId="billMonthYear">
               <Form.Label>Month & Year</Form.Label>
               <Form.Control
@@ -661,7 +735,80 @@ function ShowWaterBill() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+            {/* Create Water Bill Modal */}
+        <Modal show={showCreateBillModal} onHide={handleCreateBillModalClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create Water Bill</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleCreateFormSubmit}>
+            <Form.Group>
+              <Form.Label>Bill Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="bill_name"
+                value={createFormData.bill_name}
+                onChange={handleCreateFormChange}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="billMonthYear">
+              <Form.Label>Unit rate</Form.Label>
+              <Form.Control
+                type="number"
+                name="unit_rate"
+                value={createFormData.unit_rate}
+                onChange={handleCreateFormChange}
+              />
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Month and Year</Form.Label>
+              <Form.Control
+                type="text"
+                name="bill_month_and_year"
+                value={createFormData.bill_month_and_year}
+                onChange={handleCreateFormChange}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Start Date</Form.Label>
+              <Form.Control
+                type="date"
+                name="start_date"
+                value={createFormData.start_date}
+                onChange={handleCreateFormChange}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>End Date</Form.Label>
+              <Form.Control
+                type="date"
+                name="end_date"
+                value={createFormData.end_date}
+                onChange={handleCreateFormChange}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Remarks</Form.Label>
+              <Form.Control
+                type="text"
+                name="remarks"
+                value={createFormData.remarks}
+                onChange={handleCreateFormChange}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+            <Button variant="primary" type="submit">
+              Create Bill
+            </Button>
+            </Modal.Footer>
+      </Modal>
     </motion.div>
+    </>
   );
 }
 

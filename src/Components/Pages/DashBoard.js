@@ -16,6 +16,16 @@ import {
   Select,
   MenuItem,
   CircularProgress,
+  Button,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Slide,
+
 } from "@mui/material";
 import {
   BarChart,
@@ -27,6 +37,10 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Dashboard = () => {
   const [buildingId, setBuildingId] = useState("");
@@ -212,6 +226,87 @@ const Dashboard = () => {
     setRooms([]);
   };
 
+  const [building, setBuilding] = useState({
+    building_name: "",
+    building_address: "",
+    total_blocks: "",
+    number_of_floors: "",
+    number_of_rooms_per_floor: "",
+    ground_floor: false,
+    starting_room_number: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setBuilding({
+      ...building,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    setSuccessMessage("");
+    const accessToken = localStorage.getItem("access_token");
+    const buildingData = {
+      ...building,
+      total_blocks: parseInt(building.total_blocks, 10),
+      number_of_floors: parseInt(building.number_of_floors, 10),
+      number_of_rooms_per_floor: parseInt(building.number_of_rooms_per_floor, 10),
+      starting_room_number: parseInt(building.starting_room_number, 10),
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/buildings",
+        { building: buildingData, access_token: accessToken },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.status === 201) {
+        setSuccessMessage("Your building has been created successfully!");
+        toast.success("Building created successfully!");
+        setTimeout(() => {
+          setLoading(false);
+          setSuccessMessage("");
+          setBuilding({
+            building_name: "",
+            building_address: "",
+            total_blocks: "",
+            number_of_floors: "",
+            number_of_rooms_per_floor: "",
+            ground_floor: false,
+            starting_room_number: "",
+          });
+          handleClose();
+        }, 2000);
+      } else {
+        setLoading(false);
+        toast.error("Failed to create building");
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error("Failed to create building: " + error.message);
+      console.error("Failed to create building:", error);
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       {isLoading ? (
@@ -220,9 +315,94 @@ const Dashboard = () => {
         </Box>
       ) : (
         <Box p={3}>
-          <Typography variant="h3" gutterBottom>
-            Dashboard
-          </Typography>
+          <div className="d-flex justify-content-between align-items-center">
+          <Typography variant="h3" gutterBottom>Dashboard</Typography>
+          <button className="btn btn-sm btn-primary" onClick={handleClickOpen}>Create Building</button>
+          </div>
+
+          <Dialog
+              open={open}
+              TransitionComponent={Transition}
+              onClose={handleClose}
+              fullWidth
+              maxWidth="md"
+              PaperProps={{
+                sx: { padding: 2, maxWidth: '600px' }
+              }}
+            >
+              <DialogTitle>Create Building</DialogTitle>
+              <DialogContent>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <TextField
+                    name="building_name"
+                    label="Building Name"
+                    value={building.building_name}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name="building_address"
+                    label="Building Address"
+                    value={building.building_address}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name="total_blocks"
+                    label="Total Blocks"
+                    type="number"
+                    value={building.total_blocks}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name="number_of_floors"
+                    label="Number of Floors"
+                    type="number"
+                    value={building.number_of_floors}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name="number_of_rooms_per_floor"
+                    label="Number of Rooms per Floor"
+                    type="number"
+                    value={building.number_of_rooms_per_floor}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name="starting_room_number"
+                    label="Starting Room Number"
+                    type="number"
+                    value={building.starting_room_number}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={building.ground_floor}
+                        onChange={handleChange}
+                        name="ground_floor"
+                        color="primary"
+                      />
+                    }
+                    label="Ground Floor"
+                  />
+                </Box>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="secondary">
+                  Cancel
+                </Button>
+                <Button onClick={handleSubmit} color="primary">
+                  Create
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+
           <div className="d-flex gap-3">
           <FormControl fullWidth margin="normal">
             <InputLabel id="building-select-label">Building</InputLabel>

@@ -154,7 +154,7 @@ function WaterBillPayments() {
         </Select>
       </FormControl>
 
-      <Grid container spacing={2} style={{ marginBottom: '20px' }}>
+      <Grid container spacing={2} style={{ marginBottom: '20px' }} className="align-items-center">
         <Grid item xs={12} sm={3}>
           <FormControl fullWidth>
             <InputLabel>Filter by Month and Year</InputLabel>
@@ -201,7 +201,7 @@ function WaterBillPayments() {
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={3}>
-          <button className='btn btn-sm btn-primary' onClick={handleClear} style={{ marginBottom: '20px' }}>
+          <button className='btn btn-sm btn-primary' onClick={handleClear}>
             Clear Filters
           </button>
         </Grid>

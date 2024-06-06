@@ -19,7 +19,6 @@ function LoginCustomer() {
   const [block_name, setBlockName] = useState("");
   const [room_number, setRoomNumber] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -41,9 +40,7 @@ function LoginCustomer() {
         localStorage.setItem("floor_number", response.data.user.floor_id);
         localStorage.setItem("user", JSON.stringify(response.data.user));
         toast.success("Login successful");
-        setTimeout(() => {
-          navigate("/WaterBillsPay");
-        }, 2000);
+        window.location.href = '/WaterBillsPay';
       }
     } catch (error) {
       setErrorMessage(error.response?.data?.error || "An error occurred");

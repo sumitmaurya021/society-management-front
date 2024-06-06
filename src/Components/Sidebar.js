@@ -1,4 +1,5 @@
-import { useState } from "react";
+// Sidebar.js
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -14,8 +15,7 @@ import { GiWaterDrop } from "react-icons/gi";
 import { FaBuilding } from "react-icons/fa";
 import "./Pages/Sidebar.css";
 
-const Sidebar = ({ children }) => {
-  const userRole = localStorage.getItem("user_role");
+const Sidebar = ({ isAuthenticated, userRole, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -41,11 +41,10 @@ const Sidebar = ({ children }) => {
       const response = await axios.post("http://localhost:3000/api/v1/logout", null, config);
 
       if (response.status === 200) {
-        localStorage.clear();
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_role');
+        window.location.href = '/admin_customer_option'; 
         toast.success("Logged out successfully");
-        setTimeout(() => {
-          navigate("/admin_customer_option");
-        }, 2000);
       } else {
         toast.error("An error occurred while logging out. Please try again later.");
       }
@@ -57,7 +56,7 @@ const Sidebar = ({ children }) => {
 
   const adminLinks = [
     { to: "/", icon: <MdDashboard />, text: "Dashboard" },
-    { to: "/ShowMaintanenceBill", icon: <GrHostMaintenance />, text: "Show Maintanence Bill" },
+    { to: "/ShowMaintanenceBill", icon: <GrHostMaintenance />, text: "Show Maintenance Bill" },
     { to: "/showwaterbill", icon: <FaHandHoldingWater />, text: "Show Water Bill" },
     { to: "/user_request", icon: <FaUsers />, text: "User Requests" },
     { to: "/MaintenenceBillPayments", icon: <RiBillLine />, text: "User Payments" },

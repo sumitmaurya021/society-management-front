@@ -61,7 +61,7 @@ function App() {
             </>
           ) : (
             <>
-              <Route path="/WaterBillsPay" element={<WaterBillsPay />} /> 
+              <Route path="/WaterBillsPay" element={<WaterBillsPay />} />
               <Route path="/MaintenenceBillPay" element={<MaintenenceBillPay />} />
               <Route path="/ReceiveNotification" element={<ReceiveNotification />} />
               <Route path="/UserProfile" element={<UserProfile />} />

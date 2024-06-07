@@ -245,7 +245,7 @@ function ShowMaintanenceBill() {
             TransitionComponent={Zoom}
             transitionDuration={{ enter: 500, exit: 500 }}
           >
-            <DialogTitle>Create Maintenance Bill</DialogTitle>
+            <DialogTitle>Show Maintenance Bill</DialogTitle>
             <DialogContent>
               <TextField
                 name="bill_month_and_year"
@@ -316,7 +316,7 @@ function ShowMaintanenceBill() {
         </div>
       </Fade>
 
-      <motion.div className="maintenance-bill-container">
+      <motion.div className="maintenance-bill-container container-fluid">
           <div className="table-container">
             <table className="table table-bordered">
               <thead>

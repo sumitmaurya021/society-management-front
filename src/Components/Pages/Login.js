@@ -11,7 +11,7 @@ import Grid from                                      "@mui/material/Grid"      
 import LockOutlinedIcon from                          "@mui/icons-material/LockOutlined"     ;
 import Typography from                                "@mui/material/Typography"             ;
 import { createTheme, ThemeProvider } from            "@mui/material/styles"                 ;
-import { toast, ToastContainer } from                 "react-toastify"                       ;
+import { toast } from                 "react-toastify"                       ;
 import                                                "react-toastify/dist/ReactToastify.css";
 
 function Login() {
@@ -20,7 +20,6 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const [otpSent, setOTPSent] = useState(false);
   const [otp, setOTP] = useState("");
-  const navigate = useNavigate();
 
 
   const handleSubmit = async (e) => {
@@ -34,10 +33,8 @@ function Login() {
         },
       });
       if (response && response.data && response.status === 200) {
-        // If login is successful, set OTP sent state to true
         setOTPSent(true);
-        // Show toast notification for email sent
-        toast.info(`Email sent to ${email}`); // Corrected toast function call
+        toast.info(`Email sent to ${email}`);
       }
     } catch (error) {
       setErrorMessage(error.response?.data?.error || "An error occurred");
@@ -61,15 +58,10 @@ function Login() {
       if (response && response.data && response.status === 200) {
         const role = 'admin';
         localStorage.setItem('user_role', role);
-        // Store access token in local storage
         localStorage.setItem("access_token", response.data.user.access_token);
         localStorage.setItem("user", response.data.user.id);
-        // Show toast notification for OTP verification
         toast.success("Email verified successfully!");
-        // Set isLoggedIn to true to show the sidebar
-        setTimeout(() => {
-          navigate("/showwaterbill");
-        }, 2000);
+        window.location.href = '/showwaterbill';
       }
     } catch (error) {
       console.error("Error while verifying OTP:", error);
@@ -201,7 +193,6 @@ function Login() {
           </Box>
         </Grid>
       </Grid>
-      <ToastContainer />
     </ThemeProvider>
   );
 }

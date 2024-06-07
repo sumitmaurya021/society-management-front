@@ -153,8 +153,8 @@ function MaintenanceBillPayments() {
         </Select>
       </FormControl>
 
-      <Grid container spacing={2} style={{ marginBottom: '20px' }}>
-        <Grid item xs={12} sm={4}>
+      <Grid container spacing={2} style={{ marginBottom: '20px' }} className="align-items-center">
+        <Grid item xs={12} sm={3}>
           <FormControl fullWidth>
             <InputLabel>Filter by Month and Year</InputLabel>
             <Select
@@ -169,7 +169,7 @@ function MaintenanceBillPayments() {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={3}>
           <FormControl fullWidth>
             <InputLabel>Filter by Block</InputLabel>
             <Select
@@ -184,7 +184,7 @@ function MaintenanceBillPayments() {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={3}>
           <FormControl fullWidth>
             <InputLabel>Filter by Floor</InputLabel>
             <Select
@@ -199,10 +199,12 @@ function MaintenanceBillPayments() {
             </Select>
           </FormControl>
         </Grid>
+        <Grid item xs={12} sm={3}>
+          <button className='btn btn-sm btn-primary' onClick={handleClearFilters}>
+            Clear Filters
+          </button>
+        </Grid>
       </Grid>
-      <button className='btn btn-sm btn-primary' onClick={handleClearFilters} style={{ marginBottom: '20px' }}>
-        Clear Filters
-      </button>
 
       <div style={{ position: 'relative', minHeight: '300px' }}>
         {isLoading && (

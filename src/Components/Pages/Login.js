@@ -52,7 +52,7 @@ function Login() {
             email,
             otp,
           },
-          client_id: "nuKj4p03vMYGbmvCcyoc4eZ79QbLInVHyQW-ec1ShD4",
+          client_id: "BwVpTYhXMR7yoOvt0iI9XE_Qgtb9OegwEdr2ufyEQ_U",
         }
       );
       if (response && response.data && response.status === 200) {
@@ -61,7 +61,7 @@ function Login() {
         localStorage.setItem("access_token", response.data.user.access_token);
         localStorage.setItem("user", response.data.user.id);
         toast.success("Email verified successfully!");
-        window.location.href = '/showwaterbill';
+        window.location.href = '/';
       }
     } catch (error) {
       console.error("Error while verifying OTP:", error);
@@ -164,6 +164,9 @@ function Login() {
                       </Link>
                     </Grid>
                   </Grid>
+                  <Link to="/admin_customer_option" variant="body2" style={{ marginTop: "10px", display: "flex", justifyContent: "center" }}>
+                    {"Admin Customer Option"}
+                  </Link>
                 </>
               ) : (
                 <Box>

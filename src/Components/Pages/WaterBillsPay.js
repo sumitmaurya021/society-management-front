@@ -65,9 +65,12 @@ function WaterBillsPay() {
 
             const newStatuses = responses.reduce((acc, response, index) => {
                 if (response.status === 200 && response.data.water_bill_payments.length > 0) {
-                    acc[bills[index].id] = response.data.water_bill_payments[0].status;
+                    acc[bills[index].id] = {
+                        status: response.data.water_bill_payments[0].status,
+                        paymentId: response.data.water_bill_payments[0].id
+                    };
                 } else {
-                    acc[bills[index].id] = 'Unpaid';
+                    acc[bills[index].id] = { status: 'Unpaid', paymentId: null };
                 }
                 return acc;
             }, {});
@@ -115,6 +118,23 @@ function WaterBillsPay() {
         }
     };
 
+    const handleGenerateInvoice = (billId, paymentId) => {
+        if (!paymentId) {
+            toast.error('Payment ID not found');
+            return;
+        }
+
+        const accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+            toast.error('Access token not found');
+            return;
+        }
+
+        const url = `http://localhost:3000/api/v1/buildings/1/water_bills/${billId}/water_bill_payments/${paymentId}/generate_invoice_pdf.pdf?access_token=${accessToken}`;
+        console.log(`Opening URL: ${url}`); // Debugging line
+        window.open(url, '_blank');
+    };
+
     return (
         <>
             <div className="bills-page">
@@ -153,19 +173,25 @@ function WaterBillsPay() {
                                             <td>{userRoom.total_units}</td>
                                             <td>{userRoom.previous_unit}</td>
                                             <td>{userRoom.updated_unit}</td>
-                                            <td>{statuses[bill.id] || 'Unpaid'}</td>
+                                            <td>{statuses[bill.id]?.status || 'Unpaid'}</td>
                                             <td>
-                                                {statuses[bill.id] === 'Paid' ? (
+                                                {statuses[bill.id]?.status === 'Paid' ? (
                                                     <CheckCircle style={{ color: 'green' }} />
                                                 ) : (
                                                     <button className='btn btn-sm btn-success' onClick={() => handleOpenPaymentPopup(bill)}>Pay</button>
                                                 )}
                                             </td>
                                             <td>
-                                                {statuses[bill.id] === 'Paid' ? (
-                                                    <FaFilePdf style={{ color: 'red', cursor: 'pointer', fontSize: '20px' }} />
+                                                {statuses[bill.id]?.status === 'Paid' ? (
+                                                    <FaFilePdf 
+                                                        style={{ color: 'red', cursor: 'pointer', fontSize: '20px' }} 
+                                                        onClick={() => handleGenerateInvoice(bill.id, statuses[bill.id].paymentId)}
+                                                    />
                                                 ) : (
-                                                    <FaFilePdf style={{ color: 'blue', cursor: 'pointer', fontSize: '20px' }} />
+                                                    <FaFilePdf 
+                                                        style={{ color: 'blue', cursor: 'pointer', fontSize: '20px' }} 
+                                                        onClick={() => toast.error('Invoice available after payment')}
+                                                    />
                                                 )}
                                             </td>
                                         </tr>

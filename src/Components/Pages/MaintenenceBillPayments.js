@@ -3,7 +3,7 @@ import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Container, Select, MenuItem, FormControl, InputLabel, Button, Grid } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ThreeDots } from 'react-loader-spinner';
 
@@ -282,7 +282,6 @@ function MaintenanceBillPayments() {
           </Typography>
         )}
       </div>
-      <ToastContainer />
     </Container>
   );
 }

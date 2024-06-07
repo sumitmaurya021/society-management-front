@@ -170,7 +170,6 @@ const Dashboard = () => {
 
         if (response.status === 200) {
           setUsers(response.data.users);
-          toast.success("Users fetched successfully");
           setShow(true);
         } else {
           toast.error("Error fetching users");
@@ -184,7 +183,7 @@ const Dashboard = () => {
 
     fetchDashboard();
     fetchUsers();
-    fetchBuildings(); // Fetch buildings when the component mounts
+    fetchBuildings();
   }, []);
 
   useEffect(() => {

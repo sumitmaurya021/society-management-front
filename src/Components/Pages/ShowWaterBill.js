@@ -802,7 +802,7 @@ function ShowWaterBill() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" onClick={handleCreateFormSubmit}>
               Create Bill
             </Button>
             </Modal.Footer>

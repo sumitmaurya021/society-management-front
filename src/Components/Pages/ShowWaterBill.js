@@ -532,7 +532,7 @@ function ShowWaterBill() {
                 <option value="">Select Block</option>
                 {blocks.map((block) => (
                   <option key={block.id} value={block.id}>
-                    {block.name}
+                    {block.block_name}
                   </option>
                 ))}
               </Form.Control>
@@ -547,7 +547,7 @@ function ShowWaterBill() {
                 <option value="">Select Floor</option>
                 {floors.map((floor) => (
                   <option key={floor.id} value={floor.id}>
-                    {floor.number}
+                    {floor.floor_number}
                   </option>
                 ))}
               </Form.Control>

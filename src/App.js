@@ -35,7 +35,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/customer_signup" element={<SignUpCustomer />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/admin_customer_option" element={<AdminCustomer />} />
+          <Route path="/" element={<AdminCustomer />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

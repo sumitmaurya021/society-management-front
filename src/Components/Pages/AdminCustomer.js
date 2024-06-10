@@ -4,6 +4,8 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link } from 'react-router-dom';
+import ParticlesComponent from '../particles';
+import './AdminCustomer.css';
 
 const imageUrls = [
   'https://source.unsplash.com/random/1920x1080?nature,water',
@@ -30,27 +32,20 @@ function AdminCustomer() {
   }, []);
 
   return (
+    <>
+    <ParticlesComponent className="particles"/>
     <Grid
       container
       justifyContent="center"
       alignItems="center"
       style={{
         height: '100vh',
-        backgroundImage: `url(${bgImage})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundPosition: 'center'
       }}
     >
       <Grid item xs={12} sm={6} md={4} style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px', borderRadius: '10px' }}>
         <Grid container direction="column" alignItems="center" spacing={2}>
-          <Grid item>
-            <Typography variant="h4" align="center" gutterBottom>
-              Welcome to Society Management
-            </Typography>
-            <Typography variant="subtitle1" align="center" gutterBottom>
-              Please select your login option
-            </Typography>
-          </Grid>
           <Grid item>
             <Button
               component={Link}
@@ -82,6 +77,7 @@ function AdminCustomer() {
         </Grid>
       </Grid>
     </Grid>
+    </>
   );
 }
 

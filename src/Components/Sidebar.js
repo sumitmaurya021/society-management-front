@@ -1,18 +1,16 @@
-// Sidebar.js
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { MdDashboard, MdDomainVerification } from "react-icons/md";
-import { FaBars, FaWater, FaHandHoldingWater, FaAmazonPay, FaUsers } from "react-icons/fa";
+import { FaBars, FaHandHoldingWater, FaAmazonPay, FaUsers } from "react-icons/fa";
 import { GrHostMaintenance } from "react-icons/gr";
 import { RiBillLine } from "react-icons/ri";
 import { IoLogOut } from "react-icons/io5";
 import { AiFillNotification } from "react-icons/ai";
 import { IoIosNotifications } from "react-icons/io";
 import { GiWaterDrop } from "react-icons/gi";
-import { FaBuilding } from "react-icons/fa";
 import "./Pages/Sidebar.css";
 
 const Sidebar = ({ isAuthenticated, userRole, children }) => {
@@ -27,6 +25,11 @@ const Sidebar = ({ isAuthenticated, userRole, children }) => {
   };
 
   const handleLogout = async () => {
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    if (!confirmLogout) {
+      return; // User canceled logout
+    }
+
     try {
       const accessToken = localStorage.getItem("access_token");
       if (!accessToken) {

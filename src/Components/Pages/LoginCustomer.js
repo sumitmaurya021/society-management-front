@@ -29,7 +29,7 @@ function LoginCustomer() {
           room_number,
           password,
         },
-        client_id: "nuKj4p03vMYGbmvCcyoc4eZ79QbLInVHyQW-ec1ShD4",
+        client_id: "BwVpTYhXMR7yoOvt0iI9XE_Qgtb9OegwEdr2ufyEQ_U",
       })
 
       if (response && response.data && response.status === 200) {
@@ -146,6 +146,9 @@ function LoginCustomer() {
                     </Link>
                   </Grid>
                 </Grid>
+                <Link to="/admin_customer_option" variant="body2" style={{ marginTop: "10px", display: "flex", justifyContent: "center" }}>
+                    {"Admin Customer Option"}
+                  </Link>
               </Box>
             </Box>
           </Grid>

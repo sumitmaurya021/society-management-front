@@ -21,7 +21,6 @@ import CreateNotification from "./Components/Pages/CreateNotification";
 import ReceiveNotification from "./Components/Pages/ReceiveNotification";
 import WebSocketNotification from "./Components/Pages/WebSocketNotification";
 import UserProfile from "./Components/Pages/UserProfile";
-import { ToastContainer } from "react-toastify";
 
 function App() {
   const isAuthenticated = localStorage.getItem("access_token");
@@ -69,7 +68,6 @@ function App() {
         </Routes>
         <WebSocketNotification />
       </Sidebar>
-      <ToastContainer />
     </Router>
   );
 }

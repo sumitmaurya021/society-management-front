@@ -36,6 +36,8 @@
     "@tiptap/extension-link": "^2.3.2",
     "@tiptap/react": "^2.3.2",
     "@tiptap/starter-kit": "^2.3.2",
+    "@tsparticles/all": "^3.4.0",
+    "@tsparticles/react": "^3.0.0",
     "ag-grid-community": "^31.3.1",
     "ag-grid-react": "^31.3.1",
     "ajv": "^8.0.0",

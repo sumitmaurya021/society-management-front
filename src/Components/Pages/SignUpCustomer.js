@@ -23,10 +23,9 @@ function SignUpCustomer() {
     email: "",
     password: "",
     mobile_number: "",
-    room_id: "",
-    block_id: "",
-    floor_id: "",
     room_number: "",
+    block_name: "",
+    floor_number: "",
     owner_or_renter: "",
     gender: "",
   });
@@ -43,11 +42,27 @@ function SignUpCustomer() {
     event.preventDefault();
     try {
       const response = await axios.post("http://localhost:3000/api/v1/users", {
-        user: formData,
-        client_id: "BwVpTYhXMR7yoOvt0iI9XE_Qgtb9OegwEdr2ufyEQ_U",
+        user: {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          mobile_number: formData.mobile_number,
+          block_name: formData.block_name,
+          floor_number: formData.floor_number,
+          room_number: formData.room_number,
+          owner_or_renter: formData.owner_or_renter,
+          gender: formData.gender,
+        },
+        client_id: "huAjw3Fq_4qlXRUYWTciYsp9FmbT12OJny5db9bOme8",
       });
-      console.log("User signed up successfully:", response.data);
-      toast.success("Sign up successful");
+      if (response.status === 200) {
+        console.log("User signed up successfully:", response.data);
+        toast.success("Sign up successful");
+        window.location.href = "/customer_login";
+      } else {
+        console.error("Error signing up:", response.data);
+        toast.error("Sign up failed. Please try again.");
+      }
     } catch (error) {
       console.error("Error signing up:", error);
       toast.error("Sign up failed. Please try again.");
@@ -129,51 +144,38 @@ function SignUpCustomer() {
                 <TextField
                   required
                   fullWidth
-                  name="room_id"
-                  label="Room ID"
-                  type="text"
-                  id="room_id"
-                  autoComplete="room_id"
-                  value={formData.room_id}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="block_id"
-                  label="Block ID"
-                  type="text"
-                  id="block_id"
-                  autoComplete="block_id"
-                  value={formData.block_id}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="floor_id"
-                  label="Floor ID"
-                  type="text"
-                  id="floor_id"
-                  autoComplete="floor_id"
-                  value={formData.floor_id}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
                   name="room_number"
                   label="Room Number"
                   type="text"
                   id="room_number"
                   autoComplete="room_number"
                   value={formData.room_number}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="block_name"
+                  label="Block Name"
+                  type="text"
+                  id="block_name"
+                  autoComplete="block_name"
+                  value={formData.block_name}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="floor_number"
+                  label="Floor Number"
+                  type="text"
+                  id="floor_number"
+                  autoComplete="floor_number"
+                  value={formData.floor_number}
                   onChange={handleChange}
                 />
               </Grid>

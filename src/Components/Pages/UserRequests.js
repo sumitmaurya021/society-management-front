@@ -94,11 +94,11 @@ function UserRequests() {
                 updateRequestStatus(id, 'rejected');
             } else {
                 toast.error("Error rejecting user");
-                updateRequestStatus(id, 'pending'); // Revert status back to 'pending' if there's an error
+                updateRequestStatus(id, 'pending');
             }
         } catch (error) {
             console.error("Error rejecting user:", error);
-            updateRequestStatus(id, 'pending'); // Revert status back to 'pending' if there's an error
+            updateRequestStatus(id, 'pending');
         }
     };
 

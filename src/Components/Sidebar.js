@@ -46,7 +46,7 @@ const Sidebar = ({ isAuthenticated, userRole, children }) => {
       if (response.status === 200) {
         localStorage.removeItem('access_token');
         localStorage.removeItem('user_role');
-        window.location.href = '/admin_customer_option'; 
+        window.location.href = '/'; 
         toast.success("Logged out successfully");
       } else {
         toast.error("An error occurred while logging out. Please try again later.");

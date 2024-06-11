@@ -54,7 +54,7 @@ function WaterBillsPay() {
             }
 
             const statusPromises = bills.map(bill => 
-                axios.get(`http://localhost:3000/api/v1/buildings/1/water_bills/${bill.id}/water_bill_payments`, {
+                axios.get(`http://localhost:3000/api/v1/buildings/1/water_bills/${bill.id}/water_bill_payments/${3}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },

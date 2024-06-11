@@ -33,14 +33,15 @@ function LoginCustomer() {
       })
 
       if (response && response.data && response.status === 200) {
+        const user = response.data.user;
         localStorage.setItem("user_role", "customer");
-        localStorage.setItem("access_token", response.data.user.access_token);
-        localStorage.setItem("block_name", response.data.user.block_id);
-        localStorage.setItem("room_number", response.data.user.room_number);
-        localStorage.setItem("floor_number", response.data.user.floor_id);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("access_token", user.access_token);
+        localStorage.setItem("block_name", user.block_name); // Changed from block_id to block
+        localStorage.setItem("room_number", user.room_number);
+        localStorage.setItem("floor_number", user.floor_number); // Changed from floor to floor_number
+        localStorage.setItem("user", JSON.stringify(user));
         toast.success("Login successful");
-        window.location.href = '/WaterBillsPay';
+        window.location.href = "/WaterBillsPay";
       }
     } catch (error) {
       setErrorMessage(error.response?.data?.error || "An error occurred");

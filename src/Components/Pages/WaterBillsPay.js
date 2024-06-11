@@ -49,38 +49,43 @@ function WaterBillsPay() {
     const fetchStatuses = async (bills) => {
         try {
             const accessToken = localStorage.getItem('access_token');
+            const loggedInUserId = JSON.parse(localStorage.getItem('user')).id; // Retrieve logged-in user ID
+    
             if (!accessToken) {
                 throw new Error('Access token not found');
             }
-
+    
             const statusPromises = bills.map(bill => 
-                axios.get(`http://localhost:3000/api/v1/buildings/1/water_bills/${bill.id}/water_bill_payments/${3}`, {
+                axios.get(`http://localhost:3000/api/v1/buildings/1/water_bills/${bill.id}/water_bill_payments`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
-                    },
+                    }
                 })
             );
-
+    
             const responses = await Promise.all(statusPromises);
-
+    
             const newStatuses = responses.reduce((acc, response, index) => {
-                if (response.status === 200 && response.data.water_bill_payments.length > 0) {
+                const userPayments = response.data.water_bill_payments.filter(payment => payment.user_id === loggedInUserId);
+                if (userPayments.length > 0) {
                     acc[bills[index].id] = {
-                        status: response.data.water_bill_payments[0].status,
-                        paymentId: response.data.water_bill_payments[0].id
+                        status: userPayments[0].status,
+                        paymentId: userPayments[0].id
                     };
                 } else {
                     acc[bills[index].id] = { status: 'Unpaid', paymentId: null };
                 }
                 return acc;
             }, {});
-
+    
             setStatuses(newStatuses);
         } catch (error) {
             console.log(error);
             toast.error('Failed to fetch payment statuses');
         }
     };
+    
+    
 
     useEffect(() => {
         fetchWaterBill();
@@ -102,6 +107,7 @@ function WaterBillsPay() {
                 month_year: paymentDate,
                 payment_method: paymentMethod,
                 access_token: accessToken,
+                floor_number: userRoom.floor_number,
             });
 
             if (response.status === 200) {

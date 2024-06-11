@@ -131,8 +131,8 @@ function WaterBillPayments() {
   const filteredPayments = payments.filter(payment => {
     return (
       (filterMonthYear ? payment.month_year === filterMonthYear : true) &&
-      (filterBlock ? convertBlockToAlphabet(payment.block) === filterBlock : true) &&
-      (filterFloor ? payment.floor === filterFloor : true)
+      (filterBlock ? payment.block_name === filterBlock : true) &&
+      (filterFloor ? payment.floor_number === filterFloor : true)
     );
   });
 
@@ -177,7 +177,7 @@ function WaterBillPayments() {
               value={filterBlock}
               onChange={(e) => setFilterBlock(e.target.value)}
             >
-              {[...new Set(payments.map(payment => convertBlockToAlphabet(payment.block)))].map(block => (
+              {[...new Set(payments.map(payment => payment.block_name))].map(block => (
                 <MenuItem key={block} value={block}>
                   {block}
                 </MenuItem>
@@ -192,7 +192,7 @@ function WaterBillPayments() {
               value={filterFloor}
               onChange={(e) => setFilterFloor(e.target.value)}
             >
-              {[...new Set(payments.map(payment => payment.floor))].map(floor => (
+              {[...new Set(payments.map(payment => payment.floor_number))].map(floor => (
                 <MenuItem key={floor} value={floor}>
                   {floor}
                 </MenuItem>
@@ -236,8 +236,8 @@ function WaterBillPayments() {
                     <TableCell align="center">{payment.id}</TableCell>
                     <TableCell align="center">{payment.month_year}</TableCell>
                     <TableCell align="center">{payment.bill_name}</TableCell>
-                    <TableCell align="center">{convertBlockToAlphabet(payment.block)}</TableCell>
-                    <TableCell align="center">{payment.floor}</TableCell>
+                    <TableCell align="center">{payment.block_name}</TableCell>
+                    <TableCell align="center">{payment.floor_number}</TableCell>
                     <TableCell align="center">{payment.room_number}</TableCell>
                     <TableCell align="center">{payment.amount}</TableCell>
                     <TableCell align="center" className="text-capitalize">{payment.payment_method}</TableCell>

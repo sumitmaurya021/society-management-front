@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import {
   Box,
   Paper,
@@ -308,6 +308,7 @@ const Dashboard = () => {
 
   return (
     <>
+    <ToastContainer />
       {isLoading ? (
         <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
           <CircularProgress />
@@ -427,7 +428,7 @@ const Dashboard = () => {
             >
               {Array.isArray(blocks) && blocks.map((block) => (
                 <MenuItem key={block.id} value={block.id}>
-                  {block.name}
+                  {block.block_name}
                 </MenuItem>
               ))}
             </Select>
@@ -442,7 +443,7 @@ const Dashboard = () => {
             >
               {Array.isArray(floors) && floors.map((floor) => (
                 <MenuItem key={floor.id} value={floor.id}>
-                  {floor.number}
+                  {floor.floor_number}
                 </MenuItem>
               ))}
             </Select>

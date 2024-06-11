@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Zoom } from '@mui/material';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import { motion } from                     "framer-motion"            ;
 import { Fade } from 'react-awesome-reveal';
@@ -61,7 +61,7 @@ function ShowMaintanenceBill() {
           }));
           setBills(formattedBills);
           setIsLoading(false);
-          toast("Maintenance bills fetched successfully");
+          toast.success("Maintenance bills fetched successfully");
         } else {
           toast.error("Error fetching maintenance bills");
         }
@@ -225,6 +225,7 @@ function ShowMaintanenceBill() {
 
   return (
     <div>
+      <ToastContainer />
       <Fade>
         <div className="createmaincss">
           <Typography

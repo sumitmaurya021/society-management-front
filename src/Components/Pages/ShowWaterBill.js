@@ -94,7 +94,7 @@ function ShowWaterBill() {
 
           setWaterBills(formattedBills);
           setIsLoading(false);
-          toast("Water bills fetched successfully");
+          toast.success("Water bills fetched successfully");
         } else {
           toast.error("Error fetching water bills");
         }
@@ -431,6 +431,7 @@ function ShowWaterBill() {
 
   return (
     <>
+    <ToastContainer />
     <motion.div
       className="water-bill-container"
       initial={{ opacity: 0 }}

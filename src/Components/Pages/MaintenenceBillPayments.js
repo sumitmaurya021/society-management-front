@@ -143,7 +143,7 @@ function MaintenanceBillPayments() {
         <Typography variant="h4" style={{ marginTop: '20px', marginBottom: '20px', textAlign: 'center' }}>Maintenance Bill Payments</Typography>
 
         <FormControl fullWidth style={{ marginBottom: '20px' }}>
-          <InputLabel>Select Maintenance Bill</InputLabel>
+          <InputLabel className="select-label">Select Maintenance Bill</InputLabel>
           <Select
             value={selectedMaintenanceBill}
             onChange={(e) => setSelectedMaintenanceBill(e.target.value)}
@@ -159,7 +159,7 @@ function MaintenanceBillPayments() {
         <Grid container spacing={2} style={{ marginBottom: '20px' }} className="align-items-center">
           <Grid item xs={12} sm={3}>
             <FormControl fullWidth>
-              <InputLabel>Filter by Month and Year</InputLabel>
+              <InputLabel className="select-label">Filter by Month and Year</InputLabel>
               <Select
                 value={filterMonthYear}
                 onChange={(e) => setFilterMonthYear(e.target.value)}
@@ -174,7 +174,7 @@ function MaintenanceBillPayments() {
           </Grid>
           <Grid item xs={12} sm={3}>
             <FormControl fullWidth>
-              <InputLabel>Filter by Block</InputLabel>
+              <InputLabel className="select-label">Filter by Block</InputLabel>
               <Select
                 value={filterBlock}
                 onChange={(e) => setFilterBlock(e.target.value)}
@@ -189,7 +189,7 @@ function MaintenanceBillPayments() {
           </Grid>
           <Grid item xs={12} sm={3}>
             <FormControl fullWidth>
-              <InputLabel>Filter by Floor</InputLabel>
+              <InputLabel className="select-label">Filter by Floor</InputLabel>
               <Select
                 value={filterFloor}
                 onChange={(e) => setFilterFloor(e.target.value)}

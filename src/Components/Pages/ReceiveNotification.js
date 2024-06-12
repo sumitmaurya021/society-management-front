@@ -8,6 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useSpring, animated } from 'react-spring';
 import axios from 'axios';
+import { ToastContainer } from 'react-toastify';
 
 function ReceiveNotification() {
   const [notifications, setNotifications] = useState([]);
@@ -60,6 +61,8 @@ function ReceiveNotification() {
   });
 
   return (
+    <>
+    <ToastContainer />
     <Container>
       <Typography variant="h4" gutterBottom className='text-center mt-3 mb-5 border p-4'>
         Receive Notification
@@ -109,6 +112,7 @@ function ReceiveNotification() {
         </Table>
       </TableContainer>
     </Container>
+    </>
   );
 }
 

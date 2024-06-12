@@ -11,7 +11,7 @@ import Grid from                                      "@mui/material/Grid"      
 import LockOutlinedIcon from                          "@mui/icons-material/LockOutlined"     ;
 import Typography from                                "@mui/material/Typography"             ;
 import { createTheme, ThemeProvider } from            "@mui/material/styles"                 ;
-import { toast } from                 "react-toastify"                       ;
+import { ToastContainer, toast } from                 "react-toastify"                       ;
 import                                                "react-toastify/dist/ReactToastify.css";
 
 function Login() {
@@ -52,7 +52,7 @@ function Login() {
             email,
             otp,
           },
-          client_id: "huAjw3Fq_4qlXRUYWTciYsp9FmbT12OJny5db9bOme8",
+          client_id: "SPUH4U-v80y2GYQcXUOOlIUyFjSiYFhtNj9tecp3Ots",
         }
       );
       if (response && response.data && response.status === 200) {
@@ -72,6 +72,8 @@ function Login() {
   };
 
   return (
+    <>
+    <ToastContainer />
     <ThemeProvider theme={createTheme()}>
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
@@ -82,7 +84,7 @@ function Login() {
           md={7}
           sx={{
             backgroundImage:
-              "url(https://source.unsplash.com/random?wallpapers)",
+              "url(https://source.unsplash.com/random?blue sky)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -197,6 +199,7 @@ function Login() {
         </Grid>
       </Grid>
     </ThemeProvider>
+    </>
   );
 }
 

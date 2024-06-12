@@ -53,7 +53,7 @@ function SignUpCustomer() {
           owner_or_renter: formData.owner_or_renter,
           gender: formData.gender,
         },
-        client_id: "huAjw3Fq_4qlXRUYWTciYsp9FmbT12OJny5db9bOme8",
+        client_id: "SPUH4U-v80y2GYQcXUOOlIUyFjSiYFhtNj9tecp3Ots",
       });
       if (response.status === 200) {
         console.log("User signed up successfully:", response.data);
@@ -70,6 +70,8 @@ function SignUpCustomer() {
   };
 
   return (
+    <>
+      <ToastContainer />
     <ThemeProvider theme={theme}>
       <Container maxWidth="xs">
         <CssBaseline />
@@ -223,9 +225,9 @@ function SignUpCustomer() {
             </Grid>
           </Box>
         </Box>
-        <ToastContainer />
       </Container>
     </ThemeProvider>
+    </>
   );
 }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Spinner from '../Spinner';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import './WaterBillsPay.css';
 import { CheckCircle } from '@mui/icons-material';
 import { FaFilePdf } from "react-icons/fa";
@@ -143,6 +143,7 @@ function WaterBillsPay() {
 
     return (
         <>
+        <ToastContainer />
             <div className="bills-page">
                 {isLoading ? (
                     <Spinner />

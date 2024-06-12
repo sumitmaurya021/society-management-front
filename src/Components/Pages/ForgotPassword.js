@@ -67,6 +67,8 @@ function ForgotPassword() {
   };
 
   return (
+    <>
+    <ToastContainer />
     <ThemeProvider theme={createTheme()}>
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
@@ -165,8 +167,8 @@ function ForgotPassword() {
           </Box>
         </Grid>
       </Grid>
-      <ToastContainer />
     </ThemeProvider>
+    </>
   );
 }
 

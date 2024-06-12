@@ -56,6 +56,8 @@ function CreateWaterBill() {
   };
 
   return (
+    <>
+    <ToastContainer />
     <Fade>
     <motion.div>
       <div>
@@ -130,10 +132,10 @@ function CreateWaterBill() {
             </div>
           </div>
         </div>
-        <ToastContainer />
       </div>
     </motion.div>
     </Fade>
+    </>
   );
 }
 

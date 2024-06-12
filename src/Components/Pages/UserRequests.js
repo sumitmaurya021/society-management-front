@@ -1,6 +1,6 @@
 import axios from                          'axios'                                ;
 import React, { useEffect, useState } from 'react'                                ;
-import { toast } from      'react-toastify'                       ;
+import { ToastContainer, toast } from      'react-toastify'                       ;
 import                                     'react-toastify/dist/ReactToastify.css';
 import                                     './UserRequests.css'                   ;
 import Spinner from                        '../Spinner'                           ;
@@ -115,6 +115,7 @@ function UserRequests() {
 
     return (
         <>
+        <ToastContainer />
             {isLoading ? <Spinner size="sm" /> : (
                 <>
                     <h2 className="mt-4 mb-4">User Requests</h2>

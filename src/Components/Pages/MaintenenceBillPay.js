@@ -50,35 +50,42 @@ function MaintenanceBillPay() {
   const fetchStatuses = async (bills) => {
     try {
       const accessToken = localStorage.getItem('access_token');
+      const loggedInUserId = JSON.parse(localStorage.getItem('user')).id; // Retrieve logged-in user ID
+  
       if (!accessToken) {
         throw new Error('Access token not found');
       }
-
-      const statusPromises = bills.map(bill => 
+  
+      const statusPromises = bills.map(bill =>
         axios.get(`http://localhost:3000/api/v1/buildings/1/maintenance_bills/${bill.id}/payments`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-          },
+          }
         })
       );
-
+  
       const responses = await Promise.all(statusPromises);
-
+  
       const newStatuses = responses.reduce((acc, response, index) => {
-        if (response.status === 200 && response.data.payments.length > 0) {
-          acc[bills[index].id] = response.data.payments[0].status;
+        const userPayments = response.data.maintenance_bill_payments.filter(payment => payment.user_id === loggedInUserId);
+        if (userPayments.length > 0) {
+          acc[bills[index].id] = {
+            status: userPayments[0].status,
+            paymentId: userPayments[0].id
+          };
         } else {
-          acc[bills[index].id] = 'Unpaid';
+          acc[bills[index].id] = { status: 'Unpaid', paymentId: null };
         }
         return acc;
       }, {});
-
+  
       setStatuses(newStatuses);
     } catch (error) {
       console.log(error);
       toast.error('Failed to fetch payment statuses');
     }
   };
+  
 
   useEffect(() => {
     fetchMaintenanceBills();
@@ -177,13 +184,13 @@ function MaintenanceBillPay() {
                       <td>{bill.start_date}</td>
                       <td>{bill.end_date}</td>
                       <td>{bill.remarks}</td>
-                      <td className='text-capitalize'>{statuses[bill.id] || 'Unpaid'}</td>
+                      <td className='text-capitalize'>{statuses[bill.id]?.status || 'Unpaid'}</td>
                       <td>
                         {statuses[bill.id] === 'paid' ? (
-                          <CheckCircle style={{ color: 'green' }} />
-                        ) : (
                           <button className='btn btn-sm btn-success' onClick={() => handleOpenPaymentPopup(bill)}>Pay</button>
-                        )}
+                          ) : (
+                            <CheckCircle style={{ color: 'green' }} />
+                          )}
                       </td>
                       <td><FaFilePdf style={{ color: 'red', cursor: 'pointer', fontSize: '20px' }} /></td>
                     </tr>

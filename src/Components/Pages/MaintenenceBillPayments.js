@@ -3,7 +3,7 @@ import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Container, Select, MenuItem, FormControl, InputLabel, Button, Grid } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ThreeDots } from 'react-loader-spinner';
 
@@ -12,7 +12,6 @@ function MaintenanceBillPayments() {
   const [isLoading, setIsLoading] = useState(false);
   const [maintenanceBills, setMaintenanceBills] = useState([]);
   const [selectedMaintenanceBill, setSelectedMaintenanceBill] = useState('');
-  
   const [filterMonthYear, setFilterMonthYear] = useState('');
   const [filterBlock, setFilterBlock] = useState('');
   const [filterFloor, setFilterFloor] = useState('');
@@ -30,6 +29,7 @@ function MaintenanceBillPayments() {
           },
         });
         if (response.status === 200) {
+          toast.success('Maintenance bills fetched successfully');
           setMaintenanceBills(response.data);
         } else {
           throw new Error('Failed to fetch maintenance bills');
@@ -57,7 +57,8 @@ function MaintenanceBillPayments() {
       });
 
       if (response.status === 200) {
-        setPayments(response.data.payments);
+        toast.success('Payments fetched successfully');
+        setPayments(response.data.maintenance_bill_payments || []);
       } else {
         throw new Error('Failed to fetch payments');
       }
@@ -121,108 +122,110 @@ function MaintenanceBillPayments() {
   };
 
   const handleClearFilters = () => {
-    setSelectedMaintenanceBill('')
+    setSelectedMaintenanceBill('');
     setFilterMonthYear('');
     setFilterBlock('');
     setFilterFloor('');
   };
 
-  const filteredPayments = payments.filter(payment => {
+  const filteredPayments = payments && payments.length > 0 ? payments.filter(payment => {
     return (
       (filterMonthYear ? payment.month_year === filterMonthYear : true) &&
-      (filterBlock ? convertBlockToAlphabet(payment.block) === filterBlock : true) &&
-      (filterFloor ? payment.floor === filterFloor : true)
+      (filterBlock ? payment.block_name === filterBlock : true) &&
+      (filterFloor ? payment.floor_number === filterFloor : true)
     );
-  });
+  }) : [];
 
   return (
-    <Container>
-      <Typography variant="h4" style={{ marginTop: '20px', marginBottom: '20px', textAlign: 'center' }}>Maintenance Bill Payments</Typography>
-      
-      <FormControl fullWidth style={{ marginBottom: '20px' }}>
-        <InputLabel>Select Maintenance Bill</InputLabel>
-        <Select
-          value={selectedMaintenanceBill}
-          onChange={(e) => setSelectedMaintenanceBill(e.target.value)}
-        >
-          {maintenanceBills.map((bill) => (
-            <MenuItem key={bill.id} value={bill.id}>
-              {bill.bill_name} - {bill.bill_month_and_year}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+    <>
+      <ToastContainer />
+      <Container>
+        <Typography variant="h4" style={{ marginTop: '20px', marginBottom: '20px', textAlign: 'center' }}>Maintenance Bill Payments</Typography>
 
-      <Grid container spacing={2} style={{ marginBottom: '20px' }} className="align-items-center">
-        <Grid item xs={12} sm={3}>
-          <FormControl fullWidth>
-            <InputLabel>Filter by Month and Year</InputLabel>
-            <Select
-              value={filterMonthYear}
-              onChange={(e) => setFilterMonthYear(e.target.value)}
-            >
-              {[...new Set(payments.map(payment => payment.month_year))].map(monthYear => (
-                <MenuItem key={monthYear} value={monthYear}>
-                  {monthYear}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <FormControl fullWidth>
-            <InputLabel>Filter by Block</InputLabel>
-            <Select
-              value={filterBlock}
-              onChange={(e) => setFilterBlock(e.target.value)}
-            >
-              {[...new Set(payments.map(payment => convertBlockToAlphabet(payment.block)))].map(block => (
-                <MenuItem key={block} value={block}>
-                  {block}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <FormControl fullWidth>
-            <InputLabel>Filter by Floor</InputLabel>
-            <Select
-              value={filterFloor}
-              onChange={(e) => setFilterFloor(e.target.value)}
-            >
-              {[...new Set(payments.map(payment => payment.floor))].map(floor => (
-                <MenuItem key={floor} value={floor}>
-                  {floor}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <button className='btn btn-sm btn-primary' onClick={handleClearFilters}>
-            Clear Filters
-          </button>
-        </Grid>
-      </Grid>
+        <FormControl fullWidth style={{ marginBottom: '20px' }}>
+          <InputLabel>Select Maintenance Bill</InputLabel>
+          <Select
+            value={selectedMaintenanceBill}
+            onChange={(e) => setSelectedMaintenanceBill(e.target.value)}
+          >
+            {maintenanceBills.map((bill) => (
+              <MenuItem key={bill.id} value={bill.id}>
+                {bill.bill_name} - {bill.bill_month_and_year}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
-      <div style={{ position: 'relative', minHeight: '300px' }}>
-        {isLoading && (
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Grid container spacing={2} style={{ marginBottom: '20px' }} className="align-items-center">
+          <Grid item xs={12} sm={3}>
+            <FormControl fullWidth>
+              <InputLabel>Filter by Month and Year</InputLabel>
+              <Select
+                value={filterMonthYear}
+                onChange={(e) => setFilterMonthYear(e.target.value)}
+              >
+                {[...new Set(payments.map(payment => payment.month_year))].map(monthYear => (
+                  <MenuItem key={monthYear} value={monthYear}>
+                    {monthYear}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <FormControl fullWidth>
+              <InputLabel>Filter by Block</InputLabel>
+              <Select
+                value={filterBlock}
+                onChange={(e) => setFilterBlock(e.target.value)}
+              >
+                {[...new Set(payments.map(payment => payment.block_name))].map(block => (
+                  <MenuItem key={block} value={block}>
+                    {block}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <FormControl fullWidth>
+              <InputLabel>Filter by Floor</InputLabel>
+              <Select
+                value={filterFloor}
+                onChange={(e) => setFilterFloor(e.target.value)}
+              >
+                {[...new Set(payments.map(payment => payment.floor_number))].map(floor => (
+                  <MenuItem key={floor} value={floor}>
+                    {floor}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Button variant="contained" color="primary" onClick={handleClearFilters}>
+              Clear Filters
+            </Button>
+          </Grid>
+        </Grid>
+
+        <div style={{ position: 'relative', minHeight: '300px' }}>
+          {isLoading && (
+            <div style={{ position: 'absolute',top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
             <CircularProgress />
           </div>
         )}
-        {!isLoading && filteredPayments.length > 0 && (
-          <TableContainer component={Paper} style={{ maxHeight: '400px', overflow: 'auto' }}>
+        {!isLoading && (
+          <TableContainer component={Paper}>
             <Table>
               <TableHead>
                 <TableRow>
                   <TableCell align="center">ID</TableCell>
-                  <TableCell align="center">Month and Year</TableCell>
+                  <TableCell align="center">Month/Year</TableCell>
                   <TableCell align="center">Bill Name</TableCell>
                   <TableCell align="center">Block</TableCell>
                   <TableCell align="center">Floor</TableCell>
-                  <TableCell align="center">Room Number</TableCell>
+                  <TableCell align="center">Room</TableCell>
                   <TableCell align="center">Amount</TableCell>
                   <TableCell align="center">Payment Method</TableCell>
                   <TableCell align="center">Status</TableCell>
@@ -235,8 +238,8 @@ function MaintenanceBillPayments() {
                     <TableCell align="center">{payment.id}</TableCell>
                     <TableCell align="center">{payment.month_year || 'N/A'}</TableCell>
                     <TableCell align="center">{payment.bill_name}</TableCell>
-                    <TableCell align="center">{convertBlockToAlphabet(payment.block) || 'N/A'}</TableCell>
-                    <TableCell align="center">{payment.floor || 'N/A'}</TableCell>
+                    <TableCell align="center">{payment.block_name || 'N/A'}</TableCell>
+                    <TableCell align="center">{payment.floor_number !== null ? payment.floor_number : 'N/A'}</TableCell>
                     <TableCell align="center">{payment.room_number || 'N/A'}</TableCell>
                     <TableCell align="center">{payment.amount}</TableCell>
                     <TableCell align="center" className="text-capitalize">{payment.payment_method}</TableCell>
@@ -263,7 +266,7 @@ function MaintenanceBillPayments() {
                           />
                         </div>
                       ) : payment.status === 'paid' ? (
-                        <CheckCircle style={{ color: 'green' }} />                            
+                        <CheckCircle style={{ color: 'green' }} />
                       ) : (
                         <Button variant="contained" color="primary" size="small" onClick={() => handleAcceptPayment(payment.id, selectedMaintenanceBill)}>
                           Accept
@@ -276,14 +279,14 @@ function MaintenanceBillPayments() {
             </Table>
           </TableContainer>
         )}
-        {!isLoading && filteredPayments.length === 0 && selectedMaintenanceBill && (
-          <Typography variant="h6" align="center" style={{ marginTop: '20px' }}>
-            No payments found for the selected filters.
-          </Typography>
+        {!isLoading && filteredPayments.length === 0 && (
+          <Typography variant="body1" style={{ textAlign: 'center' }}>No payments found.</Typography>
         )}
       </div>
     </Container>
-  );
+  </>
+);
 }
 
 export default MaintenanceBillPayments;
+

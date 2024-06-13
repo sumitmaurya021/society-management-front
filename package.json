@@ -52,6 +52,7 @@
     "evergreen-ui": "^7.1.9",
     "font-awesome": "^4.7.0",
     "framer-motion": "^11.1.9",
+    "jspdf": "^2.5.1",
     "material-react-table": "^2.13.0",
     "mdb-react-ui-kit": "^8.0.0",
     "primeicons": "^7.0.0",

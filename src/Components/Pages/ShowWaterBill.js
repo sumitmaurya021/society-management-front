@@ -100,6 +100,8 @@ function ShowWaterBill() {
         }
       } catch (error) {
         console.error("Error fetching water bills:", error);
+      }finally{
+        setIsLoading(false);
       }
     };
 

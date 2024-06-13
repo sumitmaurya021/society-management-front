@@ -35,7 +35,7 @@ function SignUp({ setIsLoggedIn }) {
     try {
       const response = await axios.post("http://localhost:3000/api/v1/users", {
         user: formData,
-        client_id: "huAjw3Fq_4qlXRUYWTciYsp9FmbT12OJny5db9bOme8",
+        client_id: "SPUH4U-v80y2GYQcXUOOlIUyFjSiYFhtNj9tecp3Ots",
       });
       console.log("User signed up successfully:", response.data);
       toast.success("Sign up successful!");
@@ -52,6 +52,8 @@ function SignUp({ setIsLoggedIn }) {
   };
 
   return (
+    <>
+    <ToastContainer />
     <ThemeProvider theme={createTheme()}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -127,9 +129,8 @@ function SignUp({ setIsLoggedIn }) {
           </Box>
         </Box>
       </Container>
-      {/* Toast container for notifications */}
-      <ToastContainer />
     </ThemeProvider>
+    </>
   );
 }
 

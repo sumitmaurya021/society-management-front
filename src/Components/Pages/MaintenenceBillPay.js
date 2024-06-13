@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Spinner from '../Spinner';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import './MaintenenceBillPay.css';
 import { CheckCircle } from '@mui/icons-material';
 import { FaFilePdf } from "react-icons/fa";
@@ -85,7 +85,6 @@ function MaintenanceBillPay() {
       toast.error('Failed to fetch payment statuses');
     }
   };
-  
 
   useEffect(() => {
     fetchMaintenanceBills();
@@ -113,6 +112,21 @@ function MaintenanceBillPay() {
 
   const handleDateChange = (event) => {
     setPaymentDate(event.target.value);
+  };
+
+  const handleGenerateInvoice = async (billId, paymentId) => {
+    try {
+      const accessToken = localStorage.getItem('access_token');
+      if (!accessToken) {
+        throw new Error('Access token not found');
+      }
+
+      const url = `http://localhost:3000/api/v1/buildings/1/maintenance_bills/${billId}/payments/${paymentId}/generate_invoice_pdf.pdf?access_token=${accessToken}`;
+      window.open(url, '_blank');
+    } catch (error) {
+      console.error('Error generating invoice:', error);
+      toast.error('Failed to generate invoice');
+    }
   };
 
   const handlePaymentSubmit = async () => {
@@ -150,6 +164,7 @@ function MaintenanceBillPay() {
 
   return (
     <>
+    <ToastContainer />
       <div className="bills-page">
         {isLoading ? (
           <Spinner />
@@ -186,13 +201,25 @@ function MaintenanceBillPay() {
                       <td>{bill.remarks}</td>
                       <td className='text-capitalize'>{statuses[bill.id]?.status || 'Unpaid'}</td>
                       <td>
-                        {statuses[bill.id] === 'paid' ? (
+                        {statuses[bill.id]?.status === 'Paid' ? (
                           <button className='btn btn-sm btn-success' onClick={() => handleOpenPaymentPopup(bill)}>Pay</button>
                           ) : (
-                            <CheckCircle style={{ color: 'green' }} />
-                          )}
+                          <CheckCircle style={{ color: 'green' }} />
+                        )}
                       </td>
-                      <td><FaFilePdf style={{ color: 'red', cursor: 'pointer', fontSize: '20px' }} /></td>
+                      <td>
+                        {statuses[bill.id]?.status === 'Paid' ? (
+                            <FaFilePdf 
+                            style={{ color: 'blue', cursor: 'pointer', fontSize: '20px' }} 
+                            onClick={() => toast.error('Invoice available after payment')}
+                          />
+                        ) : (
+                          <FaFilePdf 
+                            style={{ color: 'red', cursor: 'pointer', fontSize: '20px' }} 
+                            onClick={() => handleGenerateInvoice(bill.id, statuses[bill.id].paymentId)}
+                          />
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

@@ -12,6 +12,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import './UserProfile.css'; // Import the CSS file
+import { ToastContainer } from 'react-toastify';
 
 function UserProfile() {
   const [user, setUser] = useState(null);
@@ -64,6 +65,8 @@ function UserProfile() {
   }
 
   return (
+    <>
+    <ToastContainer />
     <section style={{ backgroundColor: '#eee', height: '100vh' }}>
       <MDBContainer className="py-5">
         <MDBRow>
@@ -136,6 +139,7 @@ function UserProfile() {
         </MDBRow>
       </MDBContainer>
     </section>
+    </>
   );
 }
 

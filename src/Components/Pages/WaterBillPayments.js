@@ -6,6 +6,7 @@ import { CheckCircle } from '@mui/icons-material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ThreeDots } from 'react-loader-spinner';
+import './WaterBillPayments.css';
 
 function WaterBillPayments() {
   const [payments, setPayments] = useState([]);
@@ -137,11 +138,13 @@ function WaterBillPayments() {
   });
 
   return (
+    <>
+    <ToastContainer /> 
     <Container>
       <Typography variant="h4" style={{ marginTop: '20px', marginBottom: '20px', textAlign: 'center' }}>Water Bill Payments</Typography>
       
       <FormControl fullWidth style={{ marginBottom: '20px' }}>
-        <InputLabel>Select Water Bill</InputLabel>
+        <InputLabel className="select-label">Select Water Bill</InputLabel>
         <Select
           value={selectedWaterBill}
           onChange={(e) => setSelectedWaterBill(e.target.value)}
@@ -157,7 +160,7 @@ function WaterBillPayments() {
       <Grid container spacing={2} style={{ marginBottom: '20px' }} className="align-items-center">
         <Grid item xs={12} sm={3}>
           <FormControl fullWidth>
-            <InputLabel>Filter by Month and Year</InputLabel>
+            <InputLabel className="select-label">Filter by Month and Year</InputLabel>
             <Select
               value={filterMonthYear}
               onChange={(e) => setFilterMonthYear(e.target.value)}
@@ -172,7 +175,7 @@ function WaterBillPayments() {
         </Grid>
         <Grid item xs={12} sm={3}>
           <FormControl fullWidth>
-            <InputLabel>Filter by Block</InputLabel>
+            <InputLabel className="select-label">Filter by Block</InputLabel>
             <Select
               value={filterBlock}
               onChange={(e) => setFilterBlock(e.target.value)}
@@ -187,7 +190,7 @@ function WaterBillPayments() {
         </Grid>
         <Grid item xs={12} sm={3}>
           <FormControl fullWidth>
-            <InputLabel>Filter by Floor</InputLabel>
+            <InputLabel className="select-label">Filter by Floor</InputLabel>
             <Select
               value={filterFloor}
               onChange={(e) => setFilterFloor(e.target.value)}
@@ -278,6 +281,7 @@ function WaterBillPayments() {
         )}
       </div>
     </Container>
+    </>
   );
 }
 

@@ -37,6 +37,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import './DashBoard.css'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -308,7 +309,7 @@ const Dashboard = () => {
 
   return (
     <>
-    <ToastContainer />
+    <ToastContainer stacked />
       {isLoading ? (
         <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
           <CircularProgress />
@@ -405,7 +406,7 @@ const Dashboard = () => {
 
           <div className="d-flex gap-3">
           <FormControl fullWidth margin="normal">
-            <InputLabel id="building-select-label">Building</InputLabel>
+            <InputLabel id="building-select-label" className="select-label">Building</InputLabel>
             <Select
               labelId="building-select-label"
               value={buildingId}
@@ -420,7 +421,7 @@ const Dashboard = () => {
           </FormControl>
 
           <FormControl fullWidth margin="normal" disabled={!buildingId}>
-            <InputLabel id="block-select-label">Block</InputLabel>
+            <InputLabel id="block-select-label" className="select-label">Block</InputLabel>
             <Select
               labelId="block-select-label"
               value={blockId}
@@ -435,7 +436,7 @@ const Dashboard = () => {
           </FormControl>
 
           <FormControl fullWidth margin="normal" disabled={!blockId}>
-            <InputLabel id="floor-select-label">Floor</InputLabel>
+            <InputLabel id="floor-select-label" className="select-label">Floor</InputLabel>
             <Select
               labelId="floor-select-label"
               value={floorId}

@@ -201,22 +201,22 @@ function MaintenanceBillPay() {
                       <td>{bill.remarks}</td>
                       <td className='text-capitalize'>{statuses[bill.id]?.status || 'Unpaid'}</td>
                       <td>
-                        {statuses[bill.id]?.status === 'Paid' ? (
-                          <button className='btn btn-sm btn-success' onClick={() => handleOpenPaymentPopup(bill)}>Pay</button>
-                          ) : (
+                        {statuses[bill.id]?.status === 'paid' ? (
                           <CheckCircle style={{ color: 'green' }} />
+                          ) : (
+                            <button className='btn btn-sm btn-success' onClick={() => handleOpenPaymentPopup(bill)}>Pay</button>
                         )}
                       </td>
                       <td>
-                        {statuses[bill.id]?.status === 'Paid' ? (
+                        {statuses[bill.id]?.status === 'paid' ? (
                             <FaFilePdf 
-                            style={{ color: 'blue', cursor: 'pointer', fontSize: '20px' }} 
-                            onClick={() => toast.error('Invoice available after payment')}
+                            style={{ color: 'red', cursor: 'pointer', fontSize: '20px' }} 
+                            onClick={() => handleGenerateInvoice(bill.id, statuses[bill.id].paymentId)}
                           />
                         ) : (
                           <FaFilePdf 
-                            style={{ color: 'red', cursor: 'pointer', fontSize: '20px' }} 
-                            onClick={() => handleGenerateInvoice(bill.id, statuses[bill.id].paymentId)}
+                          style={{ color: 'blue', cursor: 'pointer', fontSize: '20px' }} 
+                          onClick={() => toast.error('Invoice available after payment')}
                           />
                         )}
                       </td>

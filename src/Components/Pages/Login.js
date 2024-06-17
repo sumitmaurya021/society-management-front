@@ -1,38 +1,41 @@
-import React, { useState } from                       "react"                                ;
-import axios from                                     "axios"                                ;
-import { Link, Navigate, Link as RouterLink, useNavigate } from "react-router-dom"                     ;
-import Avatar from                                    "@mui/material/Avatar"                 ;
-import Button from                                    "@mui/material/Button"                 ;
-import CssBaseline from                               "@mui/material/CssBaseline"            ;
-import TextField from                                 "@mui/material/TextField"              ;
-import Paper from                                     "@mui/material/Paper"                  ;
-import Box from                                       "@mui/material/Box"                    ;
-import Grid from                                      "@mui/material/Grid"                   ;
-import LockOutlinedIcon from                          "@mui/icons-material/LockOutlined"     ;
-import Typography from                                "@mui/material/Typography"             ;
-import { createTheme, ThemeProvider } from            "@mui/material/styles"                 ;
-import { ToastContainer, toast } from                 "react-toastify"                       ;
-import                                                "react-toastify/dist/ReactToastify.css";
+import React, { useState } from "react";
+import axios from "axios";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import img from "../assets/Images/patrick-fore-iOiaqY7eZsY-unsplash.jpg"
+
+
+const theme = createTheme();
+
+console.log(img)
 
 function Login() {
+  // State variables
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [otpSent, setOTPSent] = useState(false);
   const [otp, setOTP] = useState("");
 
-
-  const handleSubmit = async (e) => {
-
+  // Handle form submission for login
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:3000/api/v1/login", {
-        user: {
-          email,
-          password,
-        },
+        user: { email, password },
       });
-      if (response && response.data && response.status === 200) {
+      if (response?.status === 200) {
         setOTPSent(true);
         toast.info(`Email sent to ${email}`);
       }
@@ -42,39 +45,33 @@ function Login() {
     }
   };
 
+  // Handle form submission for OTP verification
   const handleOTPSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
         "http://localhost:3000/api/v1/verify_otp_and_login",
         {
-          user: {
-            email,
-            otp,
-          },
-          client_id: "SPUH4U-v80y2GYQcXUOOlIUyFjSiYFhtNj9tecp3Ots",
+          user: { email, otp },
+          client_id: "80B1eEelrjSYUwpczFRlor3DLje3lu4nZnQb-fBQJX0",
         }
       );
-      if (response && response.data && response.status === 200) {
+      if (response?.status === 200) {
         const role = 'admin';
         localStorage.setItem('user_role', role);
         localStorage.setItem("access_token", response.data.user.access_token);
         localStorage.setItem("user", response.data.user.id);
         toast.success("Email verified successfully!");
-        window.location.href = '/';
+        window.location.href = "/";
       }
     } catch (error) {
-      console.error("Error while verifying OTP:", error);
-      toast.error(
-        "An error occurred while verifying OTP. Please try again later."
-      );
+      toast.error("An error occurred while verifying OTP. Please try again later.");
     }
   };
 
   return (
-    <>
-    <ToastContainer />
-    <ThemeProvider theme={createTheme()}>
+    <ThemeProvider theme={theme}>
+      <ToastContainer />
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
@@ -83,8 +80,7 @@ function Login() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage:
-              "url(https://source.unsplash.com/random?blue sky)",
+            backgroundImage: `url(${img})`,
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -113,7 +109,7 @@ function Login() {
             <Box
               component="form"
               noValidate
-              onSubmit={otpSent ? handleOTPSubmit : handleSubmit}
+              onSubmit={otpSent ? handleOTPSubmit : handleLoginSubmit}
               sx={{ mt: 1 }}
             >
               {!otpSent ? (
@@ -152,26 +148,26 @@ function Login() {
                   </Button>
                   <Grid container>
                     <Grid item xs>
-                      <Link
-                        component={RouterLink}
-                        to="/forgot-password"
-                        variant="body2"
-                      >
+                      <RouterLink to="/forgot-password" variant="body2">
                         Forgot password?
-                      </Link>
+                      </RouterLink>
                     </Grid>
                     <Grid item>
-                      <Link component={RouterLink} to="/signup" variant="body2">
+                      <RouterLink to="/signup" variant="body2">
                         {"Don't have an account? Sign Up"}
-                      </Link>
+                      </RouterLink>
                     </Grid>
                   </Grid>
-                  <Link to="/admin_customer_option" variant="body2" style={{ marginTop: "10px", display: "flex", justifyContent: "center" }}>
+                  <RouterLink
+                    to="/"
+                    variant="body2"
+                    style={{ marginTop: "10px", display: "flex", justifyContent: "center" }}
+                  >
                     {"Admin Customer Option"}
-                  </Link>
+                  </RouterLink>
                 </>
               ) : (
-                <Box>
+                <>
                   <TextField
                     margin="normal"
                     required
@@ -179,7 +175,6 @@ function Login() {
                     id="otp"
                     label="OTP"
                     name="otp"
-                    type="text"
                     autoComplete="off"
                     value={otp}
                     onChange={(e) => setOTP(e.target.value)}
@@ -192,14 +187,13 @@ function Login() {
                   >
                     Verify OTP
                   </Button>
-                </Box>
+                </>
               )}
             </Box>
           </Box>
         </Grid>
       </Grid>
     </ThemeProvider>
-    </>
   );
 }
 

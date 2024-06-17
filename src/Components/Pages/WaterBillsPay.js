@@ -36,11 +36,11 @@ function WaterBillsPay() {
                 setUserRoom(response.data.user_room);
                 fetchStatuses(response.data.water_bills);
             } else {
-                throw new Error('Failed to fetch water bills');
+                toast.error('Failed to fetch water bills');
             }
         } catch (error) {
             console.log(error);
-            toast.error('Failed to fetch water bills');
+            toast.error('You are Not Verified For Fetch Water Bills Please Wait Admin Approve Your Request');
         } finally {
             setIsLoading(false);
         }
@@ -137,7 +137,7 @@ function WaterBillsPay() {
         }
 
         const url = `http://localhost:3000/api/v1/buildings/1/water_bills/${billId}/water_bill_payments/${paymentId}/generate_invoice_pdf.pdf?access_token=${accessToken}`;
-        console.log(`Opening URL: ${url}`); // Debugging line
+        console.log(`Opening URL: ${url}`);
         window.open(url, '_blank');
     };
 
@@ -171,6 +171,7 @@ function WaterBillsPay() {
                                 <tbody>
                                     {waterBills.map((bill) => (
                                         <tr key={bill.id}>
+                                            <h1>{bill.length === 0 ? 'No water bills found' : ''}</h1>
                                             <td>{bill.id}</td>
                                             <td>{bill.bill_name}</td>
                                             <td>{bill.bill_month_and_year}</td>

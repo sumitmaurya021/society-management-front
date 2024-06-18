@@ -6,7 +6,7 @@ import axios from "axios";
 import { MdDashboard, MdDomainVerification } from "react-icons/md";
 import { FaBars, FaHandHoldingWater, FaAmazonPay, FaUsers } from "react-icons/fa";
 import { GrHostMaintenance } from "react-icons/gr";
-import { RiBillLine } from "react-icons/ri";
+import { RiBillFill } from "react-icons/ri";
 import { IoLogOut } from "react-icons/io5";
 import { AiFillNotification } from "react-icons/ai";
 import { IoIosNotifications } from "react-icons/io";
@@ -15,6 +15,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { IoIosCar } from "react-icons/io";
 import "./Pages/Sidebar.css";
 
 const Sidebar = ({ isAuthenticated, userRole, children }) => {
@@ -72,9 +73,10 @@ const Sidebar = ({ isAuthenticated, userRole, children }) => {
     { to: "/ShowMaintanenceBill", icon: <GrHostMaintenance />, text: "Show Maintenance Bill" },
     { to: "/showwaterbill", icon: <FaHandHoldingWater />, text: "Show Water Bill" },
     { to: "/user_request", icon: <FaUsers />, text: "User Requests" },
-    { to: "/MaintenenceBillPayments", icon: <RiBillLine />, text: "User Payments" },
+    { to: "/MaintenenceBillPayments", icon: <RiBillFill />, text: "User Payments" },
     { to: "/WaterBillPayments", icon: <GiWaterDrop />, text: "Water Bill Payments" },
     { to: "/CreateNotification", icon: <AiFillNotification />, text: "Create Notification" },
+    { to: "/VehicleDetails", icon: <IoIosCar />, text: "Vehicle Details" }
   ];
 
   const userLinks = [

@@ -21,6 +21,7 @@ import CreateNotification from "./Components/Pages/CreateNotification";
 import ReceiveNotification from "./Components/Pages/ReceiveNotification";
 import WebSocketNotification from "./Components/Pages/WebSocketNotification";
 import UserProfile from "./Components/Pages/UserProfile";
+import VehicleDetails from "./Components/Pages/VehicleDetails";
 
 function App() {
   const isAuthenticated = localStorage.getItem("access_token");
@@ -55,6 +56,7 @@ function App() {
               <Route path="/MaintenenceBillPayments" element={<MaintenenceBillPayments />} />
               <Route path="/WaterBillPayments" element={<WaterBillPayments />} />
               <Route path="/CreateNotification" element={<CreateNotification />} />
+              <Route path="/VehicleDetails" element={<VehicleDetails />} />
             </>
           ) : (
             <>

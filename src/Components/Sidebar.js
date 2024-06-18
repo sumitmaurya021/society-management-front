@@ -11,10 +11,15 @@ import { IoLogOut } from "react-icons/io5";
 import { AiFillNotification } from "react-icons/ai";
 import { IoIosNotifications } from "react-icons/io";
 import { GiWaterDrop } from "react-icons/gi";
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import "./Pages/Sidebar.css";
 
 const Sidebar = ({ isAuthenticated, userRole, children }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const toggle = () => setIsOpen(!isOpen);
@@ -24,12 +29,15 @@ const Sidebar = ({ isAuthenticated, userRole, children }) => {
     show: { opacity: 1, width: "auto", transition: { duration: 0.2 } },
   };
 
-  const handleLogout = async () => {
-    const confirmLogout = window.confirm("Are you sure you want to log out?");
-    if (!confirmLogout) {
-      return; // User canceled logout
-    }
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleLogout = async () => {
     try {
       const accessToken = localStorage.getItem("access_token");
       if (!accessToken) {
@@ -54,6 +62,8 @@ const Sidebar = ({ isAuthenticated, userRole, children }) => {
     } catch (error) {
       console.error("Error while logging out:", error);
       toast.error("An error occurred while logging out. Please try again later.");
+    } finally {
+      handleCloseModal();
     }
   };
 
@@ -112,18 +122,78 @@ const Sidebar = ({ isAuthenticated, userRole, children }) => {
           {isOpen ? (
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={handleOpenModal}
               className="btn btn-sm btn-danger"
               style={{ marginLeft: "40px", whiteSpace: "nowrap" }}
             >
               Log Out
             </button>
           ) : (
-            <IoLogOut className="icon" onClick={handleLogout} />
+            <IoLogOut className="icon" onClick={handleOpenModal} />
           )}
         </div>
       </motion.div>
       <main style={{ width: isOpen ? "85%" : "97%" }}>{children}</main>
+      <AnimatePresence>
+        {isModalOpen && (
+          <Modal
+            open={isModalOpen}
+            onClose={handleCloseModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            closeAfterTransition
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 400,
+                bgcolor: 'background.paper',
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: 400,
+                  bgcolor: 'background.paper',
+                  border: 'none',
+                  boxShadow: 24,
+                  p: 4,
+                  borderRadius: 1,
+                }}
+              >
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Confirm Logout
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  Are you sure you want to log out?
+                </Typography>
+                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+                  <Button variant="contained" color="primary" onClick={handleLogout}>
+                    Yes
+                  </Button>
+                  <Button variant="outlined" color="secondary" onClick={handleCloseModal}>
+                    No
+                  </Button>
+                </Box>
+              </Box>
+            </motion.div>
+          </Modal>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

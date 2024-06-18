@@ -1,18 +1,24 @@
-import React, { useState } from                       "react"                                ;
-import axios from                                     "axios"                                ;
-import { Link, Navigate, Link as RouterLink, useNavigate } from "react-router-dom"                     ;
-import Avatar from                                    "@mui/material/Avatar"                 ;
-import Button from                                    "@mui/material/Button"                 ;
-import CssBaseline from                               "@mui/material/CssBaseline"            ;
-import TextField from                                 "@mui/material/TextField"              ;
-import Paper from                                     "@mui/material/Paper"                  ;
-import Box from                                       "@mui/material/Box"                    ;
-import Grid from                                      "@mui/material/Grid"                   ;
-import LockOutlinedIcon from                          "@mui/icons-material/LockOutlined"     ;
-import Typography from                                "@mui/material/Typography"             ;
-import { createTheme, ThemeProvider } from            "@mui/material/styles"                 ;
-import { toast, ToastContainer } from                 "react-toastify"                       ;
-import                                                "react-toastify/dist/ReactToastify.css";
+import React, { useState } from "react";
+import axios from "axios";
+import {
+  Link,
+  Navigate,
+  Link as RouterLink,
+  useNavigate,
+} from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import img from "../assets/Images/patrick-fore-iOiaqY7eZsY-unsplash.jpg";
 
 function LoginCustomer() {
   const [errorMessage, setErrorMessage] = useState("");
@@ -22,23 +28,29 @@ function LoginCustomer() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try{
-      const response = await axios.post("http://localhost:3000/api/v1/login_by_customer", {
-        user: {
-          block_name,
-          room_number,
-          password,
-        },
-        client_id: "SPUH4U-v80y2GYQcXUOOlIUyFjSiYFhtNj9tecp3Ots",
-      })
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/login_by_customer",
+        {
+          user: {
+            block_name,
+            room_number,
+            password,
+          },
+          client_id: "80B1eEelrjSYUwpczFRlor3DLje3lu4nZnQb-fBQJX0",
+        }
+      );
 
       if (response && response.data && response.status === 200) {
         const user = response.data.user;
         localStorage.setItem("user_role", "customer");
         localStorage.setItem("access_token", user.access_token);
-        localStorage.setItem("block_name", user.block_name); // Changed from block_id to block
+        localStorage.setItem("block_name", user.block_name);
         localStorage.setItem("room_number", user.room_number);
-        localStorage.setItem("floor_number", user.floor_number); // Changed from floor to floor_number
+        localStorage.setItem("floor_number", user.floor_number);
+        localStorage.setItem("block_id", user.block_id);
+        localStorage.setItem("floor_id", user.floor_id);
+        localStorage.setItem("room_id", user.room_id);
         localStorage.setItem("user", JSON.stringify(user));
         toast.success("Login successful");
         window.location.href = "/WaterBillsPay";
@@ -47,7 +59,7 @@ function LoginCustomer() {
       setErrorMessage(error.response?.data?.error || "An error occurred");
       toast.error(errorMessage);
     }
-  }
+  };
 
   return (
     <div>
@@ -61,7 +73,7 @@ function LoginCustomer() {
             sm={4}
             md={7}
             sx={{
-              backgroundImage: "url(https://source.unsplash.com/random)",
+              backgroundImage: `url(${img})`,
               backgroundRepeat: "no-repeat",
               backgroundColor: (t) =>
                 t.palette.mode === "light"
@@ -71,7 +83,15 @@ function LoginCustomer() {
               backgroundPosition: "center",
             }}
           />
-          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>  
+          <Grid
+            item
+            xs={12}
+            sm={8}
+            md={5}
+            component={Paper}
+            elevation={6}
+            square
+          >
             <Box
               sx={{
                 my: 8,
@@ -142,22 +162,33 @@ function LoginCustomer() {
                     </Link>
                   </Grid>
                   <Grid item>
-                    <Link component={RouterLink} to="/customer_signup" variant="body2">
+                    <Link
+                      component={RouterLink}
+                      to="/customer_signup"
+                      variant="body2"
+                    >
                       {"Don't have an account? Sign Up"}
                     </Link>
                   </Grid>
                 </Grid>
-                <Link to="/admin_customer_option" variant="body2" style={{ marginTop: "10px", display: "flex", justifyContent: "center" }}>
-                    {"Admin Customer Option"}
-                  </Link>
+                <Link
+                  to="/"
+                  variant="body2"
+                  style={{
+                    marginTop: "10px",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  {"Admin Customer Option"}
+                </Link>
               </Box>
             </Box>
           </Grid>
         </Grid>
       </ThemeProvider>
-      
     </div>
-  )
+  );
 }
 
-export default LoginCustomer
+export default LoginCustomer;

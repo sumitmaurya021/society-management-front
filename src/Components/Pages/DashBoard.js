@@ -25,7 +25,6 @@ import {
   DialogContent,
   DialogTitle,
   Slide,
-
 } from "@mui/material";
 import {
   BarChart,
@@ -37,13 +36,15 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import './DashBoard.css'
+import './DashBoard.css';
 
+// Transition for Dialog
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const Dashboard = () => {
+  // State declarations
   const [buildingId, setBuildingId] = useState("");
   const [blockId, setBlockId] = useState("");
   const [floorId, setFloorId] = useState("");
@@ -55,9 +56,23 @@ const Dashboard = () => {
   const [dashboard, setDashboard] = useState({});
   const [users, setUsers] = useState([]);
   const [show, setShow] = useState(false);
+  const [building, setBuilding] = useState({
+    building_name: "",
+    building_address: "",
+    total_blocks: "",
+    number_of_floors: "",
+    number_of_rooms_per_floor: "",
+    ground_floor: false,
+    starting_room_number: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [open, setOpen] = useState(false);
+  const [vehicles, setVehicles] = useState([]);
 
   const accessToken = localStorage.getItem("access_token");
 
+  // Fetch functions
   const fetchBuildings = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/v1/buildings", {
@@ -65,7 +80,7 @@ const Dashboard = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      setBuildings(response.data.buildings); // Ensure response data is correctly assigned
+      setBuildings(response.data.buildings);
     } catch (error) {
       toast.error("Error fetching buildings");
     }
@@ -119,72 +134,82 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchDashboard = async () => {
-      try {
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-          console.error("Access token not found in local storage");
-          return;
-        }
+  const fetchDashboard = async () => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
 
-        const config = {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        };
+      const response = await axios.get(
+        "http://localhost:3000/api/v1/dashboards",
+        config
+      );
 
-        const response = await axios.get(
-          "http://localhost:3000/api/v1/dashboards",
-          config
-        );
-
-        if (response.status === 200) {
-          setDashboard(response.data);
-          toast.success("Dashboard fetched successfully");
-        } else {
-          toast.error("Error fetching dashboard");
-        }
-      } catch (error) {
+      if (response.status === 200) {
+        setDashboard(response.data);
+        toast.success("Dashboard fetched successfully");
+      } else {
         toast.error("Error fetching dashboard");
       }
-    };
+    } catch (error) {
+      toast.error("Error fetching dashboard");
+    }
+  };
 
-    const fetchUsers = async () => {
-      try {
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-          console.error("Access token not found in local storage");
-          return;
-        }
+  const fetchUsers = async () => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
 
-        const config = {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        };
+      const response = await axios.get(
+        "http://localhost:3000/api/v1/users",
+        config
+      );
 
-        const response = await axios.get(
-          "http://localhost:3000/api/v1/users",
-          config
-        );
-
-        if (response.status === 200) {
-          setUsers(response.data.users);
-          setShow(true);
-        } else {
-          toast.error("Error fetching users");
-        }
-      } catch (error) {
+      if (response.status === 200) {
+        setUsers(response.data.users);
+        setShow(true);
+      } else {
         toast.error("Error fetching users");
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      toast.error("Error fetching users");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  const fetchVehicles = async () => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+    const response = await axios.get("http://localhost:3000/api/v1/get_all_vehicles", config);
+    if (response.status === 200) {
+      setVehicles(response.data.vehicles);
+    } else {
+      toast.error("Error fetching vehicles");
+    }
+    } catch (error) {
+      toast.error("Error fetching vehicles");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Initial data fetch
+  useEffect(() => {
     fetchDashboard();
     fetchUsers();
     fetchBuildings();
+    fetchVehicles();
   }, []);
 
   useEffect(() => {
@@ -205,6 +230,7 @@ const Dashboard = () => {
     }
   }, [floorId]);
 
+  // Handle change functions
   const handleBuildingChange = (event) => {
     setBuildingId(event.target.value);
     setBlockId("");
@@ -226,20 +252,6 @@ const Dashboard = () => {
     setRooms([]);
   };
 
-  const [building, setBuilding] = useState({
-    building_name: "",
-    building_address: "",
-    total_blocks: "",
-    number_of_floors: "",
-    number_of_rooms_per_floor: "",
-    ground_floor: false,
-    starting_room_number: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [open, setOpen] = useState(false);
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setBuilding({
@@ -248,10 +260,10 @@ const Dashboard = () => {
     });
   };
 
+  // Handle submit function
   const handleSubmit = async () => {
     setLoading(true);
     setSuccessMessage("");
-    const accessToken = localStorage.getItem("access_token");
     const buildingData = {
       ...building,
       total_blocks: parseInt(building.total_blocks, 10),
@@ -299,6 +311,7 @@ const Dashboard = () => {
     }
   };
 
+  // Handle dialog open/close
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -309,7 +322,8 @@ const Dashboard = () => {
 
   return (
     <>
-    <ToastContainer stacked />
+    <div style={{overflow: 'auto'}}>
+      <ToastContainer stacked />
       {isLoading ? (
         <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
           <CircularProgress />
@@ -317,138 +331,133 @@ const Dashboard = () => {
       ) : (
         <Box p={3}>
           <div className="d-flex justify-content-between align-items-center">
-          <Typography variant="h3" gutterBottom>Dashboard</Typography>
-          <button className="btn btn-sm btn-primary" onClick={handleClickOpen}>Create Building</button>
+            <Typography variant="h3" gutterBottom>Dashboard</Typography>
+            <button className="btn btn-sm btn-primary" onClick={handleClickOpen}>Create Building</button>
           </div>
 
           <Dialog
-              open={open}
-              TransitionComponent={Transition}
-              onClose={handleClose}
-              fullWidth
-              maxWidth="md"
-              PaperProps={{
-                sx: { padding: 2, maxWidth: '600px' }
-              }}
-            >
-              <DialogTitle>Create Building</DialogTitle>
-              <DialogContent>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <TextField
-                    name="building_name"
-                    label="Building Name"
-                    value={building.building_name}
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  <TextField
-                    name="building_address"
-                    label="Building Address"
-                    value={building.building_address}
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  <TextField
-                    name="total_blocks"
-                    label="Total Blocks"
-                    type="number"
-                    value={building.total_blocks}
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  <TextField
-                    name="number_of_floors"
-                    label="Number of Floors"
-                    type="number"
-                    value={building.number_of_floors}
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  <TextField
-                    name="number_of_rooms_per_floor"
-                    label="Number of Rooms per Floor"
-                    type="number"
-                    value={building.number_of_rooms_per_floor}
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  <TextField
-                    name="starting_room_number"
-                    label="Starting Room Number"
-                    type="number"
-                    value={building.starting_room_number}
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={building.ground_floor}
-                        onChange={handleChange}
-                        name="ground_floor"
-                        color="primary"
-                      />
-                    }
-                    label="Ground Floor"
-                  />
-                </Box>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose} color="secondary">
-                  Cancel
-                </Button>
-                <Button onClick={handleSubmit} color="primary">
-                  Create
-                </Button>
-              </DialogActions>
-            </Dialog>
-
+            open={open}
+            TransitionComponent={Transition}
+            onClose={handleClose}
+            fullWidth
+            maxWidth="md"
+            PaperProps={{
+              sx: { padding: 2, maxWidth: '600px' }
+            }}
+          >
+            <DialogTitle>Create Building</DialogTitle>
+            <DialogContent>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <TextField
+                  name="building_name"
+                  label="Building Name"
+                  value={building.building_name}
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <TextField
+                  name="building_address"
+                  label="Building Address"
+                  value={building.building_address}
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <TextField
+                  name="total_blocks"
+                  label="Total Blocks"
+                  type="number"
+                  value={building.total_blocks}
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <TextField
+                  name="number_of_floors"
+                  label="Number of Floors"
+                  type="number"
+                  value={building.number_of_floors}
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <TextField
+                  name="number_of_rooms_per_floor"
+                  label="Number of Rooms per Floor"
+                  type="number"
+                  value={building.number_of_rooms_per_floor}
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <TextField
+                  name="starting_room_number"
+                  label="Starting Room Number"
+                  type="number"
+                  value={building.starting_room_number}
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={building.ground_floor}
+                      onChange={handleChange}
+                      name="ground_floor"
+                      color="primary"
+                    />
+                  }
+                  label="Ground Floor"
+                />
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="secondary">Cancel</Button>
+              <Button onClick={handleSubmit} color="primary">Create</Button>
+            </DialogActions>
+          </Dialog>
 
           <div className="d-flex gap-3">
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="building-select-label" className="select-label">Building</InputLabel>
-            <Select
-              labelId="building-select-label"
-              value={buildingId}
-              onChange={handleBuildingChange}
-            >
-              {Array.isArray(buildings) && buildings.map((building) => (
-                <MenuItem key={building.id} value={building.id}>
-                  {building.building_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="building-select-label" className="select-label">Building</InputLabel>
+              <Select
+                labelId="building-select-label"
+                value={buildingId}
+                onChange={handleBuildingChange}
+              >
+                {Array.isArray(buildings) && buildings.map((building) => (
+                  <MenuItem key={building.id} value={building.id}>
+                    {building.building_name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-          <FormControl fullWidth margin="normal" disabled={!buildingId}>
-            <InputLabel id="block-select-label" className="select-label">Block</InputLabel>
-            <Select
-              labelId="block-select-label"
-              value={blockId}
-              onChange={handleBlockChange}
-            >
-              {Array.isArray(blocks) && blocks.map((block) => (
-                <MenuItem key={block.id} value={block.id}>
-                  {block.block_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+            <FormControl fullWidth margin="normal" disabled={!buildingId}>
+              <InputLabel id="block-select-label" className="select-label">Block</InputLabel>
+              <Select
+                labelId="block-select-label"
+                value={blockId}
+                onChange={handleBlockChange}
+              >
+                {Array.isArray(blocks) && blocks.map((block) => (
+                  <MenuItem key={block.id} value={block.id}>
+                    {block.block_name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-          <FormControl fullWidth margin="normal" disabled={!blockId}>
-            <InputLabel id="floor-select-label" className="select-label">Floor</InputLabel>
-            <Select
-              labelId="floor-select-label"
-              value={floorId}
-              onChange={handleFloorChange}
-            >
-              {Array.isArray(floors) && floors.map((floor) => (
-                <MenuItem key={floor.id} value={floor.id}>
-                  {floor.floor_number}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+            <FormControl fullWidth margin="normal" disabled={!blockId}>
+              <InputLabel id="floor-select-label" className="select-label">Floor</InputLabel>
+              <Select
+                labelId="floor-select-label"
+                value={floorId}
+                onChange={handleFloorChange}
+              >
+                {Array.isArray(floors) && floors.map((floor) => (
+                  <MenuItem key={floor.id} value={floor.id}>
+                    {floor.floor_number}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </div>
 
           <TableContainer component={Paper} style={{ marginTop: '20px' }}>
@@ -475,11 +484,9 @@ const Dashboard = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          
+
           <Box mt={4}>
-            <Typography variant="h4" gutterBottom>
-              Users
-            </Typography>
+            <Typography variant="h4" gutterBottom>Users</Typography>
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
@@ -512,15 +519,14 @@ const Dashboard = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-            
+
             <Box mt={4}>
-              <Typography variant="h4" gutterBottom>
-                User Types
-              </Typography>
+              <Typography variant="h4" gutterBottom>User Types</Typography>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart
                   data={[
                     { name: "Regular Users", value: users.filter(user => user.role === "customer").length },
+                    { name: "Admins", value: users.filter(user => user.role === "admin").length },
                   ]}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
@@ -533,8 +539,51 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </Box>
           </Box>
+
+          <Box mt={4}>
+            <Typography variant="h4" gutterBottom>Vehicle Details</Typography>
+            <ResponsiveContainer width="100%" height={300}>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell style={{ textAlign: 'center' }}>Vehicle ID</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>Name</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>Email</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>Mobile Number</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>Floor Number</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>Block Name</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>Room Number</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>Total Two-Wheelers</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>Two-Wheeler Numbers</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>Total Four-Wheelers</TableCell>
+                    <TableCell style={{ textAlign: 'center' }}>Four-Wheeler Numbers</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {vehicles.map((vehicle) => (
+                    <TableRow key={vehicle.id}>
+                      <TableCell style={{ textAlign: 'center' }}>{vehicle.id}</TableCell>
+                      <TableCell style={{ textAlign: 'center' }}>{vehicle.name}</TableCell>
+                      <TableCell style={{ textAlign: 'center' }}>{vehicle.email}</TableCell>
+                      <TableCell style={{ textAlign: 'center' }}>{vehicle.mobile_number}</TableCell>
+                      <TableCell style={{ textAlign: 'center' }}>{vehicle.floor_number}</TableCell>
+                      <TableCell style={{ textAlign: 'center' }}>{vehicle.block_name}</TableCell>
+                      <TableCell style={{ textAlign: 'center' }}>{vehicle.room_number}</TableCell>
+                      <TableCell style={{ textAlign: 'center' }}>{vehicle.total_no_of_two_wheeler}</TableCell>
+                      <TableCell style={{ textAlign: 'center' }}>{vehicle.two_wheeler_numbers.join(", ")}</TableCell>
+                      <TableCell style={{ textAlign: 'center' }}>{vehicle.total_no_of_four_wheeler}</TableCell>
+                      <TableCell style={{ textAlign: 'center' }}>{vehicle.four_wheeler_numbers.join(", ")}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            </ResponsiveContainer>
+          </Box>
         </Box>
       )}
+      </div>
     </>
   );
 };

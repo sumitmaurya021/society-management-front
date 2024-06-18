@@ -53,7 +53,7 @@ function SignUpCustomer() {
           owner_or_renter: formData.owner_or_renter,
           gender: formData.gender,
         },
-        client_id: "SPUH4U-v80y2GYQcXUOOlIUyFjSiYFhtNj9tecp3Ots",
+        client_id: "80B1eEelrjSYUwpczFRlor3DLje3lu4nZnQb-fBQJX0",
       });
       if (response.status === 200) {
         console.log("User signed up successfully:", response.data);

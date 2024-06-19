@@ -171,16 +171,15 @@ function WaterBillsPay() {
                                 <tbody>
                                     {waterBills.map((bill) => (
                                         <tr key={bill.id}>
-                                            <h1>{bill.length === 0 ? 'No water bills found' : ''}</h1>
                                             <td>{bill.id}</td>
                                             <td>{bill.bill_name}</td>
                                             <td>{bill.bill_month_and_year}</td>
                                             <td>{bill.start_date}</td>
                                             <td>{bill.end_date}</td>
                                             <td>{bill.remarks}</td>
-                                            <td>{userRoom.total_units}</td>
-                                            <td>{userRoom.previous_unit}</td>
-                                            <td>{userRoom.updated_unit}</td>
+                                            <td>{userRoom.total_units === null ? 'N/A' : userRoom.total_units}</td>
+                                            <td>{userRoom.previous_unit === null ? 'N/A' : userRoom.previous_unit}</td>
+                                            <td>{userRoom.updated_unit === null ? 'N/A' : userRoom.updated_unit}</td>
                                             <td>{statuses[bill.id]?.status || 'Unpaid'}</td>
                                             <td>
                                                 {statuses[bill.id]?.status === 'Paid' ? (

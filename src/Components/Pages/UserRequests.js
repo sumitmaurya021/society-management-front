@@ -28,7 +28,7 @@ function UserRequests() {
                 if (response.status === 200) {
                     setIsLoading(false);
                     toast.success("Requests fetched successfully");
-                    setRequests(response.data.users); // Set users array from the response to the requests state
+                    setRequests(response.data.users.filter((user) => user.role === "customer")); // Set users array from the response to the requests state
                 } else {
                     toast.error("Error fetching requests");
                 }

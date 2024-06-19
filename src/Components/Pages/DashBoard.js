@@ -36,6 +36,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { FcBullish } from "react-icons/fc";
+import { FcTodoList } from "react-icons/fc";
+import { FcClock } from "react-icons/fc";
 import './DashBoard.css';
 
 // Transition for Dialog
@@ -414,6 +417,42 @@ const Dashboard = () => {
             </DialogActions>
           </Dialog>
 
+          <Box mt={2} mb={2} p={3}>
+            {maintenanceBillSummary ? (
+              <Box display="flex" gap={2} style={{justifyContent: 'space-around'}}>
+                <Box component={Paper} p={2} display="flex" flexDirection="row" alignItems="center" width="330px" height="120px" style={{justifyContent: 'space-around', alignItems: 'center'}}>
+                  <div className="d-flex flex-column">
+                    <Typography variant="h6" style={{fontSize: '13px', marginBottom: '10px'}}>Total Amount</Typography>
+                    <Typography variant="h5">₹{maintenanceBillSummary.total_amount}</Typography>
+                  </div>
+                  <div style={{fontSize: '60px'}}>
+                    <FcTodoList />
+                  </div>
+                </Box>
+                <Box component={Paper} p={2} display="flex" flexDirection="row" alignItems="center" width="330px" height="120px" style={{justifyContent: 'space-around', alignItems: 'center'}}>
+                  <div className="d-flex flex-column">
+                    <Typography variant="h6" style={{fontSize: '13px', marginBottom: '10px'}}>Due Payments</Typography>
+                    <Typography variant="h5">₹{maintenanceBillSummary.remaining_payments}</Typography>
+                  </div>
+                  <div style={{fontSize: '60px'}}>
+                    <FcClock />
+                  </div>
+                </Box>
+                <Box component={Paper} p={2} display="flex" flexDirection="row" alignItems="center" width="330px" height="120px" style={{justifyContent: 'space-around', alignItems: 'center'}}>
+                  <div className="d-flex flex-column">
+                    <Typography variant="h6" style={{fontSize: '13px', marginBottom: '10px'}}>Payments Received</Typography>
+                    <Typography variant="h5">₹{maintenanceBillSummary.total_payments_received}</Typography>
+                  </div>
+                  <div style={{fontSize: '60px'}}>
+                    <FcBullish />
+                  </div>
+                </Box>
+              </Box>
+            ) : (
+        <Typography variant="body1">Loading...</Typography>
+      )}
+    </Box>
+
           <div className="d-flex gap-3">
             <FormControl fullWidth margin="normal">
               <InputLabel id="building-select-label" className="select-label">Building</InputLabel>
@@ -510,55 +549,6 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </Box>
           </Box>
-
-          <Box mt={4} p={3}>
-      <Typography variant="h4" gutterBottom>Maintenance Bill Summary</Typography>
-      {maintenanceBillSummary ? (
-        <Box display="flex" gap={2} style={{justifyContent: 'space-around'}}>
-          <Box
-            component={Paper}
-            p={2}
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-around"
-            width="330px"
-            height="120px"
-          >
-            <Typography variant="h6" style={{fontSize: '19px'}}>Total Amount</Typography> /
-            <Typography variant="h5">₹{maintenanceBillSummary.total_amount}</Typography>
-          </Box>
-          <Box
-            component={Paper}
-            p={2}
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-around"
-            width="330px"
-            height="120px"
-          >
-            <Typography variant="h6" style={{fontSize: '19px'}}>Payments Received</Typography> /
-            <Typography variant="h5">₹{maintenanceBillSummary.total_payments_received}</Typography>
-          </Box>
-          <Box
-            component={Paper}
-            p={2}
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-around"
-            width="330px"
-            height="120px"
-          >
-            <Typography variant="h6" style={{fontSize: '19px'}}>Due Payments</Typography> /
-            <Typography variant="h5">₹{maintenanceBillSummary.remaining_payments}</Typography>
-          </Box>
-        </Box>
-      ) : (
-        <Typography variant="body1">Loading...</Typography>
-      )}
-    </Box>
         </Box>
       )}
       </div>

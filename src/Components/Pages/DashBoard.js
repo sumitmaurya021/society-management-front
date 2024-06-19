@@ -68,7 +68,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [open, setOpen] = useState(false);
-  const [vehicles, setVehicles] = useState([]);
+  const [maintenanceBillSummary, setMaintenanceBillSummary] = useState(null);
 
   const accessToken = localStorage.getItem("access_token");
 
@@ -184,32 +184,33 @@ const Dashboard = () => {
     }
   };
 
-  const fetchVehicles = async () => {
+  const fetchMaintenanceBillSummary = async () => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      };
-    const response = await axios.get("http://localhost:3000/api/v1/get_all_vehicles", config);
-    if (response.status === 200) {
-      setVehicles(response.data.vehicles);
-    } else {
-      toast.error("Error fetching vehicles");
-    }
+      const response = await axios.get(
+        "http://localhost:3000/api/v1/buildings/1/maintenance_bill_summary",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setMaintenanceBillSummary(response.data.maintenance_bill_summary[0]);
+      } else {
+        toast.error("Error fetching maintenance bill summary");
+      }
     } catch (error) {
-      toast.error("Error fetching vehicles");
-    } finally {
-      setIsLoading(false);
+      toast.error("Error fetching maintenance bill summary");
     }
   };
+  
 
   // Initial data fetch
   useEffect(() => {
     fetchDashboard();
     fetchUsers();
     fetchBuildings();
-    fetchVehicles();
+    fetchMaintenanceBillSummary();
   }, []);
 
   useEffect(() => {
@@ -464,21 +465,25 @@ const Dashboard = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Room Number</TableCell>
-                  <TableCell>Unit Rate</TableCell>
-                  <TableCell>Previous Unit</TableCell>
-                  <TableCell>Updated Unit</TableCell>
-                  <TableCell>Total Unit</TableCell>
+                  <TableCell className="text-center">Room Number</TableCell>
+                  <TableCell className="text-center">User Name</TableCell>
+                  <TableCell className="text-center">User Email</TableCell>
+                  <TableCell className="text-center">User Role</TableCell>
+                  <TableCell className="text-center">Mobile Number</TableCell>
+                  <TableCell className="text-center">User Status</TableCell>
+                  <TableCell className="text-center">User Gender</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {Array.isArray(rooms) && rooms.map((room) => (
                   <TableRow key={room.id}>
-                    <TableCell>{room.room_number}</TableCell>
-                    <TableCell>{room.unit_rate === null ? "-" : room.unit_rate }</TableCell>
-                    <TableCell>{room.previous_unit === null ? "-" : room.previous_unit}</TableCell>
-                    <TableCell>{room.updated_unit === null ? "-" : room.updated_unit}</TableCell>
-                    <TableCell>{room.total_units === null ? "-" : room.total_units}</TableCell>
+                    <TableCell className="text-center">{room.room_number.length === 0 ? `-` : room.room_number}</TableCell>
+                    <TableCell className="text-center">{room.user_name}</TableCell>
+                    <TableCell className="text-center">{room.user_email}</TableCell>
+                    <TableCell className="text-center text-capitalize">{room.user_role}</TableCell>
+                    <TableCell className="text-center">{room.user_mobile}</TableCell>
+                    <TableCell className="text-center text-capitalize">{room.user_status}</TableCell>
+                    <TableCell className="text-center text-capitalize">{room.user_gender}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -486,40 +491,6 @@ const Dashboard = () => {
           </TableContainer>
 
           <Box mt={4}>
-            <Typography variant="h4" gutterBottom>Users</Typography>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Role</TableCell>
-                    <TableCell>Mobile Number</TableCell>
-                    <TableCell>Block</TableCell>
-                    <TableCell>Floor</TableCell>
-                    <TableCell>Room</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Gender</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Array.isArray(users) && users.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>{user.name}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.role}</TableCell>
-                      <TableCell>{user.mobile_number}</TableCell>
-                      <TableCell>{user.block}</TableCell>
-                      <TableCell>{user.floor}</TableCell>
-                      <TableCell>{user.room}</TableCell>
-                      <TableCell style={{ color: user.status === "accepted" ? "green" : "red", textTransform: "capitalize" }}>{user.status}</TableCell>
-                      <TableCell style={{ textTransform: "capitalize" }}>{user.gender}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-
             <Box mt={4}>
               <Typography variant="h4" gutterBottom>User Types</Typography>
               <ResponsiveContainer width="100%" height={300}>
@@ -540,47 +511,54 @@ const Dashboard = () => {
             </Box>
           </Box>
 
-          <Box mt={4}>
-            <Typography variant="h4" gutterBottom>Vehicle Details</Typography>
-            <ResponsiveContainer width="100%" height={300}>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell style={{ textAlign: 'center' }}>Vehicle ID</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>Name</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>Email</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>Mobile Number</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>Floor Number</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>Block Name</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>Room Number</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>Total Two-Wheelers</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>Two-Wheeler Numbers</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>Total Four-Wheelers</TableCell>
-                    <TableCell style={{ textAlign: 'center' }}>Four-Wheeler Numbers</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {vehicles.map((vehicle) => (
-                    <TableRow key={vehicle.id}>
-                      <TableCell style={{ textAlign: 'center' }}>{vehicle.id}</TableCell>
-                      <TableCell style={{ textAlign: 'center' }}>{vehicle.name}</TableCell>
-                      <TableCell style={{ textAlign: 'center' }}>{vehicle.email}</TableCell>
-                      <TableCell style={{ textAlign: 'center' }}>{vehicle.mobile_number}</TableCell>
-                      <TableCell style={{ textAlign: 'center' }}>{vehicle.floor_number}</TableCell>
-                      <TableCell style={{ textAlign: 'center' }}>{vehicle.block_name}</TableCell>
-                      <TableCell style={{ textAlign: 'center' }}>{vehicle.room_number}</TableCell>
-                      <TableCell style={{ textAlign: 'center' }}>{vehicle.total_no_of_two_wheeler}</TableCell>
-                      <TableCell style={{ textAlign: 'center' }}>{vehicle.two_wheeler_numbers.join(", ")}</TableCell>
-                      <TableCell style={{ textAlign: 'center' }}>{vehicle.total_no_of_four_wheeler}</TableCell>
-                      <TableCell style={{ textAlign: 'center' }}>{vehicle.four_wheeler_numbers.join(", ")}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            </ResponsiveContainer>
+          <Box mt={4} p={3}>
+      <Typography variant="h4" gutterBottom>Maintenance Bill Summary</Typography>
+      {maintenanceBillSummary ? (
+        <Box display="flex" gap={2} style={{justifyContent: 'space-around'}}>
+          <Box
+            component={Paper}
+            p={2}
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-around"
+            width="330px"
+            height="120px"
+          >
+            <Typography variant="h6" style={{fontSize: '19px'}}>Total Amount</Typography> /
+            <Typography variant="h5">₹{maintenanceBillSummary.total_amount}</Typography>
           </Box>
+          <Box
+            component={Paper}
+            p={2}
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-around"
+            width="330px"
+            height="120px"
+          >
+            <Typography variant="h6" style={{fontSize: '19px'}}>Payments Received</Typography> /
+            <Typography variant="h5">₹{maintenanceBillSummary.total_payments_received}</Typography>
+          </Box>
+          <Box
+            component={Paper}
+            p={2}
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-around"
+            width="330px"
+            height="120px"
+          >
+            <Typography variant="h6" style={{fontSize: '19px'}}>Due Payments</Typography> /
+            <Typography variant="h5">₹{maintenanceBillSummary.remaining_payments}</Typography>
+          </Box>
+        </Box>
+      ) : (
+        <Typography variant="body1">Loading...</Typography>
+      )}
+    </Box>
         </Box>
       )}
       </div>

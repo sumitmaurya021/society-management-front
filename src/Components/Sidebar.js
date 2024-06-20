@@ -88,7 +88,7 @@ const Sidebar = ({ isAuthenticated, userRole, children }) => {
 
   const renderLinks = (links) =>
     links.map((link) => (
-      <NavLink to={link.to} className="link" activeClassName="active" key={link.to}>
+      <NavLink to={link.to} className="link"  key={link.to}>
         <div className="icon">{link.icon}</div>
         <AnimatePresence>
           {isOpen && (

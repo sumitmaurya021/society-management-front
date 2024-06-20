@@ -17,9 +17,6 @@ import img from "../assets/Images/patrick-fore-iOiaqY7eZsY-unsplash.jpg"
 
 
 const theme = createTheme();
-
-console.log(img)
-
 function Login() {
   // State variables
   const [email, setEmail] = useState("");

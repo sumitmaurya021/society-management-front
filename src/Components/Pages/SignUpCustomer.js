@@ -146,19 +146,6 @@ function SignUpCustomer() {
                 <TextField
                   required
                   fullWidth
-                  name="room_number"
-                  label="Room Number"
-                  type="text"
-                  id="room_number"
-                  autoComplete="room_number"
-                  value={formData.room_number}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
                   name="block_name"
                   label="Block Name"
                   type="text"
@@ -178,6 +165,19 @@ function SignUpCustomer() {
                   id="floor_number"
                   autoComplete="floor_number"
                   value={formData.floor_number}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="room_number"
+                  label="Room Number"
+                  type="text"
+                  id="room_number"
+                  autoComplete="room_number"
+                  value={formData.room_number}
                   onChange={handleChange}
                 />
               </Grid>

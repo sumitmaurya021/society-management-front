@@ -5,6 +5,7 @@ import Spinner from "../Spinner";
 import { ToastContainer, toast } from "react-toastify";
 import { Modal, Button, Form, Table } from "react-bootstrap";
 import "./ShowWaterBill.css";
+import { Typography } from "@mui/material";
 
 function ShowWaterBill() {
   const [waterBills, setWaterBills] = useState([]);
@@ -433,6 +434,9 @@ function ShowWaterBill() {
 
   return (
     <>
+    <div>
+    <Typography variant="h5" className="text-center p-3 bg-body-secondary text-dark sticky-top">Water Bills</Typography>
+    </div>
     <ToastContainer />
     <motion.div
       className="water-bill-container"
@@ -440,9 +444,6 @@ function ShowWaterBill() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="header">
-        <h2>Show Water Bills</h2>
-      </div>
       <div className="text-end mb-4">
       <button className="btn btn-primary btn-sm" onClick={handleCreateBillModalOpen}>Create Water Bill</button>
     </div>

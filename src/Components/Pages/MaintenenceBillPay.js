@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Spinner from '../Spinner';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import './MaintenenceBillPay.css';
 import { CheckCircle } from '@mui/icons-material';
@@ -165,12 +165,14 @@ function MaintenanceBillPay() {
   return (
     <>
     <ToastContainer />
+    <div>
+        <Typography variant="h4" gutterBottom className="text-center p-3 bg-body-secondary text-dark sticky-top">Maintenance Bills</Typography>
+    </div>
       <div className="bills-page">
         {isLoading ? (
           <Spinner />
         ) : (
           <div className="bills-container">
-            <h2 className="bills-title">Maintenance Bills</h2>
             <div className="table-container">
               <table className="bills-table">
                 <thead>

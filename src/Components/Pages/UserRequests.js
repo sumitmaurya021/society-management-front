@@ -28,7 +28,7 @@ function UserRequests() {
                 if (response.status === 200) {
                     setIsLoading(false);
                     toast.success("Requests fetched successfully");
-                    setRequests(response.data.users.filter((user) => user.role === "customer")); // Set users array from the response to the requests state
+                    setRequests(response.data.users.filter((user) => user.role === "customer" || user.role === "shop"));
                 } else {
                     toast.error("Error fetching requests");
                 }
@@ -130,6 +130,7 @@ function UserRequests() {
                                             <th>Email</th>
                                             <th>Phone</th>
                                             <th>Role</th>
+                                            <th>Shop Number</th>
                                             <th>Block</th>
                                             <th>Floor</th>
                                             <th>Room</th>
@@ -146,13 +147,14 @@ function UserRequests() {
                                                 <td>{request.name}</td>
                                                 <td>{request.email}</td>
                                                 <td>{request.mobile_number}</td>
-                                                <td className='text-capitalize'>{request.role}</td>
+                                                <td className='text-capitalize' style={{ color: request.role === "shop" ? "green" : "red" }} >{request.role}</td>
+                                                <td>{request.role === "shop" ? request.shop_number : "N/A"}</td>
                                                 <td>{request.block}</td>
                                                 <td>{request.floor === 0 ? "Ground Floor" : request.floor}</td>
-                                                <td>{request.room}</td>
+                                                <td>{request.role === "shop" ? "N/A" : request.room}</td>
                                                 <td className='text-capitalize'>{request.gender}</td>
                                                 <td className='text-capitalize' style={{ color: request.status === "accepted" ? "green" : request.status === "rejected" ? "red" : "black" }}>{request.status}</td>
-                                                <td className='text-capitalize'>{request.owner_or_renter}</td>
+                                                <td className='text-capitalize'>{request.role === "shop" ? "N/A" : request.owner_or_renter}</td>
                                                 <td className='btn-action'>
                                                     {request.status === 'loading' ? (
                                                         

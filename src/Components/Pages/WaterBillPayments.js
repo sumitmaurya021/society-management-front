@@ -140,8 +140,10 @@ function WaterBillPayments() {
   return (
     <>
     <ToastContainer /> 
+    <div>
+      <Typography variant="h4" className="text-center p-3 bg-body-secondary text-dark sticky-top mb-4">Water Bill Payments</Typography>
+    </div>
     <Container>
-      <Typography variant="h4" style={{ marginTop: '20px', marginBottom: '20px', textAlign: 'center' }}>Water Bill Payments</Typography>
       
       <FormControl fullWidth style={{ marginBottom: '20px' }}>
         <InputLabel className="select-label">Select Water Bill</InputLabel>

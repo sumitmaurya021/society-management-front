@@ -1,10 +1,12 @@
-import axios from                          'axios'                                ;
-import React, { useEffect, useState } from 'react'                                ;
-import { ToastContainer, toast } from      'react-toastify'                       ;
-import                                     'react-toastify/dist/ReactToastify.css';
-import                                     './UserRequests.css'                   ;
-import Spinner from                        '../Spinner'                           ;
-import { ThreeDots } from                  'react-loader-spinner'                 ;
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './UserRequests.css';
+import Spinner from '../Spinner';
+import { ThreeDots } from 'react-loader-spinner';
+import { Typography } from '@mui/material';
+import { FaCheck, FaTimes } from 'react-icons/fa';
 
 function UserRequests() {
     const [requests, setRequests] = useState([]);
@@ -118,7 +120,9 @@ function UserRequests() {
         <ToastContainer />
             {isLoading ? <Spinner size="sm" /> : (
                 <>
-                    <h2 className="mt-4 mb-4">User Requests</h2>
+                    <div clsName="sticky-top">
+                        <Typography variant="h5" className="text-center p-3 bg-body-secondary text-dark sticky-top">User Requests</Typography>
+                    </div>
                     <div className="p-3">
                         <div className="user_requests">
                             <div className="table-responsive">
@@ -171,10 +175,14 @@ function UserRequests() {
                                                     ) : (
                                                         <>
                                                             {(request.status === 'pending' || request.status === 'rejected') && (
-                                                                <button onClick={() => handleApprove(request.id)} className='btn btn-sm btn-success'>Approve</button>
+                                                                <button onClick={() => handleApprove(request.id)} className='btn btn-sm btn-success' style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "9px 12px" }}>
+                                                                    <FaCheck />
+                                                                </button>
                                                             )}
                                                             {(request.status === 'pending' || request.status === 'accepted') && (
-                                                                <button onClick={() => handleReject(request.id)} className='btn btn-sm btn-danger'>Reject</button>
+                                                                <button onClick={() => handleReject(request.id)} className='btn btn-sm btn-danger' style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "9px 12px" }}>
+                                                                    <FaTimes />
+                                                                </button>
                                                             )}
                                                         </>
                                                     )}

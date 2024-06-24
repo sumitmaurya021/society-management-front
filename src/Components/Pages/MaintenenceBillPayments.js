@@ -139,9 +139,10 @@ function MaintenanceBillPayments() {
   return (
     <>
       <ToastContainer />
+      <div>
+      <Typography variant="h4" className="text-center p-3 bg-body-secondary text-dark sticky-top mb-4">Maintenance Bill Payments</Typography>
+      </div>
       <Container>
-        <Typography variant="h4" style={{ marginTop: '20px', marginBottom: '20px', textAlign: 'center' }}>Maintenance Bill Payments</Typography>
-
         <FormControl fullWidth style={{ marginBottom: '20px' }}>
           <InputLabel className="select-label">Select Maintenance Bill</InputLabel>
           <Select
@@ -203,9 +204,9 @@ function MaintenanceBillPayments() {
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={3}>
-            <Button variant="contained" color="primary" onClick={handleClearFilters}>
+            <button className="btn btn-sm btn-primary" onClick={handleClearFilters}>
               Clear Filters
-            </Button>
+            </button>
           </Grid>
         </Grid>
 
@@ -280,7 +281,7 @@ function MaintenanceBillPayments() {
           </TableContainer>
         )}
         {!isLoading && filteredPayments.length === 0 && (
-          <Typography variant="body1" style={{ textAlign: 'center' }}>No payments found.</Typography>
+          <Typography variant="body1" style={{ textAlign: 'center', marginTop: '20px' }}>No payments found.</Typography>
         )}
       </div>
     </Container>

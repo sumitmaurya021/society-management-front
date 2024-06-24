@@ -74,8 +74,10 @@ function VehicleDetails() {
   return (
     <div>
         <ToastContainer />
+        <div>
+            <Typography variant="h4" gutterBottom className="text-center p-3 bg-body-secondary text-dark sticky-top">Vehicle Details</Typography>
+        </div>
         <Box p={3} mt={4}>
-            <Typography variant="h4" gutterBottom>Vehicle Details</Typography>
             <ResponsiveContainer width="100%" height={300}>
             <TableContainer>
               <Table>

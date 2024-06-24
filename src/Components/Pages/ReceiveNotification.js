@@ -63,10 +63,12 @@ function ReceiveNotification() {
   return (
     <>
     <ToastContainer />
-    <Container>
-      <Typography variant="h4" gutterBottom className='text-center mt-3 mb-5 border p-4'>
+    <div>
+    <Typography variant="h4" gutterBottom className="text-center p-3 bg-body-secondary text-dark sticky-top mb-4">
         Receive Notification
       </Typography>
+    </div>
+    <Container>
       <Box display="flex" justifyContent="space-between" mb={2}>
         <TextField
           label="Filter by Title"

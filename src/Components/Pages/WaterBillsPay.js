@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Spinner from '../Spinner';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import './WaterBillsPay.css';
 import { CheckCircle } from '@mui/icons-material';
@@ -137,19 +137,20 @@ function WaterBillsPay() {
         }
 
         const url = `http://localhost:3000/api/v1/buildings/1/water_bills/${billId}/water_bill_payments/${paymentId}/generate_invoice_pdf.pdf?access_token=${accessToken}`;
-        console.log(`Opening URL: ${url}`);
         window.open(url, '_blank');
     };
 
     return (
         <>
         <ToastContainer />
+        <div>
+            <Typography variant="h4" gutterBottom className="text-center p-3 bg-body-secondary text-dark sticky-top">Water Bills</Typography>
+        </div>
             <div className="bills-page">
                 {isLoading ? (
                     <Spinner />
                 ) : (
                     <div className="bills-container">
-                        <h2 className="bills-title">Water Bills</h2>
                         <div className="table-container">
                             <table className="bills-table">
                                 <thead>
@@ -177,9 +178,10 @@ function WaterBillsPay() {
                                             <td>{bill.start_date}</td>
                                             <td>{bill.end_date}</td>
                                             <td>{bill.remarks}</td>
-                                            <td>{userRoom.total_units === null ? 'N/A' : userRoom.total_units}</td>
-                                            <td>{userRoom.previous_unit === null ? 'N/A' : userRoom.previous_unit}</td>
-                                            <td>{userRoom.updated_unit === null ? 'N/A' : userRoom.updated_unit}</td>
+                                            <td>{statuses[bill.id]?.status === 'Paid' ? '-' : (userRoom.total_units === null ? 'N/A' : userRoom.total_units)}</td>
+                                            <td>{statuses[bill.id]?.status === 'Paid' ? '-' : (userRoom.previous_unit === null ? 'N/A' : userRoom.previous_unit)}</td>
+                                            <td>{statuses[bill.id]?.status === 'Paid' ? '-' : (userRoom.updated_unit === null ? 'N/A' : userRoom.updated_unit)}</td>
+                                            
                                             <td>{statuses[bill.id]?.status || 'Unpaid'}</td>
                                             <td>
                                                 {statuses[bill.id]?.status === 'Paid' ? (

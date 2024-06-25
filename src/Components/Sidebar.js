@@ -131,7 +131,9 @@ const Sidebar = ({ isAuthenticated, userRole, children }) => {
               Log Out
             </button>
           ) : (
-            <IoLogOut className="icon" onClick={handleOpenModal} />
+            <div style={{ cursor: "pointer" }}>
+              <IoLogOut className="icon" onClick={handleOpenModal} />
+            </div>
           )}
         </div>
       </motion.div>

@@ -35,7 +35,7 @@ function SignUp({ setIsLoggedIn }) {
     try {
       const response = await axios.post("http://localhost:3000/api/v1/users", {
         user: formData,
-        client_id: "80B1eEelrjSYUwpczFRlor3DLje3lu4nZnQb-fBQJX0",
+        client_id: "pSEeHaYWaEB3t9lZlWkS_MZHLPHobPY7RvsNvF9lh3E",
       });
       console.log("User signed up successfully:", response.data);
       toast.success("Sign up successful!");
@@ -55,7 +55,7 @@ function SignUp({ setIsLoggedIn }) {
     <>
     <ToastContainer />
     <ThemeProvider theme={createTheme()}>
-      <Container component="main" maxWidth="xs">
+      <Container  maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{

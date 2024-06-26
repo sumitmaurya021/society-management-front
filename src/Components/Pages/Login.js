@@ -56,7 +56,7 @@ function Login() {
         "http://localhost:3000/api/v1/verify_otp_and_login",
         {
           user: { email, otp },
-          client_id: "pSEeHaYWaEB3t9lZlWkS_MZHLPHobPY7RvsNvF9lh3E",
+          client_id: "JxG3hdqSMfJLXBzg4Y0qoOgOV53QBAclGVytNeYBos4",
         }
       );
       if (response?.status === 200) {

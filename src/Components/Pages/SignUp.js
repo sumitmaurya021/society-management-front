@@ -20,6 +20,7 @@ function SignUp({ setIsLoggedIn }) {
     name: "",
     email: "",
     password: "",
+    role: "admin",
   });
 
   const handleChange = (event) => {
@@ -35,16 +36,12 @@ function SignUp({ setIsLoggedIn }) {
     try {
       const response = await axios.post("http://localhost:3000/api/v1/users", {
         user: formData,
-        client_id: "pSEeHaYWaEB3t9lZlWkS_MZHLPHobPY7RvsNvF9lh3E",
+        client_id: "JxG3hdqSMfJLXBzg4Y0qoOgOV53QBAclGVytNeYBos4",
       });
       console.log("User signed up successfully:", response.data);
       toast.success("Sign up successful!");
       setIsLoggedIn(true);
-      // Redirect to login page
-      setTimeout(() => {
-        // Replace '/login' with your login page route
         window.location.href = "/login";
-      }, 3000); // Redirect after 3 seconds
     } catch (error) {
       console.error("Error signing up:", error);
       // Show error message to user

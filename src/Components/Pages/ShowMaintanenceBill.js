@@ -56,8 +56,8 @@ function ShowMaintanenceBill() {
         if (response.status === 200) {
           const formattedBills = response.data.map(bill => ({
             ...bill,
-            start_date: new Date(bill.start_date).toISOString().substr(0, 10),
-            end_date: new Date(bill.end_date).toISOString().substr(0, 10)
+            start_date: new Date(bill.start_date).toISOString().substr(5, 5),
+            end_date: new Date(bill.end_date).toISOString().substr(5, 5)
           }));
           setBills(formattedBills);
           setIsLoading(false);

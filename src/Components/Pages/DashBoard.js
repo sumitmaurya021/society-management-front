@@ -40,14 +40,13 @@ import { FcBullish } from "react-icons/fc";
 import { FcTodoList } from "react-icons/fc";
 import { FcClock } from "react-icons/fc";
 import './DashBoard.css';
+import { ThreeDots } from "react-loader-spinner";
 
-// Transition for Dialog
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const Dashboard = () => {
-  // State declarations
   const [buildingId, setBuildingId] = useState("");
   const [blockId, setBlockId] = useState("");
   const [floorId, setFloorId] = useState("");
@@ -72,10 +71,10 @@ const Dashboard = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [open, setOpen] = useState(false);
   const [maintenanceBillSummary, setMaintenanceBillSummary] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   const accessToken = localStorage.getItem("access_token");
 
-  // Fetch functions
   const fetchBuildings = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/v1/buildings", {
@@ -182,8 +181,6 @@ const Dashboard = () => {
       }
     } catch (error) {
       toast.error("Error fetching users");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -204,11 +201,13 @@ const Dashboard = () => {
       }
     } catch (error) {
       toast.error("Error fetching maintenance bill summary");
+      setIsLoading(false)
+    } finally {
+      setIsLoading(false);
     }
   };
   
 
-  // Initial data fetch
   useEffect(() => {
     fetchDashboard();
     fetchUsers();
@@ -234,7 +233,6 @@ const Dashboard = () => {
     }
   }, [floorId]);
 
-  // Handle change functions
   const handleBuildingChange = (event) => {
     setBuildingId(event.target.value);
     setBlockId("");
@@ -264,8 +262,8 @@ const Dashboard = () => {
     });
   };
 
-  // Handle submit function
   const handleSubmit = async () => {
+    setIsCreating(true);
     setLoading(true);
     setSuccessMessage("");
     const buildingData = {
@@ -303,19 +301,22 @@ const Dashboard = () => {
             starting_room_number: "",
           });
           handleClose();
+          setIsCreating(false);
         }, 2000);
       } else {
         setLoading(false);
+        setIsCreating(false);
         toast.error("Failed to create building");
       }
     } catch (error) {
       setLoading(false);
       toast.error("Failed to create building: " + error.message);
       console.error("Failed to create building:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Handle dialog open/close
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -413,7 +414,12 @@ const Dashboard = () => {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose} color="secondary">Cancel</Button>
-              <Button onClick={handleSubmit} color="primary">Create</Button>
+              <Button onClick={handleSubmit} color="primary">            
+                {loading ? (
+              <CircularProgress size={24} />
+            ) : (
+              "Create"
+            )}</Button>
             </DialogActions>
           </Dialog>
 
@@ -449,7 +455,18 @@ const Dashboard = () => {
                 </Box>
               </Box>
             ) : (
-        <Typography variant="body1">Loading...</Typography>
+              <div className="d-flex justify-content-center">
+                <ThreeDots
+                visible={true}
+                height="50"
+                width="50"
+                color="#1976d2"
+                radius="9"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            </div>
       )}
     </Box>
 

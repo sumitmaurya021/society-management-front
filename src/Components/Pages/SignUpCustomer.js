@@ -71,7 +71,7 @@ function SignUpCustomer() {
 
       const response = await axios.post("http://localhost:3000/api/v1/users", {
         user,
-        client_id: "pSEeHaYWaEB3t9lZlWkS_MZHLPHobPY7RvsNvF9lh3E",
+        client_id: "JxG3hdqSMfJLXBzg4Y0qoOgOV53QBAclGVytNeYBos4",
       });
 
       if (response.status === 200) {

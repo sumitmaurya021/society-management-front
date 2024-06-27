@@ -13,16 +13,15 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import img from "../assets/Images/patrick-fore-iOiaqY7eZsY-unsplash.jpg"
+import img from "../assets/Images/patrick-fore-iOiaqY7eZsY-unsplash.jpg";
 import { ThreeDots } from 'react-loader-spinner';
 
-
 const theme = createTheme();
+
 function Login() {
   // State variables
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const [otpSent, setOTPSent] = useState(false);
   const [otp, setOTP] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,8 +39,7 @@ function Login() {
         toast.info(`Email sent to ${email}`);
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.error || "An error occurred");
-      toast.error(errorMessage);
+      toast.error(error.response?.data?.error);
     } finally {
       setLoading(false);
     }
@@ -148,17 +146,18 @@ function Login() {
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
+                    disabled={loading}
                   >
-                    { loading ? (
+                    {loading ? (
                       <ThreeDots
-                      visible={true}
-                      height="30"
-                      width="30"
-                      color="#fff"
-                      radius="9"
-                      ariaLabel="three-dots-loading"
-                      wrapperStyle={{}}
-                      wrapperClass=""
+                        visible={true}
+                        height="30"
+                        width="30"
+                        color="#fff"
+                        radius="9"
+                        ariaLabel="three-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
                       />
                     ) : (
                       "Sign In"
@@ -202,8 +201,9 @@ function Login() {
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
+                    disabled={loading}
                   >
-                    { loading ? (
+                    {loading ? (
                       <ThreeDots
                         visible={true}
                         height="30"

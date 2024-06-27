@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import dayjs from 'dayjs'; // Import dayjs for date handling
 import Spinner from '../Spinner';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
@@ -91,11 +92,17 @@ function MaintenanceBillPay() {
   }, []);
 
   const handleOpenPaymentPopup = (bill) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const today = dayjs().format('YYYY-MM-DD');
+    const amount = user.owner_or_renter === 'renter' ? bill.rent_amount : bill.owner_amount;
+
     setSelectedBill(bill);
     setOpenPaymentPopup(true);
-    setBlock(localStorage.getItem('block_number'));
+    setBlock(localStorage.getItem('block_name'));
     setFloor(localStorage.getItem('floor_number'));
     setRoom(localStorage.getItem('room_number'));
+    setPaymentDate(today);
+    setPaymentAmount(amount);
   };
 
   const handleClosePaymentPopup = () => {

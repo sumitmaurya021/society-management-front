@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Box } from '@mui/material';
+import {
+  Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Box
+} from '@mui/material';
 import { motion } from 'framer-motion';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
@@ -8,7 +11,6 @@ import { ActionCableConsumer } from 'react-actioncable-provider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { useSpring } from 'react-spring';
 
 function CreateNotification() {
   const [userId, setUserId] = useState('');
@@ -29,7 +31,7 @@ function CreateNotification() {
     if (storedUserId) {
       const userIdInt = parseInt(storedUserId, 10);
       setUserId(userIdInt);
-      setNotification((prevNotification) => ({ ...prevNotification, user_id: userIdInt }));
+      setNotification(prevNotification => ({ ...prevNotification, user_id: userIdInt }));
     }
     fetchNotifications();
   }, []);
@@ -84,7 +86,7 @@ function CreateNotification() {
   };
 
   const filterNotifications = () => {
-    const filtered = notifications.filter((notification) => {
+    const filtered = notifications.filter(notification => {
       const matchesTitle = notification.title.toLowerCase().includes(titleFilter.toLowerCase());
       const matchesMessage = notification.message.toLowerCase().includes(messageFilter.toLowerCase());
       const matchesCreatedAt = createdAtFilter
@@ -125,7 +127,6 @@ function CreateNotification() {
       }
     } catch (error) {
       toast.error('Failed to update notification: ' + error.message);
-      console.error('Failed to update notification:', error);
     }
   };
 
@@ -159,49 +160,79 @@ function CreateNotification() {
     }
   };
 
-  const fade = useSpring({ from: { opacity: 0 }, to: { opacity: 1 } });
-
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       <Fade>
         <motion.div>
-          <div>
-            <div className="createmaincss">
-              <Typography variant="h6" gutterBottom className="text-center p-3 bg-body-secondary sticky-top border-bottom text-dark">
-                Create Notification
-              </Typography>
-              <div className='text-end container'>
-                <button className='btn btn-sm btn-primary' onClick={handleClickOpen}>Create Notification</button>
-              </div>
-              <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Create Notification</DialogTitle>
-                <DialogContent>
-                  <TextField name="title" label="Title" value={notification.title} onChange={handleChange} fullWidth margin="normal" />
-                  <TextField name="message" label="Message" value={notification.message} onChange={handleChange} fullWidth margin="normal" multiline rows={4} />
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose} color="secondary">Cancel</Button>
-                  <Button onClick={handleSubmit} color="primary">Create</Button>
-                </DialogActions>
-              </Dialog>
-            </div>
+          <Typography variant="h6" gutterBottom className="text-center p-3 bg-body-secondary sticky-top border-bottom text-dark">
+            Create Notification
+          </Typography>
+          <div className='text-end container'>
+            <Button variant="contained" color="primary" size="small" onClick={handleClickOpen}>
+              Create Notification
+            </Button>
           </div>
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>Create Notification</DialogTitle>
+            <DialogContent>
+              <TextField
+                name="title"
+                label="Title"
+                value={notification.title}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                name="message"
+                label="Message"
+                value={notification.message}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+                multiline
+                rows={4}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="secondary">Cancel</Button>
+              <Button onClick={handleSubmit} color="primary">Create</Button>
+            </DialogActions>
+          </Dialog>
         </motion.div>
-        <ActionCableConsumer
-          channel={{ channel: 'NotificationsChannel' }}
-          onReceived={(notification) => {
-            console.log('Received notification:', notification);
-          }}
-        />
       </Fade>
+
+      <ActionCableConsumer
+        channel={{ channel: 'NotificationsChannel' }}
+        onReceived={(notification) => {
+          console.log('Received notification:', notification);
+        }}
+      />
 
       <Container>
         <Box display="flex" justifyContent="space-between" mb={2}>
-          <TextField label="Filter by Title" variant="outlined" value={titleFilter} onChange={(e) => setTitleFilter(e.target.value)} sx={{ flex: 1, marginRight: 2 }} />
-          <TextField label="Filter by Message" variant="outlined" value={messageFilter} onChange={(e) => setMessageFilter(e.target.value)} sx={{ flex: 1, marginRight: 2 }} />
+          <TextField
+            label="Filter by Title"
+            variant="outlined"
+            value={titleFilter}
+            onChange={(e) => setTitleFilter(e.target.value)}
+            sx={{ flex: 1, marginRight: 2 }}
+          />
+          <TextField
+            label="Filter by Message"
+            variant="outlined"
+            value={messageFilter}
+            onChange={(e) => setMessageFilter(e.target.value)}
+            sx={{ flex: 1, marginRight: 2 }}
+          />
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker label="Filter by Created At" value={createdAtFilter} onChange={(newValue) => setCreatedAtFilter(newValue)} renderInput={(params) => <TextField {...params} variant="outlined" sx={{ flex: 1 }} />} />
+            <DatePicker
+              label="Filter by Created At"
+              value={createdAtFilter}
+              onChange={(newValue) => setCreatedAtFilter(newValue)}
+              renderInput={(params) => <TextField {...params} variant="outlined" sx={{ flex: 1 }} />}
+            />
           </LocalizationProvider>
         </Box>
         <TableContainer component={Paper} sx={{ marginBottom: 2 }}>
@@ -221,8 +252,12 @@ function CreateNotification() {
                   <TableCell>{notification.message}</TableCell>
                   <TableCell>{new Date(notification.created_at).toLocaleString()}</TableCell>
                   <TableCell>
-                    <button className='btn btn-sm btn-primary' onClick={() => handleUpdateClickOpen(notification)}>Update</button>
-                    <button className='btn btn-sm ms-2 btn-danger' onClick={() => handleDeleteClickOpen(notification.id)}>Delete</button>
+                    <Button variant="contained" color="primary" size="small" onClick={() => handleUpdateClickOpen(notification)}>
+                      Update
+                    </Button>
+                    <Button variant="contained" color="secondary" size="small" onClick={() => handleDeleteClickOpen(notification.id)} sx={{ marginLeft: 2 }}>
+                      Delete
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -231,12 +266,27 @@ function CreateNotification() {
         </TableContainer>
       </Container>
 
-      {/* Update Notification Dialog */}
       <Dialog open={updateOpen} onClose={handleUpdateClose}>
         <DialogTitle>Update Notification</DialogTitle>
         <DialogContent>
-          <TextField name="title" label="Title" value={updateNotification.title} onChange={handleUpdateChange} fullWidth margin="normal" />
-          <TextField name="message" label="Message" value={updateNotification.message} onChange={handleUpdateChange} fullWidth margin="normal" multiline rows={4} />
+          <TextField
+            name="title"
+            label="Title"
+            value={updateNotification.title}
+            onChange={handleUpdateChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            name="message"
+            label="Message"
+            value={updateNotification.message}
+            onChange={handleUpdateChange}
+            fullWidth
+            margin="normal"
+            multiline
+            rows={4}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleUpdateClose} color="secondary">Cancel</Button>
@@ -244,7 +294,6 @@ function CreateNotification() {
         </DialogActions>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog open={deleteOpen} onClose={handleDeleteClose}>
         <DialogTitle>Are you sure?</DialogTitle>
         <DialogContent>

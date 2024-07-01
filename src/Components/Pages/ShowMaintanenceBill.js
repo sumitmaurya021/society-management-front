@@ -468,8 +468,8 @@ function ShowMaintanenceBill() {
               </form>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancel</Button>
-              <Button variant="primary" onClick={handleEditSubmit}>Submit</Button>
+              <button className="btn btn-sm btn-outline-secondary" onClick={() => setShowEditModal(false)}>Cancel</button>
+              <button className="btn btn-sm btn-outline-primary" onClick={handleEditSubmit}>Submit</button>
             </Modal.Footer>
           </Modal>
           <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>

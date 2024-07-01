@@ -16,6 +16,7 @@ function ShowMaintanenceBill() {
     end_date: '',
     remarks: '',
   });
+  const [errors, setErrors] = useState({});
   const [open, setOpen] = useState(false); // State for controlling the modal
   const [bills, setBills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +30,8 @@ function ShowMaintanenceBill() {
     rent_amount: "",
     start_date: "",
     end_date: "",
-    remarks: ""
+    remarks: "",
+    late_fee: "",
   });
 
   useEffect(() => {
@@ -81,7 +83,39 @@ function ShowMaintanenceBill() {
     });
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!maintenanceBill.bill_month_and_year) {
+      newErrors.bill_month_and_year = 'Bill Month and Year is required';
+    }
+    if (!maintenanceBill.owner_amount) {
+      newErrors.owner_amount = 'Owner Amount is required';
+    }
+    if (!maintenanceBill.rent_amount) {
+      newErrors.rent_amount = 'Rent Amount is required';
+    }
+    if (!maintenanceBill.start_date) {
+      newErrors.start_date = 'Start Date is required';
+    }
+    if (!maintenanceBill.end_date) {
+      newErrors.end_date = 'End Date is required';
+    }
+    if (!maintenanceBill.remarks) {
+      newErrors.remarks = 'Remarks are required';
+    }
+    if (!maintenanceBill.late_fee) {
+      newErrors.late_fee = 'Late Fee is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
     const accessToken = localStorage.getItem('access_token');
     try {
       const response = await axios.post(
@@ -105,6 +139,7 @@ function ShowMaintanenceBill() {
           start_date: '',
           end_date: '',
           remarks: '',
+          late_fee: '',
         });
         handleClose(); // Close the modal after submission
       } else {
@@ -134,6 +169,7 @@ function ShowMaintanenceBill() {
       start_date: bill.start_date,
       end_date: bill.end_date,
       remarks: bill.remarks,
+      late_fee: bill.late_fee,
     });
     setShowEditModal(true);
   };
@@ -255,6 +291,11 @@ function ShowMaintanenceBill() {
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
+                error={!!errors.bill_month_and_year}
+                helperText={errors.bill_month_and_year}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
               <TextField
                 name="owner_amount"
@@ -264,6 +305,11 @@ function ShowMaintanenceBill() {
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
+                error={!!errors.owner_amount}
+                helperText={errors.owner_amount}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
               <TextField
                 name="rent_amount"
@@ -273,6 +319,11 @@ function ShowMaintanenceBill() {
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
+                error={!!errors.rent_amount}
+                helperText={errors.rent_amount}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
               <TextField
                 name="start_date"
@@ -282,6 +333,8 @@ function ShowMaintanenceBill() {
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
+                error={!!errors.start_date}
+                helperText={errors.start_date}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -294,6 +347,22 @@ function ShowMaintanenceBill() {
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
+                error={!!errors.end_date}
+                helperText={errors.end_date}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+                <TextField
+                name="late_fee"
+                label="Late Fee"
+                type="number"
+                value={maintenanceBill.late_fee}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+                error={!!errors.late_fee}
+                helperText={errors.late_fee}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -305,8 +374,13 @@ function ShowMaintanenceBill() {
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
+                error={!!errors.remarks}
+                helperText={errors.remarks}
                 multiline
                 rows={4}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </DialogContent>
             <DialogActions>

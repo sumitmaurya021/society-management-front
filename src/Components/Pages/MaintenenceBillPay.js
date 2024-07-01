@@ -192,6 +192,8 @@ function MaintenanceBillPay() {
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Remarks</th>
+                    <th>Late Fees</th>
+                    <th>Bill Status</th>
                     <th>Status</th>
                     <th>Action</th>
                     <th>Invoice</th>
@@ -208,6 +210,8 @@ function MaintenanceBillPay() {
                       <td>{bill.start_date}</td>
                       <td>{bill.end_date}</td>
                       <td>{bill.remarks}</td>
+                      <td>{bill.late_fee}</td>
+                      <td className='text-capitalize' style={{ color: bill.status === 'expired' ? 'red' : 'green' }}>{bill.status}</td>
                       <td className='text-capitalize'>{statuses[bill.id]?.status || 'Unpaid'}</td>
                       <td>
                         {statuses[bill.id]?.status === 'paid' ? (

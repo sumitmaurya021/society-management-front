@@ -31,13 +31,13 @@ function ShowWaterBill() {
     room_units: {},
   });
 
-  const [buildingId, setBuildingId] = useState(1); // Initial building ID
+  const [buildingId, setBuildingId] = useState(1);
   const [blockId, setBlockId] = useState(null);
   const [floorId, setFloorId] = useState(null);
   const [blocks, setBlocks] = useState([]);
   const [floors, setFloors] = useState([]);
   const [rooms, setRooms] = useState([]);
-  const accessToken = localStorage.getItem("access_token"); // Retrieve access token from local storage
+  const accessToken = localStorage.getItem("access_token"); 
   const [unit, setUnit] = useState(null);
   const [waterBillId, setWaterBillId] = useState(null);
 

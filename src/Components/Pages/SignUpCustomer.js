@@ -15,7 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./SignUpCustomer.css"; // Import the CSS file
+import "./SignUpCustomer.css";
 
 const theme = createTheme();
 
@@ -71,7 +71,7 @@ function SignUpCustomer() {
 
       const response = await axios.post("http://localhost:3000/api/v1/users", {
         user,
-        client_id: "JxG3hdqSMfJLXBzg4Y0qoOgOV53QBAclGVytNeYBos4",
+        client_id: "whkBTp_UAjOR29cRg2AWxarqOC4IniwQlOo4iuDVN_0",
       });
 
       if (response.status === 200) {

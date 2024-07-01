@@ -40,7 +40,7 @@ function Login() {
     try {
       const response = await axios.post("http://localhost:3000/api/v1/verify_otp_and_login", {
         user: { email, otp },
-        client_id: "JxG3hdqSMfJLXBzg4Y0qoOgOV53QBAclGVytNeYBos4",
+        client_id: "whkBTp_UAjOR29cRg2AWxarqOC4IniwQlOo4iuDVN_0",
       });
       if (response?.status === 200) {
         const role = 'admin';

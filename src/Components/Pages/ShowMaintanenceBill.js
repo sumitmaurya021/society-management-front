@@ -233,7 +233,7 @@ function ShowMaintanenceBill() {
             gutterBottom
             className="text-center p-3 bg-body-secondary text-dark sticky-top"
           >
-            Create Maintenance Bill
+            Show Maintenance Bill
           </Typography>
           <div className="text-end container">
             <button className='btn btn-sm btn-success' onClick={handleClickOpen}>
@@ -329,6 +329,8 @@ function ShowMaintanenceBill() {
                   <th>Rent Amount</th>
                   <th>Start Date</th>
                   <th>End Date</th>
+                  <th>Late Fees</th>
+                  <th>Status</th>
                   <th>Remarks</th>
                   <th>Action</th>
                 </tr>
@@ -343,6 +345,8 @@ function ShowMaintanenceBill() {
                     <td>{bill.rent_amount}</td>
                     <td>{bill.start_date}</td>
                     <td>{bill.end_date}</td>
+                    <td>{bill.late_fee}</td>
+                    <td className='text-capitalize' style={{ color: bill.status === "expired" ? "red" : "green" }}>{bill.status}</td>
                     <td>{bill.remarks}</td>
                     <td>
                       <button onClick={() => handleEdit(bill)} className="btn mx-2 btn-sm btn-primary btn-outline-primary">Edit</button>

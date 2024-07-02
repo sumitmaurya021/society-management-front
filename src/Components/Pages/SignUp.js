@@ -40,7 +40,7 @@ function SignUp() {
     try {
       const response = await axios.post("http://localhost:3000/api/v1/users", {
         user: formData,
-        client_id: "JxG3hdqSMfJLXBzg4Y0qoOgOV53QBAclGVytNeYBos4",
+        client_id: "whkBTp_UAjOR29cRg2AWxarqOC4IniwQlOo4iuDVN_0",
       });
 
       if (response.status === 200) {

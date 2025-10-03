@@ -22,6 +22,7 @@ import ReceiveNotification from "./Components/Pages/ReceiveNotification";
 import WebSocketNotification from "./Components/Pages/WebSocketNotification";
 import UserProfile from "./Components/Pages/UserProfile";
 import VehicleDetails from "./Components/Pages/VehicleDetails";
+import Credentials from "./Components/Pages/Credentials";
 
 function App() {
   const isAuthenticated = localStorage.getItem("access_token");
@@ -30,6 +31,7 @@ function App() {
   if (!isAuthenticated) {
     return (
       <Router>
+        <Credentials />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/customer_login" element={<LoginCustomer />} />
